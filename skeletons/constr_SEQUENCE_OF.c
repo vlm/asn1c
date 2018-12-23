@@ -18,7 +18,7 @@ SEQUENCE_OF_encode_der(const asn_TYPE_descriptor_t *td, const void *ptr,
 	const asn_anonymous_sequence_ *list = _A_CSEQUENCE_FROM_VOID(ptr);
 	size_t computed_size = 0;
 	ssize_t encoding_size = 0;
-	asn_enc_rval_t erval;
+	asn_enc_rval_t erval = {0,0,0};
 	int edx;
 
 	ASN_DEBUG("Estimating size of SEQUENCE OF %s", td->name);
@@ -91,7 +91,7 @@ asn_enc_rval_t
 SEQUENCE_OF_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
                        int ilevel, enum xer_encoder_flags_e flags,
                        asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_enc_rval_t er;
+    asn_enc_rval_t er = {0,0,0};
     const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
     const asn_TYPE_member_t *elm = td->elements;
     const asn_anonymous_sequence_ *list = _A_CSEQUENCE_FROM_VOID(sptr);
@@ -107,7 +107,7 @@ SEQUENCE_OF_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
     er.encoded = 0;
 
     for(i = 0; i < list->count; i++) {
-        asn_enc_rval_t tmper;
+        asn_enc_rval_t tmper = {0,0,0};
         void *memb_ptr = list->array[i];
         if(!memb_ptr) continue;
 
@@ -147,7 +147,7 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
                         const void *sptr, asn_per_outp_t *po) {
     const asn_anonymous_sequence_ *list;
 	const asn_per_constraint_t *ct;
-	asn_enc_rval_t er;
+	asn_enc_rval_t er = {0,0,0};
 	const asn_TYPE_member_t *elm = td->elements;
 	size_t encoded_edx;
 
@@ -225,6 +225,76 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 	ASN__ENCODED_OK(er);
 }
 
+asn_enc_rval_t
+SEQUENCE_OF_encode_aper(const asn_TYPE_descriptor_t *td,
+                        const asn_per_constraints_t *constraints,
+                        const void *sptr, asn_per_outp_t *po) {
+	const asn_anonymous_sequence_ *list;
+	const asn_per_constraint_t *ct;
+	asn_enc_rval_t er = {0,0,0};
+	asn_TYPE_member_t *elm = td->elements;
+	int seq;
+
+	if(!sptr) ASN__ENCODE_FAILED;
+	list = _A_CSEQUENCE_FROM_VOID(sptr);
+
+	er.encoded = 0;
+
+	ASN_DEBUG("Encoding %s as SEQUENCE OF size (%d) using ALIGNED PER", td->name, list->count);
+
+	if(constraints) ct = &constraints->size;
+	else if(td->encoding_constraints.per_constraints)
+		ct = &td->encoding_constraints.per_constraints->size;
+	else ct = 0;
+
+	/* If extensible constraint, check if size is in root */
+	if(ct) {
+		int not_in_root = (list->count < ct->lower_bound
+				|| list->count > ct->upper_bound);
+		ASN_DEBUG("lb %ld ub %ld %s",
+			ct->lower_bound, ct->upper_bound,
+			ct->flags & APC_EXTENSIBLE ? "ext" : "fix");
+		if(ct->flags & APC_EXTENSIBLE) {
+			/* Declare whether size is in extension root */
+			if(per_put_few_bits(po, not_in_root, 1))
+				ASN__ENCODE_FAILED;
+			if(not_in_root) ct = 0;
+		} else if(not_in_root && ct->effective_bits >= 0)
+			ASN__ENCODE_FAILED;
+	}
+
+	if(ct && ct->effective_bits >= 0) {
+		/* X.691, #19.5: No length determinant */
+/*		 if(per_put_few_bits(po, list->count - ct->lower_bound,
+				 ct->effective_bits))
+			 ASN__ENCODE_FAILED;
+*/
+		if (aper_put_length(po, ct->upper_bound - ct->lower_bound + 1, list->count - ct->lower_bound) < 0)
+			ASN__ENCODE_FAILED;
+	}
+
+	for(seq = -1; seq < list->count;) {
+		ssize_t mayEncode;
+		if(seq < 0) seq = 0;
+		if(ct && ct->effective_bits >= 0) {
+			mayEncode = list->count;
+		} else {
+			mayEncode = aper_put_length(po, -1, list->count - seq);
+			if(mayEncode < 0) ASN__ENCODE_FAILED;
+		}
+
+		while(mayEncode--) {
+			void *memb_ptr = list->array[seq++];
+			if(!memb_ptr) ASN__ENCODE_FAILED;
+			er = elm->type->op->aper_encoder(elm->type,
+				elm->encoding_constraints.per_constraints, memb_ptr, po);
+			if(er.encoded == -1)
+				ASN__ENCODE_FAILED;
+		}
+	}
+
+	ASN__ENCODED_OK(er);
+}
 #endif  /* ASN_DISABLE_PER_SUPPORT */
 
 int
@@ -274,9 +344,13 @@ asn_TYPE_operation_t asn_OP_SEQUENCE_OF = {
 #ifdef ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	SEQUENCE_OF_decode_uper, /* Same as SET OF decoder */
 	SEQUENCE_OF_encode_uper,
+	SEQUENCE_OF_decode_aper,
+	SEQUENCE_OF_encode_aper,
 #endif /* ASN_DISABLE_PER_SUPPORT */
 	SEQUENCE_OF_random_fill,
 	0	/* Use generic outmost tag fetcher */

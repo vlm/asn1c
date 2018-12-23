@@ -30,9 +30,13 @@ asn_TYPE_operation_t asn_OP_BOOLEAN = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	BOOLEAN_decode_uper,	/* Unaligned PER decoder */
 	BOOLEAN_encode_uper,	/* Unaligned PER encoder */
+	BOOLEAN_decode_aper,	/* Aligned PER decoder */
+	BOOLEAN_encode_aper,	/* Aligned PER encoder */
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	BOOLEAN_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -119,10 +123,10 @@ asn_enc_rval_t
 BOOLEAN_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
                    int tag_mode, ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb,
                    void *app_key) {
-    asn_enc_rval_t erval;
-    const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+	asn_enc_rval_t erval = {0,0,0};
+	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
 
-    erval.encoded = der_write_tags(td, 1, tag_mode, 0, tag, cb, app_key);
+	erval.encoded = der_write_tags(td, 1, tag_mode, 0, tag, cb, app_key);
 	if(erval.encoded == -1) {
 		erval.failed_type = td;
 		erval.structure_ptr = sptr;
@@ -306,6 +310,60 @@ BOOLEAN_encode_uper(const asn_TYPE_descriptor_t *td,
 
 	if(per_put_few_bits(po, *st ? 1 : 0, 1))
 		ASN__ENCODE_FAILED;
+
+	ASN__ENCODED_OK(er);
+}
+
+asn_dec_rval_t
+BOOLEAN_decode_aper(const asn_codec_ctx_t *opt_codec_ctx, const asn_TYPE_descriptor_t *td,
+                    const asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+	asn_dec_rval_t rv;
+	BOOLEAN_t *st = (BOOLEAN_t *)*sptr;
+
+	(void)opt_codec_ctx;
+	(void)constraints;
+	(void)td;
+
+	if(!st) {
+		st = (BOOLEAN_t *)(*sptr = MALLOC(sizeof(*st)));
+		if(!st) ASN__DECODE_FAILED;
+	}
+
+	/*
+	 * Extract a single bit
+	 */
+	switch(per_get_few_bits(pd, 1)) {
+	case 1:
+		*st = 1;
+		break;
+	case 0:
+		*st = 0;
+		break;
+	case -1:
+	default:
+		ASN__DECODE_STARVED;
+	}
+
+	ASN_DEBUG("%s decoded as %s", td->name, *st ? "TRUE" : "FALSE");
+
+	rv.code = RC_OK;
+	rv.consumed = 1;
+	return rv;
+}
+
+asn_enc_rval_t
+BOOLEAN_encode_aper(const asn_TYPE_descriptor_t *td,
+                    const asn_per_constraints_t *constraints,
+                    const void *sptr, asn_per_outp_t *po) {
+	const BOOLEAN_t *st = (const BOOLEAN_t *)sptr;
+	asn_enc_rval_t er = { 0, 0, 0 };
+
+	(void)constraints;
+
+	if(!st) ASN__ENCODE_FAILED;
+
+	if(per_put_few_bits(po, *st ? 1 : 0, 1))
+        	ASN__ENCODE_FAILED;
 
 	ASN__ENCODED_OK(er);
 }

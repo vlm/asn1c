@@ -33,9 +33,13 @@ asn_TYPE_operation_t asn_OP_OBJECT_IDENTIFIER = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,
+	OCTET_STRING_encode_aper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	OBJECT_IDENTIFIER_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -111,10 +115,14 @@ OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, size_t arcbuf_len,
         return 0;
     } else {
         asn_oid_arc_t accum;
+	asn_oid_arc_t upper_limit = (ASN_OID_ARC_MAX >> 7);
+	/* When the value reaches "upper_limit", it can take */
+	/* at most one more digit. If it exceeds "upper_limit" */
+	/* but there are more digits - it's an Overflow condition */
         /* Gather all bits into the accumulator */
         for(accum = 0; b < arcend; b++) {
             accum = (accum << 7) | (*b & ~0x80);
-            if((*b & 0x80) == 0) {
+            if((*b & 0x80) == 0) { // no more digits
                 if(accum <= ASN_OID_ARC_MAX) {
                     *ret_value = accum;
                     return 1 + (b - arcbuf);
@@ -122,7 +130,12 @@ OBJECT_IDENTIFIER_get_single_arc(const uint8_t *arcbuf, size_t arcbuf_len,
                     errno = ERANGE; /* Overflow */
                     return -1;
                 }
-            }
+            } else { // to make sure we aren't wrapping around
+	      if(accum > upper_limit) {
+		    errno = ERANGE; /* Overflow */
+		    return -1;
+	      }
+	    }
         }
         errno = EINVAL;
         return -1;
@@ -239,7 +252,7 @@ OBJECT_IDENTIFIER_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
                              int ilevel, enum xer_encoder_flags_e flags,
                              asn_app_consume_bytes_f *cb, void *app_key) {
     const OBJECT_IDENTIFIER_t *st = (const OBJECT_IDENTIFIER_t *)sptr;
-	asn_enc_rval_t er;
+    asn_enc_rval_t er = {0,0,0};
 
     (void)ilevel;
     (void)flags;

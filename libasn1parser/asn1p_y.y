@@ -1,3 +1,5 @@
+%parse-param { void **param }
+
 %{
 
 #include <stdlib.h>
@@ -9,8 +11,6 @@
 
 #include "asn1parser.h"
 
-#define YYPARSE_PARAM	param
-#define YYPARSE_PARAM_TYPE	void **
 #define YYERROR_VERBOSE
 #define YYDEBUG 1
 #define YYFPRINTF   prefixed_fprintf
@@ -38,8 +38,7 @@ prefixed_fprintf(FILE *f, const char *fmt, ...) {
 }
 
 int yylex(void);
-static int yyerror(const char *msg);
-
+int yyerror(void **param, const char *msg);
 #ifdef	YYBYACC
 int yyparse(void **param);	/* byacc does not produce a prototype */
 #endif
@@ -70,7 +69,7 @@ static asn1p_module_t *currentModule;
 
 #define	checkmem(ptr)	do {						\
 		if(!(ptr))						\
-		return yyerror("Memory failure");			\
+		return yyerror(param, "Memory failure");		\
 	} while(0)
 
 #define	CONSTRAINT_INSERT(root, constr_type, arg1, arg2) do {		\
@@ -206,7 +205,7 @@ static asn1p_module_t *currentModule;
 %token			TOK_EXPLICIT
 %token			TOK_EXPORTS
 %token			TOK_EXTENSIBILITY
-%token			TOK_EXTERNAL
+/*%token			TOK_EXTERNAL*/
 %token			TOK_FALSE
 %token			TOK_FROM
 %token			TOK_GeneralizedTime
@@ -660,7 +659,7 @@ Assignment:
 	 * Erroneous attemps
 	 */
 	| BasicString {
-		return yyerror(
+		return yyerror(param,
 			"Attempt to redefine a standard basic string type, "
 			"please comment out or remove this type redefinition.");
 	}
@@ -678,7 +677,7 @@ optImports:
 ImportsDefinition:
 	TOK_IMPORTS optImportsBundleSet ';' {
 		if(!saved_aid && 0)
-			return yyerror("Unterminated IMPORTS FROM, "
+			return yyerror(param, "Unterminated IMPORTS FROM, "
 					"expected semicolon ';'");
 		saved_aid = 0;
 		$$ = $2;
@@ -687,7 +686,7 @@ ImportsDefinition:
 	 * Some error cases.
 	 */
 	| TOK_IMPORTS TOK_FROM /* ... */ {
-		return yyerror("Empty IMPORTS list");
+		return yyerror(param, "Empty IMPORTS list");
 	}
 	;
 
@@ -1033,8 +1032,10 @@ ComponentTypeLists:
 	}
 	| ComponentTypeLists ',' TOK_VBracketLeft ComponentTypeLists TOK_VBracketRight {
 		$$ = $1;
-		asn1p_expr_add_many($$, $4);
-		asn1p_expr_free($4);
+		$4->meta_type = AMT_TYPE;
+		$4->expr_type = ASN_CONSTR_SEQUENCE;
+		$4->marker.flags |= EM_OPTIONAL;
+		asn1p_expr_add($$, $4);
 	}
 	;
 
@@ -1704,7 +1705,7 @@ BasicTypeId:
 	| TOK_OCTET TOK_STRING { $$ = ASN_BASIC_OCTET_STRING; }
 	| TOK_OBJECT TOK_IDENTIFIER { $$ = ASN_BASIC_OBJECT_IDENTIFIER; }
 	| TOK_RELATIVE_OID { $$ = ASN_BASIC_RELATIVE_OID; }
-	| TOK_EXTERNAL { $$ = ASN_BASIC_EXTERNAL; }
+	/* | TOK_EXTERNAL { $$ = ASN_BASIC_EXTERNAL; } */
 	| TOK_EMBEDDED TOK_PDV { $$ = ASN_BASIC_EMBEDDED_PDV; }
 	| TOK_CHARACTER TOK_STRING { $$ = ASN_BASIC_CHARACTER_STRING; }
 	| TOK_UTCTime { $$ = ASN_BASIC_UTCTime; }
@@ -2311,11 +2312,11 @@ Enumerations:
         asn1p_expr_t *first_memb = TQ_FIRST(&($$->members));
         if(first_memb) {
             if(first_memb->expr_type == A1TC_EXTENSIBLE) {
-                return yyerror(
+                return yyerror(param,
                     "The ENUMERATION cannot start with extension (...).");
             }
         } else {
-            return yyerror(
+            return yyerror(param,
                 "The ENUMERATION list cannot be empty.");
         }
     }
@@ -2524,9 +2525,10 @@ _convert_bitstring2binary(char *str, int base) {
 	memlen = slen / (8 / baselen);	/* Conservative estimate */
 
 	bv_ptr = binary_vector = malloc(memlen + 1);
-	if(bv_ptr == NULL)
+	if(bv_ptr == NULL) {
 		/* ENOMEM */
 		return NULL;
+	}
 
 	cur_val = 0;
 	bits = 0;
@@ -2623,8 +2625,9 @@ _fixup_anonymous_identifier(asn1p_expr_t *expr) {
 		expr->Identifier);
 }
 
-static int
-yyerror(const char *msg) {
+int
+yyerror(void **param, const char *msg) {
+	(void)param;
 	extern char *asn1p_text;
 	fprintf(stderr,
 		"ASN.1 grammar parse error "

@@ -35,9 +35,13 @@ asn_TYPE_operation_t asn_OP_BIT_STRING = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	BIT_STRING_decode_uper,	/* Unaligned PER decoder */
 	BIT_STRING_encode_uper,	/* Unaligned PER encoder */
+	OCTET_STRING_decode_aper,	/* Aligned PER decoder */
+	OCTET_STRING_encode_aper,	/* Aligned PER encoder */
 #endif  /* ASN_DISABLE_PER_SUPPORT */
 	BIT_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -92,7 +96,7 @@ asn_enc_rval_t
 BIT_STRING_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
                       int ilevel, enum xer_encoder_flags_e flags,
                       asn_app_consume_bytes_f *cb, void *app_key) {
-    asn_enc_rval_t er;
+	asn_enc_rval_t er = {0, 0, 0};
 	char scratch[128];
 	char *p = scratch;
 	char *scend = scratch + (sizeof(scratch) - 10);
@@ -351,7 +355,7 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		if(!st) RETURN(RC_FAIL);
 	}
 
-	ASN_DEBUG("PER Decoding %s size %jd .. %jd bits %d",
+	ASN_DEBUG("PER Decoding %s size %ld .. %ld bits %d",
 		csiz->flags & APC_EXTENSIBLE ? "extensible" : "non-extensible",
 		csiz->lower_bound, csiz->upper_bound, csiz->effective_bits);
 
@@ -375,7 +379,7 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
 	if(csiz->effective_bits == 0) {
 		int ret;
-        ASN_DEBUG("Encoding BIT STRING size %jd", csiz->upper_bound);
+        ASN_DEBUG("Encoding BIT STRING size %ld", csiz->upper_bound);
         ret = per_get_many_bits(pd, st->buf, 0, csiz->upper_bound);
 		if(ret < 0) RETURN(RC_WMORE);
 		consumed_myself += csiz->upper_bound;
@@ -460,7 +464,7 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
 
     ASN_DEBUG(
         "Encoding %s into %" ASN_PRI_SIZE " bits"
-        " (%jd..%jd, effective %d)%s",
+        " (%ld..%ld, effective %d)%s",
         td->name, size_in_bits, csiz->lower_bound, csiz->upper_bound,
         csiz->effective_bits, ct_extensible ? " EXT" : "");
 
@@ -488,11 +492,11 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
     if(csiz->effective_bits >= 0 && !inext) {
         int add_trailer = (ssize_t)size_in_bits < csiz->lower_bound;
         ASN_DEBUG(
-            "Encoding %" ASN_PRI_SIZE " bytes (%jd), length (in %d bits) trailer %d; actual "
+            "Encoding %" ASN_PRI_SIZE " bytes (%ld), length (in %d bits) trailer %d; actual "
             "value %" ASN_PRI_SSIZE "",
-            st->size, (intmax_t)(size_in_bits - csiz->lower_bound), csiz->effective_bits,
+            st->size, size_in_bits - csiz->lower_bound, csiz->effective_bits,
             add_trailer,
-            add_trailer ? (ssize_t)0 : (ssize_t)(size_in_bits - csiz->lower_bound));
+            add_trailer ? 0 : (ssize_t)size_in_bits - csiz->lower_bound);
         ret = per_put_few_bits(
             po, add_trailer ? 0 : (ssize_t)size_in_bits - csiz->lower_bound,
             csiz->effective_bits);

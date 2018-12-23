@@ -17,7 +17,7 @@ static void
 check_OID(int lineno, uint8_t *buf, size_t len, unsigned *ck_buf, int ck_len) {
 	OBJECT_IDENTIFIER_t *oid;
 	asn_dec_rval_t rval;
-	uint32_t arcs[10];
+	uint32_t arcs[11];
 	int alen;
 	int i;
 
@@ -265,7 +265,15 @@ check_binary_parsing() {
 	};
 	uint32_t buf5_check[] = { 2, 2, 1, 0, 1 };
 
-    /* {0 0} */
+	/* {joint-iso-itu-t 25957 } */
+	uint8_t buf6[] = {
+		0x06,   /* OBJECT IDENTIFIER */
+		0x0c,   /* Length */
+		0x2a, 0x03, 0x01, 0x01, 0x01, 0x81, 0xaa, 0x11, 0x03, 0x05, 0x01, 0x01
+	};
+	uint32_t buf6_check[] = { 1, 2, 3, 1, 1, 1, 21777, 3, 5, 1, 1 };
+
+	/* {0 0} */
 	uint8_t buf10[] = {
 		0x0D,	/* RELATIVE-OID */
 		0x01,	/* Length */
@@ -295,6 +303,7 @@ check_binary_parsing() {
 	CHECK_OID(3);
 	CHECK_OID(4);
 	CHECK_OID(5);
+	CHECK_OID(6);
 
 	CHECK_ROID(10);
 	CHECK_ROID(11);

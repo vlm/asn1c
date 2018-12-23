@@ -26,6 +26,8 @@ extern asn_TYPE_operation_t asn_OP_TeletexString;
 #define TeletexString_encode_xer    OCTET_STRING_encode_xer
 #define TeletexString_decode_uper   OCTET_STRING_decode_uper
 #define TeletexString_encode_uper   OCTET_STRING_encode_uper
+#define TeletexString_decode_aper   OCTET_STRING_decode_aper
+#define TeletexString_encode_aper   OCTET_STRING_encode_aper
 
 #ifdef __cplusplus
 }

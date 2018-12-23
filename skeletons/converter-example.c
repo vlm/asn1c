@@ -146,6 +146,8 @@ static syntax_selector input_encodings[] = {
      "Input is in OER (Octet Encoding Rules)"},
     {"per", ATS_UNALIGNED_BASIC_PER, CODEC_OFFSET(uper_decoder),
      "Input is in Unaligned PER (Packed Encoding Rules)"},
+    {"aper", ATS_ALIGNED_BASIC_PER, CODEC_OFFSET(aper_decoder),
+     "Input is in Aligned PER (Packed Encoding Rules)"},
     {"xer", ATS_BASIC_XER, CODEC_OFFSET(xer_decoder),
      "Input is in XER (XML Encoding Rules)"},
     {0, ATS_INVALID, 0, 0}};
@@ -157,6 +159,8 @@ static syntax_selector output_encodings[] = {
      "Output as Canonical OER (Octet Encoding Rules)"},
     {"per", ATS_UNALIGNED_CANONICAL_PER, CODEC_OFFSET(uper_encoder),
      "Output as Unaligned PER (Packed Encoding Rules)"},
+    {"aper", ATS_ALIGNED_CANONICAL_PER, CODEC_OFFSET(aper_encoder),
+     "Output as Aligned PER (Packed Encoding Rules)"},
     {"xer", ATS_BASIC_XER, CODEC_OFFSET(xer_encoder),
      "Output as XER (XML Encoding Rules)"},
     {"text", ATS_NONSTANDARD_PLAINTEXT, CODEC_OFFSET(print_struct),
@@ -438,7 +442,7 @@ main(int ac, char *av[]) {
        * Process all files in turn.
        */
       for(ac_i = (isyntax == ATS_RANDOM) ? -1 : 0; ac_i < ac; ac_i++) {
-        asn_enc_rval_t erv;
+        asn_enc_rval_t erv = {0,0,0};
         void *structure;    /* Decoded structure */
         FILE *file;
         char *name;
@@ -713,9 +717,11 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
             perror("malloc()");
             exit(EX_OSERR);
         }
-        memcpy(p,
-            DynamicBuffer.data + DynamicBuffer.offset,
-            DynamicBuffer.length);
+		if (DynamicBuffer.length) {
+			memcpy(p,
+					DynamicBuffer.data + DynamicBuffer.offset,
+					DynamicBuffer.length);
+		}
         FREEMEM(DynamicBuffer.data);
         DynamicBuffer.data = (uint8_t *)p;
         DynamicBuffer.offset = 0;
@@ -747,7 +753,9 @@ static void add_bytes_to_buffer(const void *data2add, size_t bytes) {
 static int
 is_syntax_PER(enum asn_transfer_syntax syntax) {
     return (syntax == ATS_UNALIGNED_BASIC_PER
-            || syntax == ATS_UNALIGNED_CANONICAL_PER);
+            || syntax == ATS_UNALIGNED_CANONICAL_PER
+            || syntax == ATS_ALIGNED_BASIC_PER
+            || syntax == ATS_ALIGNED_CANONICAL_PER);
 }
 
 static int
@@ -839,8 +847,12 @@ data_decode_from_file(enum asn_transfer_syntax isyntax, asn_TYPE_descriptor_t *p
             rval.code = RC_FAIL;
             rval.consumed = 0;
 #else
-            rval = uper_decode(opt_codec_ctx, pduType, (void **)&structure,
-                               i_bptr, i_size, 0, DynamicBuffer.unbits);
+            if(isyntax == ATS_UNALIGNED_BASIC_PER)
+                rval = uper_decode(opt_codec_ctx, pduType, (void **)&structure,
+                                   i_bptr, i_size, 0, DynamicBuffer.unbits);
+            else
+                rval = aper_decode(opt_codec_ctx, pduType, (void **)&structure,
+                                   i_bptr, i_size, 0, DynamicBuffer.unbits);
             /* uper_decode() returns bits! */
             ecbits = rval.consumed % 8; /* Bits consumed from the last byte */
             rval.consumed >>= 3;    /* Convert bits into bytes. */

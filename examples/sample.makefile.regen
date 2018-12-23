@@ -60,7 +60,7 @@ test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAG
 	echo "	ASN_PROGRAM=${ASN_PROGRAM} \\"
 	echo "	$0"
 	echo
-	echo 'check: ${ASN_PROGRAM} check-ber check-xer check-oer check-per'
+	echo 'check: ${ASN_PROGRAM} check-ber check-xer check-oer check-per check-aper'
 	echo '	@echo ================'
 	echo '	@echo All tests passed'
 	echo '	@echo ================'
@@ -138,6 +138,22 @@ test -n "$TITLE" && EXTRA_CFLAGS="-DASN_CONVERTER_TITLE=\"$TITLE\" ${EXTRA_CFLAG
 	echo '	echo "Test junking $$f (please wait)..."; \'
 	echo '	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 7; \'
 	echo '	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -iper -onull $$f || exit 8; \'
+	echo '	done; done; fi'
+	echo
+	echo 'check-aper:'
+	echo "	@files=\$\$(find . -type f -regex '^.*\/sample-.*-[0-9]+.aper\$\$' | sort -V); \\"
+	echo '	if [ -n "$$files" ]; then \'
+	echo '	for f in $$files; do \'
+	echo '	pdu=`echo $$f | sed -E -e "s/.*sample-([A-Za-z0-9-]+)-[0-9]+.*/\\1/"`; \'
+	echo '	for b in 1 17 33 980 8192; do \'
+	echo '	echo "Recoding $$f ($$pdu) into XER and back ($$b)..."; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -iaper -oxer $$f > ./.tmp.1.$$$$ || exit 3; \'
+	echo '	./${ASN_PROGRAM} -p $$pdu -b $$b -ixer -oaper ./.tmp.1.$$$$ > ./.tmp.2.$$$$ || exit 4; \'
+	echo '	diff $$f ./.tmp.2.$$$$ || exit 6; \'
+	echo '	rm -f ./.tmp.[12].$$$$; \'
+	echo '	echo "Test junking $$f (please wait)..."; \'
+	echo '	./${ASN_PROGRAM} -J0.0001 -n 1000 -p $$pdu -b $$b -iaper -onull $$f || exit 7; \'
+	echo '	./${ASN_PROGRAM} -J0.001 -n 1000 -p $$pdu -b $$b -iaper -onull $$f || exit 8; \'
 	echo '	done; done; fi'
 	echo
 	echo "maybe-wip-pause:"

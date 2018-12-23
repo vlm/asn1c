@@ -1,14 +1,13 @@
-/* A Bison parser, made by GNU Bison 2.3.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
-/* Skeleton interface for Bison's Yacc-like parsers in C
+/* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,9 +15,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -33,120 +30,128 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Tokens.  */
+#ifndef YY_ASN1P_ASN_P_Y_H_INCLUDED
+# define YY_ASN1P_ASN_P_Y_H_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int asn1p_debug;
+#endif
+
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     TOK_PPEQ = 258,
-     TOK_VBracketLeft = 259,
-     TOK_VBracketRight = 260,
-     TOK_whitespace = 261,
-     TOK_opaque = 262,
-     TOK_bstring = 263,
-     TOK_cstring = 264,
-     TOK_hstring = 265,
-     TOK_identifier = 266,
-     TOK_number = 267,
-     TOK_number_negative = 268,
-     TOK_realnumber = 269,
-     TOK_tuple = 270,
-     TOK_quadruple = 271,
-     TOK_typereference = 272,
-     TOK_capitalreference = 273,
-     TOK_typefieldreference = 274,
-     TOK_valuefieldreference = 275,
-     TOK_Literal = 276,
-     TOK_ExtValue_BIT_STRING = 277,
-     TOK_ABSENT = 278,
-     TOK_ABSTRACT_SYNTAX = 279,
-     TOK_ALL = 280,
-     TOK_ANY = 281,
-     TOK_APPLICATION = 282,
-     TOK_AUTOMATIC = 283,
-     TOK_BEGIN = 284,
-     TOK_BIT = 285,
-     TOK_BMPString = 286,
-     TOK_BOOLEAN = 287,
-     TOK_BY = 288,
-     TOK_CHARACTER = 289,
-     TOK_CHOICE = 290,
-     TOK_CLASS = 291,
-     TOK_COMPONENT = 292,
-     TOK_COMPONENTS = 293,
-     TOK_CONSTRAINED = 294,
-     TOK_CONTAINING = 295,
-     TOK_DEFAULT = 296,
-     TOK_DEFINITIONS = 297,
-     TOK_DEFINED = 298,
-     TOK_EMBEDDED = 299,
-     TOK_ENCODED = 300,
-     TOK_ENCODING_CONTROL = 301,
-     TOK_END = 302,
-     TOK_ENUMERATED = 303,
-     TOK_EXPLICIT = 304,
-     TOK_EXPORTS = 305,
-     TOK_EXTENSIBILITY = 306,
-     TOK_EXTERNAL = 307,
-     TOK_FALSE = 308,
-     TOK_FROM = 309,
-     TOK_GeneralizedTime = 310,
-     TOK_GeneralString = 311,
-     TOK_GraphicString = 312,
-     TOK_IA5String = 313,
-     TOK_IDENTIFIER = 314,
-     TOK_IMPLICIT = 315,
-     TOK_IMPLIED = 316,
-     TOK_IMPORTS = 317,
-     TOK_INCLUDES = 318,
-     TOK_INSTANCE = 319,
-     TOK_INSTRUCTIONS = 320,
-     TOK_INTEGER = 321,
-     TOK_ISO646String = 322,
-     TOK_MAX = 323,
-     TOK_MIN = 324,
-     TOK_MINUS_INFINITY = 325,
-     TOK_NULL = 326,
-     TOK_NumericString = 327,
-     TOK_OBJECT = 328,
-     TOK_ObjectDescriptor = 329,
-     TOK_OCTET = 330,
-     TOK_OF = 331,
-     TOK_OPTIONAL = 332,
-     TOK_PATTERN = 333,
-     TOK_PDV = 334,
-     TOK_PLUS_INFINITY = 335,
-     TOK_PRESENT = 336,
-     TOK_PrintableString = 337,
-     TOK_PRIVATE = 338,
-     TOK_REAL = 339,
-     TOK_RELATIVE_OID = 340,
-     TOK_SEQUENCE = 341,
-     TOK_SET = 342,
-     TOK_SIZE = 343,
-     TOK_STRING = 344,
-     TOK_SYNTAX = 345,
-     TOK_T61String = 346,
-     TOK_TAGS = 347,
-     TOK_TeletexString = 348,
-     TOK_TRUE = 349,
-     TOK_TYPE_IDENTIFIER = 350,
-     TOK_UNIQUE = 351,
-     TOK_UNIVERSAL = 352,
-     TOK_UniversalString = 353,
-     TOK_UTCTime = 354,
-     TOK_UTF8String = 355,
-     TOK_VideotexString = 356,
-     TOK_VisibleString = 357,
-     TOK_WITH = 358,
-     UTF8_BOM = 359,
-     TOK_EXCEPT = 360,
-     TOK_INTERSECTION = 361,
-     TOK_UNION = 362,
-     TOK_TwoDots = 363,
-     TOK_ThreeDots = 364
-   };
+  enum yytokentype
+  {
+    TOK_PPEQ = 258,
+    TOK_VBracketLeft = 259,
+    TOK_VBracketRight = 260,
+    TOK_whitespace = 261,
+    TOK_opaque = 262,
+    TOK_bstring = 263,
+    TOK_cstring = 264,
+    TOK_hstring = 265,
+    TOK_identifier = 266,
+    TOK_number = 267,
+    TOK_number_negative = 268,
+    TOK_realnumber = 269,
+    TOK_tuple = 270,
+    TOK_quadruple = 271,
+    TOK_typereference = 272,
+    TOK_capitalreference = 273,
+    TOK_typefieldreference = 274,
+    TOK_valuefieldreference = 275,
+    TOK_Literal = 276,
+    TOK_ExtValue_BIT_STRING = 277,
+    TOK_ABSENT = 278,
+    TOK_ABSTRACT_SYNTAX = 279,
+    TOK_ALL = 280,
+    TOK_ANY = 281,
+    TOK_APPLICATION = 282,
+    TOK_AUTOMATIC = 283,
+    TOK_BEGIN = 284,
+    TOK_BIT = 285,
+    TOK_BMPString = 286,
+    TOK_BOOLEAN = 287,
+    TOK_BY = 288,
+    TOK_CHARACTER = 289,
+    TOK_CHOICE = 290,
+    TOK_CLASS = 291,
+    TOK_COMPONENT = 292,
+    TOK_COMPONENTS = 293,
+    TOK_CONSTRAINED = 294,
+    TOK_CONTAINING = 295,
+    TOK_DEFAULT = 296,
+    TOK_DEFINITIONS = 297,
+    TOK_DEFINED = 298,
+    TOK_EMBEDDED = 299,
+    TOK_ENCODED = 300,
+    TOK_ENCODING_CONTROL = 301,
+    TOK_END = 302,
+    TOK_ENUMERATED = 303,
+    TOK_EXPLICIT = 304,
+    TOK_EXPORTS = 305,
+    TOK_EXTENSIBILITY = 306,
+    TOK_FALSE = 307,
+    TOK_FROM = 308,
+    TOK_GeneralizedTime = 309,
+    TOK_GeneralString = 310,
+    TOK_GraphicString = 311,
+    TOK_IA5String = 312,
+    TOK_IDENTIFIER = 313,
+    TOK_IMPLICIT = 314,
+    TOK_IMPLIED = 315,
+    TOK_IMPORTS = 316,
+    TOK_INCLUDES = 317,
+    TOK_INSTANCE = 318,
+    TOK_INSTRUCTIONS = 319,
+    TOK_INTEGER = 320,
+    TOK_ISO646String = 321,
+    TOK_MAX = 322,
+    TOK_MIN = 323,
+    TOK_MINUS_INFINITY = 324,
+    TOK_NULL = 325,
+    TOK_NumericString = 326,
+    TOK_OBJECT = 327,
+    TOK_ObjectDescriptor = 328,
+    TOK_OCTET = 329,
+    TOK_OF = 330,
+    TOK_OPTIONAL = 331,
+    TOK_PATTERN = 332,
+    TOK_PDV = 333,
+    TOK_PLUS_INFINITY = 334,
+    TOK_PRESENT = 335,
+    TOK_PrintableString = 336,
+    TOK_PRIVATE = 337,
+    TOK_REAL = 338,
+    TOK_RELATIVE_OID = 339,
+    TOK_SEQUENCE = 340,
+    TOK_SET = 341,
+    TOK_SIZE = 342,
+    TOK_STRING = 343,
+    TOK_SYNTAX = 344,
+    TOK_T61String = 345,
+    TOK_TAGS = 346,
+    TOK_TeletexString = 347,
+    TOK_TRUE = 348,
+    TOK_TYPE_IDENTIFIER = 349,
+    TOK_UNIQUE = 350,
+    TOK_UNIVERSAL = 351,
+    TOK_UniversalString = 352,
+    TOK_UTCTime = 353,
+    TOK_UTF8String = 354,
+    TOK_VideotexString = 355,
+    TOK_VisibleString = 356,
+    TOK_WITH = 357,
+    UTF8_BOM = 358,
+    TOK_EXCEPT = 359,
+    TOK_INTERSECTION = 360,
+    TOK_UNION = 361,
+    TOK_TwoDots = 362,
+    TOK_ThreeDots = 363
+  };
 #endif
 /* Tokens.  */
 #define TOK_PPEQ 258
@@ -198,72 +203,71 @@
 #define TOK_EXPLICIT 304
 #define TOK_EXPORTS 305
 #define TOK_EXTENSIBILITY 306
-#define TOK_EXTERNAL 307
-#define TOK_FALSE 308
-#define TOK_FROM 309
-#define TOK_GeneralizedTime 310
-#define TOK_GeneralString 311
-#define TOK_GraphicString 312
-#define TOK_IA5String 313
-#define TOK_IDENTIFIER 314
-#define TOK_IMPLICIT 315
-#define TOK_IMPLIED 316
-#define TOK_IMPORTS 317
-#define TOK_INCLUDES 318
-#define TOK_INSTANCE 319
-#define TOK_INSTRUCTIONS 320
-#define TOK_INTEGER 321
-#define TOK_ISO646String 322
-#define TOK_MAX 323
-#define TOK_MIN 324
-#define TOK_MINUS_INFINITY 325
-#define TOK_NULL 326
-#define TOK_NumericString 327
-#define TOK_OBJECT 328
-#define TOK_ObjectDescriptor 329
-#define TOK_OCTET 330
-#define TOK_OF 331
-#define TOK_OPTIONAL 332
-#define TOK_PATTERN 333
-#define TOK_PDV 334
-#define TOK_PLUS_INFINITY 335
-#define TOK_PRESENT 336
-#define TOK_PrintableString 337
-#define TOK_PRIVATE 338
-#define TOK_REAL 339
-#define TOK_RELATIVE_OID 340
-#define TOK_SEQUENCE 341
-#define TOK_SET 342
-#define TOK_SIZE 343
-#define TOK_STRING 344
-#define TOK_SYNTAX 345
-#define TOK_T61String 346
-#define TOK_TAGS 347
-#define TOK_TeletexString 348
-#define TOK_TRUE 349
-#define TOK_TYPE_IDENTIFIER 350
-#define TOK_UNIQUE 351
-#define TOK_UNIVERSAL 352
-#define TOK_UniversalString 353
-#define TOK_UTCTime 354
-#define TOK_UTF8String 355
-#define TOK_VideotexString 356
-#define TOK_VisibleString 357
-#define TOK_WITH 358
-#define UTF8_BOM 359
-#define TOK_EXCEPT 360
-#define TOK_INTERSECTION 361
-#define TOK_UNION 362
-#define TOK_TwoDots 363
-#define TOK_ThreeDots 364
+#define TOK_FALSE 307
+#define TOK_FROM 308
+#define TOK_GeneralizedTime 309
+#define TOK_GeneralString 310
+#define TOK_GraphicString 311
+#define TOK_IA5String 312
+#define TOK_IDENTIFIER 313
+#define TOK_IMPLICIT 314
+#define TOK_IMPLIED 315
+#define TOK_IMPORTS 316
+#define TOK_INCLUDES 317
+#define TOK_INSTANCE 318
+#define TOK_INSTRUCTIONS 319
+#define TOK_INTEGER 320
+#define TOK_ISO646String 321
+#define TOK_MAX 322
+#define TOK_MIN 323
+#define TOK_MINUS_INFINITY 324
+#define TOK_NULL 325
+#define TOK_NumericString 326
+#define TOK_OBJECT 327
+#define TOK_ObjectDescriptor 328
+#define TOK_OCTET 329
+#define TOK_OF 330
+#define TOK_OPTIONAL 331
+#define TOK_PATTERN 332
+#define TOK_PDV 333
+#define TOK_PLUS_INFINITY 334
+#define TOK_PRESENT 335
+#define TOK_PrintableString 336
+#define TOK_PRIVATE 337
+#define TOK_REAL 338
+#define TOK_RELATIVE_OID 339
+#define TOK_SEQUENCE 340
+#define TOK_SET 341
+#define TOK_SIZE 342
+#define TOK_STRING 343
+#define TOK_SYNTAX 344
+#define TOK_T61String 345
+#define TOK_TAGS 346
+#define TOK_TeletexString 347
+#define TOK_TRUE 348
+#define TOK_TYPE_IDENTIFIER 349
+#define TOK_UNIQUE 350
+#define TOK_UNIVERSAL 351
+#define TOK_UniversalString 352
+#define TOK_UTCTime 353
+#define TOK_UTF8String 354
+#define TOK_VideotexString 355
+#define TOK_VisibleString 356
+#define TOK_WITH 357
+#define UTF8_BOM 358
+#define TOK_EXCEPT 359
+#define TOK_INTERSECTION 360
+#define TOK_UNION 361
+#define TOK_TwoDots 362
+#define TOK_ThreeDots 363
 
-
-
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef union YYSTYPE
-#line 115 "asn1p_y.y"
+
+union YYSTYPE
 {
+#line 114 "asn1p_y.y" /* yacc.c:1909  */
+
 	asn1p_t			*a_grammar;
 	asn1p_module_flags_e	 a_module_flags;
 	asn1p_module_t		*a_module;
@@ -296,14 +300,18 @@ typedef union YYSTYPE
 		char *name;
 		struct asn1p_type_tag_s tag;
 	} tv_nametag;
-}
-/* Line 1529 of yacc.c.  */
-#line 302 "asn1p_y.h"
-	YYSTYPE;
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
+
+#line 305 "asn1p_y.h" /* yacc.c:1909  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
+# define YYSTYPE_IS_DECLARED 1
 #endif
+
 
 extern YYSTYPE asn1p_lval;
 
+int asn1p_parse (void **param);
+
+#endif /* !YY_ASN1P_ASN_P_Y_H_INCLUDED  */

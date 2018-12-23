@@ -27,6 +27,8 @@ asn_constr_check_f NumericString_constraint;
 #define NumericString_encode_xer    OCTET_STRING_encode_xer_utf8
 #define NumericString_decode_uper   OCTET_STRING_decode_uper
 #define NumericString_encode_uper   OCTET_STRING_encode_uper
+#define NumericString_decode_aper   OCTET_STRING_decode_aper
+#define NumericString_encode_aper   OCTET_STRING_encode_aper
 
 #ifdef __cplusplus
 }

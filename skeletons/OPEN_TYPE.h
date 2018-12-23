@@ -19,7 +19,10 @@ extern "C" {
 #define OPEN_TYPE_encode_der CHOICE_encode_der
 #define OPEN_TYPE_decode_xer NULL
 #define OPEN_TYPE_encode_xer CHOICE_encode_xer
+#define OPEN_TYPE_decode_oer NULL
+#define OPEN_TYPE_encode_oer CHOICE_encode_oer
 #define OPEN_TYPE_decode_uper NULL
+#define OPEN_TYPE_decode_aper NULL
 
 extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
 
@@ -51,7 +54,18 @@ asn_dec_rval_t OPEN_TYPE_uper_get(const asn_codec_ctx_t *opt_codec_ctx,
                                   const asn_TYPE_member_t *element,
                                   asn_per_data_t *pd);
 
+asn_dec_rval_t OPEN_TYPE_aper_get(const asn_codec_ctx_t *opt_codec_ctx,
+                                  const asn_TYPE_descriptor_t *parent_type,
+                                  void *parent_structure,
+                                  const asn_TYPE_member_t *element,
+                                  asn_per_data_t *pd);
+
 asn_enc_rval_t OPEN_TYPE_encode_uper(
+    const asn_TYPE_descriptor_t *type_descriptor,
+    const asn_per_constraints_t *constraints, const void *struct_ptr,
+    asn_per_outp_t *per_output);
+
+asn_enc_rval_t OPEN_TYPE_encode_aper(
     const asn_TYPE_descriptor_t *type_descriptor,
     const asn_per_constraints_t *constraints, const void *struct_ptr,
     asn_per_outp_t *per_output);

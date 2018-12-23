@@ -41,9 +41,13 @@ asn_TYPE_operation_t asn_OP_UniversalString = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,
+	OCTET_STRING_encode_aper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	OCTET_STRING_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -206,8 +210,8 @@ asn_enc_rval_t
 UniversalString_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
                            int ilevel, enum xer_encoder_flags_e flags,
                            asn_app_consume_bytes_f *cb, void *app_key) {
-    const UniversalString_t *st = (const UniversalString_t *)sptr;
-	asn_enc_rval_t er;
+	const UniversalString_t *st = (const UniversalString_t *)sptr;
+	asn_enc_rval_t er = {0,0,0};
 
 	(void)ilevel;
 	(void)flags;

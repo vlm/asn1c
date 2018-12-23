@@ -26,6 +26,8 @@ oer_type_decoder_f NativeEnumerated_decode_oer;
 oer_type_encoder_f NativeEnumerated_encode_oer;
 per_type_decoder_f NativeEnumerated_decode_uper;
 per_type_encoder_f NativeEnumerated_encode_uper;
+per_type_decoder_f NativeEnumerated_decode_aper;
+per_type_encoder_f NativeEnumerated_encode_aper;
 
 #define NativeEnumerated_free       NativeInteger_free
 #define NativeEnumerated_print      NativeInteger_print

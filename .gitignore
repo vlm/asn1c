@@ -90,6 +90,9 @@ doc/docsrc/*.xdv
 
 # /libasn1parser/
 /libasn1parser/check_*
+/libasn1parser/asn1p_l.c
+/libasn1parser/asn1p_y.c
+/libasn1parser/asn1p_y.h
 
 #code coverage
 *.gcno

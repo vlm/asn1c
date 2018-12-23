@@ -28,4 +28,16 @@ DEFINITIONS ::= BEGIN
 	    &property	BIT STRING { handles-invalid-encodings(0) } DEFAULT {}
 	} WITH SYNTAX { &Type IDENTIFIED BY &id [HAS PROPERTY &property] }
 
+	--
+	-- From "ITU-T Recommendation X.208", "34 The external type"
+	--
+	EXTERNAL ::= [UNIVERSAL 8] IMPLICIT SEQUENCE
+	{direct-reference OBJECT IDENTIFIER OPTIONAL,
+		indirect-reference INTEGER OPTIONAL,
+		data-value-descriptor ObjectDescriptor OPTIONAL,
+		encoding CHOICE
+		{single-ASN1-type [0] ANY,
+			octet-aligned [1] IMPLICIT OCTET STRING,
+			arbitrary [2] IMPLICIT BIT STRING}}
+
 END

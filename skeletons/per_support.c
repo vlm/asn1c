@@ -121,9 +121,9 @@ uper_put_nsnnwn(asn_per_outp_t *po, int n) {
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_get_constrained_whole_number(asn_per_data_t *pd, uintmax_t *out_value, int nbits) {
-	uintmax_t lhalf;    /* Lower half of the number*/
-	intmax_t half;
+int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value, int nbits) {
+	unsigned long lhalf;    /* Lower half of the number*/
+	long half;
 
 	if(nbits <= 31) {
 		half = per_get_few_bits(pd, nbits);
@@ -141,14 +141,14 @@ int uper_get_constrained_whole_number(asn_per_data_t *pd, uintmax_t *out_value, 
 	if(uper_get_constrained_whole_number(pd, &lhalf, nbits - 31))
 		return -1;
 
-	*out_value = ((uintmax_t)half << (nbits - 31)) | lhalf;
+	*out_value = ((unsigned long)half << (nbits - 31)) | lhalf;
 	return 0;
 }
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
 int
-uper_put_constrained_whole_number_u(asn_per_outp_t *po, uintmax_t v,
+uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v,
                                     int nbits) {
     if(nbits <= 31) {
         return per_put_few_bits(po, v, nbits);
@@ -216,13 +216,13 @@ uper_put_nslength(asn_per_outp_t *po, size_t length) {
 }
 
 static int
-per__long_range(intmax_t lb, intmax_t ub, uintmax_t *range_r) {
-    uintmax_t bounds_range;
+per__long_range(long lb, long ub, unsigned long *range_r) {
+    unsigned long bounds_range;
     if((ub < 0) == (lb < 0)) {
         bounds_range = ub - lb;
     } else if(lb < 0) {
         assert(ub >= 0);
-        bounds_range = 1 + ((uintmax_t)ub + (uintmax_t)-(lb + 1));
+        bounds_range = 1 + ((unsigned long)ub + (unsigned long)-(lb + 1));
     } else {
         assert(!"Unreachable");
         return -1;
@@ -232,8 +232,8 @@ per__long_range(intmax_t lb, intmax_t ub, uintmax_t *range_r) {
 }
 
 int
-per_long_range_rebase(intmax_t v, intmax_t lb, intmax_t ub, uintmax_t *output) {
-    uintmax_t range;
+per_long_range_rebase(long v, long lb, long ub, unsigned long *output) {
+    unsigned long range;
 
     assert(lb <= ub);
 
@@ -253,12 +253,12 @@ per_long_range_rebase(intmax_t v, intmax_t lb, intmax_t ub, uintmax_t *output) {
         *output = v-lb;
         return 0;
     } else if(v < 0) {
-        uintmax_t rebased = 1 + (uintmax_t)-(v+1) + (uintmax_t)lb;
+        unsigned long rebased = 1 + (unsigned long)-(v+1) + (unsigned long)lb;
         assert(rebased <= range);   /* By construction */
         *output = rebased;
         return 0;
     } else if(lb < 0) {
-        uintmax_t rebased = 1 + (uintmax_t)-(lb+1) + (uintmax_t)v;
+        unsigned long rebased = 1 + (unsigned long)-(lb+1) + (unsigned long)v;
         assert(rebased <= range);   /* By construction */
         *output = rebased;
         return 0;
@@ -269,8 +269,8 @@ per_long_range_rebase(intmax_t v, intmax_t lb, intmax_t ub, uintmax_t *output) {
 }
 
 int
-per_long_range_unrebase(uintmax_t inp, intmax_t lb, intmax_t ub, intmax_t *outp) {
-    uintmax_t range;
+per_long_range_unrebase(unsigned long inp, long lb, long ub, long *outp) {
+    unsigned long range;
 
     if(per__long_range(lb, ub, &range) != 0) {
         return -1;
@@ -285,11 +285,205 @@ per_long_range_unrebase(uintmax_t inp, intmax_t lb, intmax_t ub, intmax_t *outp)
         return -1;
     }
 
-    if(inp <= LLONG_MAX) {
-        *outp = (intmax_t)inp + lb;
+    if(inp <= LONG_MAX) {
+        *outp = (long)inp + lb;
     } else {
-        *outp = (lb + LLONG_MAX + 1) + (intmax_t)((inp - LLONG_MAX) - 1);
+        *outp = (lb + LONG_MAX + 1) + (long)((inp - LONG_MAX) - 1);
     }
 
     return 0;
+}
+
+int32_t
+aper_get_align(asn_per_data_t *pd) {
+
+	if(pd->nboff & 0x7) {
+		ASN_DEBUG("Aligning %ld bits", 8 - ((unsigned long)pd->nboff & 0x7));
+		return per_get_few_bits(pd, 8 - (pd->nboff & 0x7));
+	}
+	return 0;
+}
+
+ssize_t
+aper_get_length(asn_per_data_t *pd, int range, int ebits, int *repeat) {
+	ssize_t value;
+
+	*repeat = 0;
+
+	if (range <= 65536 && range >= 0)
+		return aper_get_nsnnwn(pd, range);
+
+	if (aper_get_align(pd) < 0)
+		return -1;
+
+	if(ebits >= 0) return per_get_few_bits(pd, ebits);
+
+	value = per_get_few_bits(pd, 8);
+	if(value < 0) return -1;
+	if((value & 128) == 0)  /* #10.9.3.6 */
+		return (value & 0x7F);
+	if((value & 64) == 0) { /* #10.9.3.7 */
+		value = ((value & 63) << 8) | per_get_few_bits(pd, 8);
+		if(value < 0) return -1;
+		return value;
+	}
+	value &= 63;	/* this is "m" from X.691, #10.9.3.8 */
+	if(value < 1 || value > 4)
+		return -1;
+	*repeat = 1;
+	return (16384 * value);
+}
+
+ssize_t
+aper_get_nslength(asn_per_data_t *pd) {
+	ssize_t length;
+
+	ASN_DEBUG("Getting normally small length");
+
+	if(per_get_few_bits(pd, 1) == 0) {
+		length = per_get_few_bits(pd, 6) + 1;
+		if(length <= 0) return -1;
+		ASN_DEBUG("l=%ld", length);
+		return length;
+	} else {
+		int repeat;
+		length = aper_get_length(pd, -1, -1, &repeat);
+		if(length >= 0 && !repeat) return length;
+		return -1; /* Error, or do not support >16K extensions */
+	}
+}
+
+ssize_t
+aper_get_nsnnwn(asn_per_data_t *pd, int range) {
+	ssize_t value;
+	int bytes = 0;
+
+	ASN_DEBUG("getting nsnnwn with range %d", range);
+
+	if(range <= 255) {
+		int i;
+
+		if (range < 0) return -1;
+		/* 1 -> 8 bits */
+		for (i = 1; i <= 8; i++) {
+			int upper = 1 << i;
+			if (upper >= range)
+				break;
+		}
+		value = per_get_few_bits(pd, i);
+		return value;
+	} else if (range == 256){
+		/* 1 byte */
+		bytes = 1;
+	} else if (range <= 65536) {
+		/* 2 bytes */
+		bytes = 2;
+	} else {
+		return -1;
+	}
+	if (aper_get_align(pd) < 0)
+		return -1;
+	value = per_get_few_bits(pd, 8 * bytes);
+	return value;
+}
+
+int aper_put_align(asn_per_outp_t *po) {
+
+	if(po->nboff & 0x7) {
+		ASN_DEBUG("Aligning %ld bits", 8 - ((unsigned long)po->nboff & 0x7));
+		if(per_put_few_bits(po, 0x00, (8 - (po->nboff & 0x7))))
+			return -1;
+	}
+	return 0;
+}
+
+ssize_t
+aper_put_length(asn_per_outp_t *po, int range, size_t length) {
+
+	ASN_DEBUG("APER put length %zu with range %d", length, range);
+
+	/* 10.9 X.691 Note 2 */
+	if (range <= 65536 && range >= 0)
+		return aper_put_nsnnwn(po, range, length);
+
+	if (aper_put_align(po) < 0)
+		return -1;
+
+	if(length <= 127)	   /* #10.9.3.6 */{
+		return per_put_few_bits(po, length, 8)
+		? -1 : (ssize_t)length;
+	}
+	else if(length < 16384) /* #10.9.3.7 */
+		return per_put_few_bits(po, length|0x8000, 16)
+		? -1 : (ssize_t)length;
+
+	length >>= 14;
+	if(length > 4) length = 4;
+
+	return per_put_few_bits(po, 0xC0 | length, 8)
+	? -1 : (ssize_t)(length << 14);
+}
+
+
+int
+aper_put_nslength(asn_per_outp_t *po, size_t length) {
+
+	if(length <= 64) {
+		/* #10.9.3.4 */
+		if(length == 0) return -1;
+		return per_put_few_bits(po, length-1, 7) ? -1 : 0;
+	} else {
+		if(aper_put_length(po, -1, length) != (ssize_t)length) {
+			/* This might happen in case of >16K extensions */
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
+int
+aper_put_nsnnwn(asn_per_outp_t *po, int range, int number) {
+	int bytes;
+
+    ASN_DEBUG("aper put nsnnwn %d with range %d", number, range);
+	/* 10.5.7.1 X.691 */
+	if(range < 0) {
+		int i;
+		for (i = 1; ; i++) {
+			int bits = 1 << (8 * i);
+			if (number <= bits)
+				break;
+		}
+		bytes = i;
+		assert(i <= 4);
+	}
+	if(range <= 255) {
+		int i;
+		for (i = 1; i <= 8; i++) {
+			int bits = 1 << i;
+			if (range <= bits)
+				break;
+		}
+		return per_put_few_bits(po, number, i);
+	} else if(range == 256) {
+		bytes = 1;
+	} else if(range <= 65536) {
+		bytes = 2;
+	} else { /* Ranges > 64K */
+		int i;
+		for (i = 1; ; i++) {
+			int bits = 1 << (8 * i);
+			if (range <= bits)
+				break;
+		}
+		assert(i <= 4);
+		bytes = i;
+	}
+	if(aper_put_align(po) < 0) /* Aligning on octet */
+		return -1;
+/* 	if(per_put_few_bits(po, bytes, 8))
+		return -1;
+*/
+    return per_put_few_bits(po, number, 8 * bytes);
 }

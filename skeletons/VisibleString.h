@@ -28,6 +28,8 @@ asn_constr_check_f VisibleString_constraint;
 #define VisibleString_encode_xer    OCTET_STRING_encode_xer
 #define VisibleString_decode_uper   OCTET_STRING_decode_uper
 #define VisibleString_encode_uper   OCTET_STRING_encode_uper
+#define VisibleString_decode_aper   OCTET_STRING_decode_aper
+#define VisibleString_encode_aper   OCTET_STRING_encode_aper
 
 #ifdef __cplusplus
 }

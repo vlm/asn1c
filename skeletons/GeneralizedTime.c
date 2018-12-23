@@ -191,9 +191,13 @@ asn_TYPE_operation_t asn_OP_GeneralizedTime = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,
+	OCTET_STRING_encode_aper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	GeneralizedTime_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -242,7 +246,7 @@ GeneralizedTime_encode_der(const asn_TYPE_descriptor_t *td, const void *sptr,
                            int tag_mode, ber_tlv_tag_t tag,
                            asn_app_consume_bytes_f *cb, void *app_key) {
     GeneralizedTime_t *st;
-	asn_enc_rval_t erval;
+	asn_enc_rval_t erval = {0,0,0};
 	int fv, fd;	/* seconds fraction value and number of digits */
 	struct tm tm;
 	time_t tloc;
@@ -609,17 +613,17 @@ asn_time2GT(GeneralizedTime_t *opt_gt, const struct tm *tm, int force_gmt) {
 GeneralizedTime_t *
 asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value, int frac_digits, int force_gmt) {
 	struct tm tm_s;
-	long gmtoff;
+	long gmtoff = 0;
 	const unsigned int buf_size =
 		4 + 2 + 2	/* yyyymmdd */
 		+ 2 + 2 + 2	/* hhmmss */
-		+ 1 + 6		/* .ffffff */
+		+ 1 + 9		/* .fffffffff */
 		+ 1 + 4		/* +hhmm */
 		+ 1		/* '\0' */
 		;
-	char *buf;
-	char *p;
-	int size;
+	char *buf = NULL;
+	char *p = NULL;
+	int size = 0;
 
 	/* Check arguments */
 	if(!tm) {
@@ -666,13 +670,13 @@ asn_time2GT_frac(GeneralizedTime_t *opt_gt, const struct tm *tm, int frac_value,
 	 * Deal with fractions.
 	 */
 	if(frac_value > 0 && frac_digits > 0) {
-		char *end = p + 1 + 6;	/* '.' + maximum 6 digits */
+		char *end = p + 1 + 9;	/* '.' + maximum 9 digits */
 		char *z = p;
 		long fbase;
 		*z++ = '.';
 
 		/* Place bounds on precision */
-		while(frac_digits-- > 6)
+		while(frac_digits-- > 9)
 			frac_value /= 10;
 
 		/* emulate fbase = pow(10, frac_digits) */

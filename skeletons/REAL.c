@@ -84,9 +84,13 @@ asn_TYPE_operation_t asn_OP_REAL = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	REAL_decode_uper,
 	REAL_encode_uper,
+	REAL_decode_aper,
+	REAL_encode_aper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	REAL_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -372,8 +376,8 @@ asn_enc_rval_t
 REAL_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
                 enum xer_encoder_flags_e flags, asn_app_consume_bytes_f *cb,
                 void *app_key) {
-    const REAL_t *st = (const REAL_t *)sptr;
-	asn_enc_rval_t er;
+	const REAL_t *st = (const REAL_t *)sptr;
+	asn_enc_rval_t er = {0,0,0};
 	double d;
 
 	(void)ilevel;
@@ -850,7 +854,7 @@ REAL_encode_oer(const asn_TYPE_descriptor_t *td,
                 const asn_oer_constraints_t *constraints, const void *sptr,
                 asn_app_consume_bytes_f *cb, void *app_key) {
     const REAL_t *st = sptr;
-    asn_enc_rval_t er;
+    asn_enc_rval_t er = {0,0,0};
     ssize_t len_len;
 
     if(!st || !st->buf || !td)
@@ -944,6 +948,23 @@ REAL_encode_uper(const asn_TYPE_descriptor_t *td,
                  asn_per_outp_t *po) {
     (void)constraints;	/* No PER visible constraints */
 	return OCTET_STRING_encode_uper(td, 0, sptr, po);
+}
+
+asn_dec_rval_t
+REAL_decode_aper(const asn_codec_ctx_t *opt_codec_ctx,
+                 const asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints,
+                 void **sptr, asn_per_data_t *pd) {
+	(void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_decode_aper(opt_codec_ctx, td, 0, sptr, pd);
+}
+
+asn_enc_rval_t
+REAL_encode_aper(const asn_TYPE_descriptor_t *td,
+                 const asn_per_constraints_t *constraints,
+                 const void *sptr, asn_per_outp_t *po) {
+	(void)constraints;	/* No PER visible constraints */
+	return OCTET_STRING_encode_aper(td, 0, sptr, po);
 }
 
 #endif  /* ASN_DISABLE_PER_SUPPORT */

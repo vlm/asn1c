@@ -34,9 +34,13 @@ asn_TYPE_operation_t asn_OP_RELATIVE_OID = {
 #ifdef	ASN_DISABLE_PER_SUPPORT
 	0,
 	0,
+	0,
+	0,
 #else
 	OCTET_STRING_decode_uper,
 	OCTET_STRING_encode_uper,
+	OCTET_STRING_decode_aper,
+	OCTET_STRING_encode_aper,
 #endif	/* ASN_DISABLE_PER_SUPPORT */
 	RELATIVE_OID_random_fill,
 	0	/* Use generic outmost tag fetcher */
@@ -170,8 +174,8 @@ asn_enc_rval_t
 RELATIVE_OID_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
                         int ilevel, enum xer_encoder_flags_e flags,
                         asn_app_consume_bytes_f *cb, void *app_key) {
-    const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
-	asn_enc_rval_t er;
+	const RELATIVE_OID_t *st = (const RELATIVE_OID_t *)sptr;
+	asn_enc_rval_t er = {0,0,0};
 
 	(void)ilevel;	/* Unused argument */
 	(void)flags;	/* Unused argument */

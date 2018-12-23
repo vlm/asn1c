@@ -113,10 +113,10 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 					ulong_optimize = ulong_optimization(arg, etype, r_size, r_value);
 					if(!ulong_optimize) {
 						value_unsigned = 1;
-						OUT("uintmax_t value;\n");
+						OUT("unsigned long value;\n");
 					}
 				} else {
-					OUT("intmax_t value;\n");
+					OUT("long value;\n");
 				}
 				break;
 			case ASN_BASIC_REAL:
