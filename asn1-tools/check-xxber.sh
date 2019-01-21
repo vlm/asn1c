@@ -3,6 +3,10 @@
 ORIG="./.check-xxber.orig.$$.tmp"
 TEST="./.check-xxber.test.$$.tmp"
 
+builddir=${builddir:-.}
+ENBER=${builddir}/enber/enber
+UNBER=${builddir}/unber/unber
+
 # Test diff(1) capabilities
 diff -a . . 2>/dev/null && diffArgs="-a"		# Assume text files
 diff -u . . 2>/dev/null && diffArgs="$diffArgs -u"	# Unified diff output
@@ -23,7 +27,7 @@ cat<<EOM > $ORIG
 </I O="32" T="[UNIVERSAL 0]" TL="2" L="4">
 EOM
 
-./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
+${ENBER} $ORIG | ${UNBER} -p -i 0 - > $TEST 2>&1
 diff $diffArgs "$ORIG" "$TEST" >/dev/null 2>&1
 diffExitCode=$?
 
@@ -36,7 +40,7 @@ fi
 echo '</I O="34" T="[UNIVERSAL 0]" TL="2" L="36">' >> $ORIG
 
 # Try trancoding again
-./enber $ORIG | ./unber -p -i 0 - > $TEST 2>&1
+${ENBER} $ORIG | ${UNBER} -p -i 0 - > $TEST 2>&1
 
 diff $diffArgs "$ORIG" "$TEST"
 diffExitCode=$?

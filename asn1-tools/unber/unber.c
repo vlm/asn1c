@@ -1,4 +1,4 @@
-/*-
+/*
  * Copyright (c) 2004, 2005, 2006 Lev Walkin <vlm@lionet.info>.
  * All rights reserved.
  *
@@ -23,9 +23,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id$
  */
-#include "sys-common.h"
+#include "asn1_common.h"
 
 #define ASN_DISABLE_PER_SUPPORT 1
 #define ASN_DISABLE_OER_SUPPORT 1

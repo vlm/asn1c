@@ -1,4 +1,4 @@
-/*-
+/*
  * Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,9 +22,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id$
  */
-#include "sys-common.h"
+#include "asn1_common.h"
 
 #include <asn1parser.h> /* For static string tables */
 

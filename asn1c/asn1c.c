@@ -23,13 +23,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id$
  */
 /*
  * This is the program that connects the libasn1* libraries together.
  * It uses them in turn to parse, fix and then compile or print the ASN.1 tree.
  */
-#include "sys-common.h"
+#include "asn1_common.h"
 
 #undef COPYRIGHT
 #define COPYRIGHT "Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info> and contributors.\n"

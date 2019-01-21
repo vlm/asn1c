@@ -292,6 +292,9 @@ tests/tests-asn1c-smoke/Makefile            \
 tests/tests-randomized/Makefile             \
 tests/tests-c-compiler/Makefile             \
 tests/tests-skeletons/Makefile              \
+asn1-tools/enber/Makefile                   \
+asn1-tools/unber/Makefile                   \
+asn1-tools/Makefile                         \
 libasn1compiler/Makefile                    \
 libasn1common/Makefile                      \
 libasn1parser/Makefile                      \

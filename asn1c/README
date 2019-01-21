@@ -1,3 +1,1 @@
 asn1c	- The ASN.1 Compiler
-unber	- The ASN.1 BER Decoder
-enber	- Reverse unber(1) output back into BER
