@@ -24,18 +24,22 @@
     * uper_encode() API got new argument (breaks API compatibility).
     * asn1c -gen-XXX flags are deprecated. Use -no-gen-XXX to disable codecs.
 
-    FIXES:
-    * CVE-2017-12966 verified not present.
-    * Fix incomplete (failed) CHOICE XER decoding memory leak.
-      (Severity: medium; Security impact: medium)
-    * Fix REAL type overwrite conversion memory leak.
-      (Severity: low; Security impact: medium)
-    * Fix UPER string decoding constrained only by lower bound > 0
-      (Severity: low; Security impact: none)
-    * Fix UPER decoding of large [bit-]strings of size a multiple of 16K
-      (Severity: low; Security impact: none)
-    * Fix XER decoder crash on maliciously constructed ENUMERATED input.
-      (Severity: medium; Security impact: medium)
+    FIXES IN COMPILER-GENERATED OUTPUT:
+      * Fix incomplete (failed) CHOICE XER decoding memory leak.
+        (Severity: medium; Security impact: medium)
+      * Fix REAL type overwrite conversion memory leak.
+        (Severity: low; Security impact: medium)
+      * Fix UPER string decoding constrained only by lower bound > 0
+        (Severity: low; Security impact: none)
+      * Fix UPER decoding of large [bit-]strings of size a multiple of 16K
+        (Severity: low; Security impact: none)
+      * Fix XER decoder crash on maliciously constructed ENUMERATED input.
+        (Severity: medium; Security impact: medium)
+
+    FIXES IN TOOLING:
+      * CVE-2017-12966 verified not present.
+      * Fix `unber` buffer overrun. Reported by Eric Sesterhenn.
+        (Severity: low; Security impact: high)
 
 0.9.28: 2017-03-26
     * PER decoding: avoid memory leak on error. By github.com/simo5

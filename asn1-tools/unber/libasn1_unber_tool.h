@@ -38,6 +38,32 @@ int set_indent_size(int indent_size);
  */
 int unber_file(const char *fname);
 
+typedef struct input_stream {
+    /*
+     * Return the next character as if it were an unsigned int converted to
+     * an int. Returns -1 on EOF or error.
+     */
+    int (*nextChar)(struct input_stream *);
+    /*
+     * Return the number of bytes consumed from the stream so far.
+     */
+    off_t (*bytesRead)(struct input_stream *);
+} input_stream_t;
+
+typedef struct output_stream {
+    /*
+     * Return the next character as if it were an unsigned int converted to
+     * an int. Returns -1 on EOF or error.
+     */
+    int (*vprintf)(struct output_stream *, const char *fmt, va_list);
+    int (*vprintfError)(struct output_stream *, const char *fmt, va_list);
+} output_stream_t;
+
+/*
+ * Lower level converter.
+ */
+int unber_stream(const char *fname, input_stream_t *, output_stream_t *);
+
 /*
  * Decode the TLV given by the given string.
  */

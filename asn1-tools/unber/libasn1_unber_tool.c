@@ -67,33 +67,51 @@ typedef enum pd_code {
     PD_FINISHED = 0,
     PD_EOF = 1,
 } pd_code_e;
-static pd_code_e process_deeper(const char *fname, FILE *fp,
-                                size_t *offset, int level,
+static pd_code_e process_deeper(const char *fname, input_stream_t *,
+                                output_stream_t *os, int level,
                                 ssize_t limit, ber_tlv_len_t *frame_size,
                                 ber_tlv_len_t effective_size, int expect_eoc);
-static void print_TL(int fin, size_t offset, int level, int constr,
-                     ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t,
+static void print_TL(output_stream_t *, int fin, off_t offset, int level,
+                     int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t,
                      ber_tlv_len_t effective_frame_size);
-static int print_V(const char *fname, FILE *fp, ber_tlv_tag_t, ber_tlv_len_t);
+static int print_V(const char *fname, input_stream_t *, output_stream_t *,
+                   ber_tlv_tag_t, ber_tlv_len_t);
+
+static int ibs_getc(input_stream_t *ibs) { return ibs->nextChar(ibs); }
+static int __attribute__((format(printf, 2, 3)))
+osprintf(output_stream_t *os, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int ret = os->vprintf(os, fmt, ap);
+    va_end(ap);
+    return ret;
+}
+static int __attribute__((format(printf, 2, 3)))
+osprintfError(output_stream_t *os, const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    int ret = os->vprintfError(os, fmt, ap);
+    va_end(ap);
+    return ret;
+}
 
 /*
  * Open the file and initiate recursive processing.
  */
-static int
-unber_stream(const char *fname, FILE *fp) {
+int
+unber_stream(const char *fname, input_stream_t *ibs, output_stream_t *os) {
     pd_code_e pdc;
-    size_t offset = 0;   /* Stream decoding position */
     ber_tlv_len_t frame_size = 0; /* Single frame size */
 
     /*
      * Skip the requested amount of bytes.
      */
-    for(; offset < (size_t)skip_bytes; offset++) {
-        if(fgetc(fp) == -1) {
-            fprintf(stderr, "%s: input source (%zu bytes) "
-                            "has less data than \"-s %ld\" switch "
-                            "wants to skip\n",
-                    fname, offset, skip_bytes);
+    for(size_t offset = 0; offset < (size_t)skip_bytes; offset++) {
+        if(ibs_getc(ibs) == -1) {
+            osprintfError(os,
+                          "%s: input source has less data "
+                          "than \"-s %ld\" switch wants to skip\n",
+                          fname, skip_bytes);
             return -1;
         }
     }
@@ -102,7 +120,7 @@ unber_stream(const char *fname, FILE *fp) {
      * Fetch out BER-encoded data until EOF or error.
      */
     do {
-        pdc = process_deeper(fname, fp, &offset, 0, -1, &frame_size, 0, 0);
+        pdc = process_deeper(fname, ibs, os, 0, -1, &frame_size, 0, 0);
     } while(pdc == PD_FINISHED && !single_type_decoding);
 
     if(pdc == PD_FAILED) return -1;
@@ -113,8 +131,8 @@ unber_stream(const char *fname, FILE *fp) {
  * Process the TLV recursively.
  */
 static pd_code_e
-process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
-               ssize_t limit, ber_tlv_len_t *frame_size,
+process_deeper(const char *fname, input_stream_t *ibs, output_stream_t *os,
+               int level, ssize_t limit, ber_tlv_len_t *frame_size,
                ber_tlv_len_t effective_size, int expect_eoc) {
     unsigned char tagbuf[32];
     ssize_t tblen = 0;
@@ -132,22 +150,29 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
         if(limit == 0) return PD_FINISHED;
 
         if(limit >= 0 && tblen >= limit) {
-            fprintf(stderr,
-                    "%s: Too long TL sequence (%ld >= %ld)"
-                    " at %zu. "
-                    "Broken or maliciously constructed file\n",
-                    fname, (long)tblen, (long)limit, *offset);
+            osprintfError(os,
+                          "%s: Too long TL sequence (%zd >= %zd) at %lld. "
+                          "Broken or maliciously constructed file\n",
+                          fname, tblen, limit, ibs->bytesRead(ibs));
+            return PD_FAILED;
+        }
+
+        if(tblen >= (ssize_t)sizeof(tagbuf)) {
+            osprintfError(os,
+                          "%s: Too long TL sequence (%zd bytes) at %lld. "
+                          "Broken or maliciously constructed file\n",
+                          fname, tblen, ibs->bytesRead(ibs));
             return PD_FAILED;
         }
 
         /* Get the next byte from the input stream */
-        ch = fgetc(fp);
+        ch = ibs_getc(ibs);
         if(ch == -1) {
             if(limit > 0 || expect_eoc) {
-                fprintf(stderr,
-                        "%s: Unexpected end of file (TL)"
-                        " at %zu\n",
-                        fname, *offset);
+                osprintfError(os,
+                              "%s: Unexpected end of file (TL)"
+                              " at %zu\n",
+                              fname, (size_t)ibs->bytesRead(ibs));
                 return PD_FAILED;
             } else {
                 return PD_EOF;
@@ -162,10 +187,10 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
         t_len = ber_fetch_tag(tagbuf, tblen, &tlv_tag);
         switch(t_len) {
         case -1:
-            fprintf(stderr,
-                    "%s: Fatal error decoding tag"
-                    " at %zu+%ld\n",
-                    fname, *offset, (long)tblen);
+            osprintfError(os,
+                          "%s: Fatal error decoding tag"
+                          " at %zu\n",
+                          fname, (size_t)ibs->bytesRead(ibs));
             return PD_FAILED;
         case 0:
             /* More data expected */
@@ -180,10 +205,10 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
             ber_fetch_length(constr, tagbuf + t_len, tblen - t_len, &tlv_len);
         switch(l_len) {
         case -1:
-            fprintf(stderr,
-                    "%s: Fatal error decoding value length"
-                    " at %zu\n",
-                    fname, *offset + t_len);
+            osprintfError(os,
+                          "%s: Fatal error decoding value length"
+                          " at %zu\n",
+                          fname, (size_t)ibs->bytesRead(ibs));
             return PD_FAILED;
         case 0:
             /* More data expected */
@@ -191,11 +216,17 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
         }
 
         /* Make sure the T & L decoders took exactly the whole buffer */
-        assert((t_len + l_len) == tblen);
+        if((t_len + l_len) != tblen) {
+            osprintfError(os,
+                          "%s: Outer tag length doesn't match inner tag length"
+                          " at %zu\n",
+                          fname, (size_t)ibs->bytesRead(ibs));
+            return PD_FAILED;
+        }
 
         if(!expect_eoc || tagbuf[0] || tagbuf[1])
-            print_TL(0, *offset, level, constr, tblen, tlv_tag, tlv_len,
-                     effective_size);
+            print_TL(os, 0, ibs->bytesRead(ibs), level, constr, tblen,
+                     tlv_tag, tlv_len, effective_size);
 
         if(limit != -1) {
             /* If limit is set, account for the TL sequence */
@@ -203,22 +234,22 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
             assert(limit >= 0);
 
             if(tlv_len > limit) {
-                fprintf(stderr,
-                        "%s: Structure advertizes length (%ld) "
-                        "greater than of a parent container (%ld)\n",
-                        fname, (long)tlv_len, (long)limit);
+                osprintfError(os,
+                              "%s: Structure advertizes length (%ld) "
+                              "greater than of a parent container (%ld)\n",
+                              fname, (long)tlv_len, (long)limit);
                 return PD_FAILED;
             }
         }
 
-        *offset += t_len + l_len;
         *frame_size += t_len + l_len;
         effective_size += t_len + l_len;
         local_esize += t_len + l_len;
 
         if(expect_eoc && !tagbuf[0] && !tagbuf[1]) {
             /* End of content octets */
-            print_TL(1, *offset - 2, level - 1, 1, 2, 0, -1, effective_size);
+            print_TL(os, 1, ibs->bytesRead(ibs), level - 1, 1, 2, 0, -1,
+                     effective_size);
             return PD_FINISHED;
         }
 
@@ -227,11 +258,11 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
             /*
              * This is a constructed type. Process recursively.
              */
-            printf(">\n"); /* Close the opening tag */
+            osprintf(os, ">\n"); /* Close the opening tag */
             if(tlv_len != -1 && limit != -1) {
                 assert(limit >= tlv_len);
             }
-            pdc = process_deeper(fname, fp, offset, level + 1,
+            pdc = process_deeper(fname, ibs, os, level + 1,
                                  tlv_len == -1 ? limit : tlv_len, &dec,
                                  t_len + l_len, tlv_len == -1);
             if(pdc == PD_FAILED) return pdc;
@@ -249,20 +280,19 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
             }
         } else {
             assert(tlv_len >= 0);
-            if(print_V(fname, fp, tlv_tag, tlv_len)) return PD_FAILED;
+            if(print_V(fname, ibs, os, tlv_tag, tlv_len)) return PD_FAILED;
 
             if(limit != -1) {
                 assert(limit >= tlv_len);
                 limit -= tlv_len;
             }
-            *offset += tlv_len;
             *frame_size += tlv_len;
             effective_size += tlv_len;
             local_esize += tlv_len;
         }
 
-        print_TL(1, *offset, level, constr, tblen, tlv_tag, tlv_len,
-                 local_esize);
+        print_TL(os, 1, ibs->bytesRead(ibs), level, constr, tblen,
+                 tlv_tag, tlv_len, local_esize);
 
         tblen = 0;
 
@@ -274,45 +304,45 @@ process_deeper(const char *fname, FILE *fp, size_t *offset, int level,
 }
 
 static void
-print_TL(int fin, size_t offset, int level, int constr, ssize_t tlen,
-         ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len,
+print_TL(output_stream_t *os, int fin, off_t offset, int level, int constr,
+         ssize_t tlen, ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len,
          ber_tlv_len_t effective_size) {
     if(fin && !constr) {
-        printf("</P>\n");
+        osprintf(os, "</P>\n");
         return;
     }
 
-    while(level-- > 0) fputs(indent_bytes, stdout); /* Print indent */
-    printf(fin ? "</" : "<");
+    while(level-- > 0) osprintf(os, "%s", indent_bytes); /* Print indent */
+    osprintf(os, fin ? "</" : "<");
 
-    printf(constr ? ((tlv_len == -1) ? "I" : "C") : "P");
+    osprintf(os, constr ? ((tlv_len == -1) ? "I" : "C") : "P");
 
     /* Print out the offset of this boundary, even if closing tag */
-    if(!minimalistic) printf(" O=\"%zu\"", offset);
+    if(!minimalistic) osprintf(os, " O=\"%lld\"", offset);
 
-    printf(" T=\"");
-    ber_tlv_tag_fwrite(tlv_tag, stdout);
-    printf("\"");
+    osprintf(os, " T=\"%s\"", ber_tlv_tag_string(tlv_tag));
 
     if(!fin || (tlv_len == -1 && !minimalistic))
-        printf(" TL=\"%ld\"", (long)tlen);
+        osprintf(os, " TL=\"%ld\"", (long)tlen);
     if(!fin) {
         if(tlv_len == -1)
-            printf(" V=\"Indefinite\"");
+            osprintf(os, " V=\"Indefinite\"");
         else
-            printf(" V=\"%ld\"", (long)tlv_len);
+            osprintf(os, " V=\"%ld\"", (long)tlv_len);
     }
 
     if(!minimalistic && BER_TAG_CLASS(tlv_tag) == ASN_TAG_CLASS_UNIVERSAL) {
         const char *str;
         ber_tlv_tag_t tvalue = BER_TAG_VALUE(tlv_tag);
         str = ASN_UNIVERSAL_TAG2STR(tvalue);
-        if(str) printf(" A=\"%s\"", str);
+        if(str) osprintf(os, " A=\"%s\"", str);
     }
 
     if(fin) {
-        if(constr && !minimalistic) printf(" L=\"%ld\"", (long)effective_size);
-        printf(">\n");
+        if(constr && !minimalistic) {
+            osprintf(os, " L=\"%ld\"", (long)effective_size);
+        }
+        osprintf(os, ">\n");
     }
 }
 
@@ -320,8 +350,8 @@ print_TL(int fin, size_t offset, int level, int constr, ssize_t tlen,
  * Print the value in binary form, or reformat for pretty-printing.
  */
 static int
-print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
-        ber_tlv_len_t tlv_len) {
+print_V(const char *fname, input_stream_t *ibs, output_stream_t *os,
+        ber_tlv_tag_t tlv_tag, ber_tlv_len_t tlv_len) {
     asn_oid_arc_t *arcs = 0; /* Object identifier arcs */
     unsigned char *vbuf = 0;
     asn1p_expr_type_e etype = 0;
@@ -393,16 +423,16 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
     }
 
     /* If collection vbuf is present, defer printing the F flag. */
-    if(!vbuf) printf(special_format ? " F>" : ">");
+    if(!vbuf) osprintf(os, special_format ? " F>" : ">");
 
     /*
      * Print the value in binary or text form,
      * or collect the bytes into vbuf.
      */
     for(i = 0; i < tlv_len; i++) {
-        int ch = fgetc(fp);
+        int ch = ibs_getc(ibs);
         if(ch == -1) {
-            fprintf(stderr, "%s: Unexpected end of file (V)\n", fname);
+            osprintfError(os, "%s: Unexpected end of file (V)\n", fname);
             if(vbuf) FREEMEM(vbuf);
             if(arcs) FREEMEM(arcs);
             return -1;
@@ -419,26 +449,26 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
             default:
                 if(((etype == ASN_STRING_UTF8String) || !(ch & 0x80))
                    && (ch >= 0x20)) {
-                    printf("%c", ch);
+                    osprintf(os, "%c", ch);
                     break;
                 }
             /* Fall through */
             case 0x3c:
             case 0x3e:
             case 0x26:
-                printf("&#x%02x;", ch);
+                osprintf(os, "&#x%02x;", ch);
             }
             break;
         case ASN_BASIC_BOOLEAN:
             switch(ch) {
             case 0:
-                printf("<false/>");
+                osprintf(os, "<false/>");
                 break;
             case 0xff:
-                printf("<true/>");
+                osprintf(os, "<true/>");
                 break;
             default:
-                printf("<true value=\"&#x%02x\"/>", ch);
+                osprintf(os, "<true value=\"&#x%02x\"/>", ch);
             }
             break;
         case ASN_BASIC_INTEGER:
@@ -452,7 +482,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
             if(vbuf) {
                 vbuf[i] = ch;
             } else {
-                printf("&#x%02x;", ch);
+                osprintf(os, "&#x%02x;", ch);
             }
         }
     }
@@ -461,7 +491,7 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
     switch(etype) {
     case ASN_BASIC_INTEGER:
     case ASN_BASIC_ENUMERATED:
-        printf("%s", asn1p_itoa(collector));
+        osprintf(os, "%s", asn1p_itoa(collector));
         break;
     case ASN_BASIC_OBJECT_IDENTIFIER:
         if(vbuf) {
@@ -474,10 +504,10 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
             arcno = OBJECT_IDENTIFIER_get_arcs(&oid, arcs, tlv_len + 1);
             if(arcno >= 0) {
                 assert(arcno <= (tlv_len + 1));
-                printf(" F>");
+                osprintf(os, " F>");
                 for(i = 0; i < arcno; i++) {
-                    if(i) printf(".");
-                    printf("%" PRIu32, arcs[i]);
+                    if(i) osprintf(os, ".");
+                    osprintf(os, "%" PRIu32, arcs[i]);
                 }
                 FREEMEM(vbuf);
                 vbuf = 0;
@@ -495,10 +525,10 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
             arcno = RELATIVE_OID_get_arcs(&oid, arcs, tlv_len);
             if(arcno >= 0) {
                 assert(arcno <= tlv_len);
-                printf(" F>");
+                osprintf(os, " F>");
                 for(i = 0; i < arcno; i++) {
-                    if(i) printf(".");
-                    printf("%" PRIu32, arcs[i]);
+                    if(i) osprintf(os, ".");
+                    osprintf(os, "%" PRIu32, arcs[i]);
                 }
                 FREEMEM(vbuf);
                 vbuf = 0;
@@ -538,22 +568,60 @@ print_V(const char *fname, FILE *fp, ber_tlv_tag_t tlv_tag,
             }
             break;
         }
-        printf(">");
+        osprintf(os, ">");
         for(i = 0; i < tlv_len; i++) {
             if(binary > 0 || vbuf[i] < 0x20 || vbuf[i] >= 0x7f
                || vbuf[i] == 0x26 /* '&' */
                || vbuf[i] == 0x3c /* '<' */
                || vbuf[i] == 0x3e /* '>' */
                )
-                printf("&#x%02x;", vbuf[i]);
+                osprintf(os, "&#x%02x;", vbuf[i]);
             else
-                printf("%c", vbuf[i]);
+                osprintf(os, "%c", vbuf[i]);
         }
         FREEMEM(vbuf);
     }
 
     if(arcs) FREEMEM(arcs);
     return 0;
+}
+
+struct file_input_stream {
+    input_stream_t istream;
+    FILE *fp;
+    off_t offset;
+};
+
+static int file_input_stream_nextChar(input_stream_t *ibs) {
+    struct file_input_stream *fs = (struct file_input_stream *)ibs;
+    int ret = fgetc(fs->fp);
+    if(ret != -1) {
+        fs->offset++;
+    }
+    return ret;
+}
+
+static off_t file_input_stream_bytesRead(input_stream_t *ibs) {
+    struct file_input_stream *fs = (struct file_input_stream *)ibs;
+    return fs->offset;
+}
+
+struct file_output_stream {
+    output_stream_t ostream;
+    FILE *outputFile;
+    FILE *errorFile;
+};
+
+static int
+file_output_stream_vprintf(output_stream_t *os, const char *fmt, va_list ap) {
+    struct file_output_stream *fos = (struct file_output_stream *)os;
+    return vfprintf(fos->outputFile, fmt, ap);
+}
+
+static int
+file_output_stream_vprintfError(output_stream_t *os, const char *fmt, va_list ap) {
+    struct file_output_stream *fos = (struct file_output_stream *)os;
+    return vfprintf(fos->errorFile, fmt, ap);
 }
 
 int
@@ -570,7 +638,18 @@ unber_file(const char *fname) {
         fp = stdin;
     }
 
-    int ret = unber_stream(fname, fp);
+    struct file_input_stream ifs;
+    ifs.istream.nextChar = file_input_stream_nextChar;
+    ifs.istream.bytesRead = file_input_stream_bytesRead;
+    ifs.fp = fp;
+
+    struct file_output_stream ofs;
+    ofs.ostream.vprintf = file_output_stream_vprintf;
+    ofs.ostream.vprintfError = file_output_stream_vprintfError;
+    ofs.outputFile = stdout;
+    ofs.errorFile = stderr;
+
+    int ret = unber_stream(fname, &ifs.istream, &ofs.ostream);
 
     if(fp != stdin) fclose(fp);
 

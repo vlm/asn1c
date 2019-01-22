@@ -38,6 +38,7 @@ stamp-h*
 # /asn1c-tools
 /asn1-tools/enber/enber
 /asn1-tools/unber/unber
+/asn1-tools/unber/check_unber
 
 # /skeletons
 /skeletons/check-*
