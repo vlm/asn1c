@@ -4,15 +4,17 @@
 diff -a . . 2>/dev/null && diffArgs="-a"		# Assume text files
 diff -u . . 2>/dev/null && diffArgs="$diffArgs -u"	# Unified diff output
 
-ec=0
+finalExitCode=0
 
 if [ "$1" != "regenerate" ]; then
     set -e
 fi
 
-PROCESSING=""
+LAST_FAILED=""
 print_status() {
-    echo "Error while processing $PROCESSING"
+    if [ -n "${LAST_FAILED}" ]; then
+        echo "Error while processing $LAST_FAILED"
+    fi
 }
 
 trap print_status EXIT
@@ -29,11 +31,15 @@ for ref in ${top_srcdir}/tests/tests-asn1c-compiler/*.asn1.-*; do
 	template=.tmp.check-parsing.$$
 	oldversion=${template}.old
 	newversion=${template}.new
-	PROCESSING="$ref (from $src)"
 	LANG=C sed -e 's/^found in .*/found in .../' < "$ref" > "$oldversion"
+	ec=0
 	(${top_builddir}/asn1c/asn1c -S ${top_srcdir}/skeletons -no-gen-OER -no-gen-PER "-$flags" "$src" | LANG=C sed -e 's/^found in .*/found in .../' > "$newversion") || ec=$?
 	if [ $? = 0 ]; then
 		diff $diffArgs "$oldversion" "$newversion" || ec=$?
+	fi
+	if [ $ec != 0 ]; then
+		LAST_FAILED="$ref (from $src)"
+		finalExitCode=$ec
 	fi
 	rm -f $oldversion $newversion
 	if [ "$1" = "regenerate" ]; then
@@ -41,8 +47,4 @@ for ref in ${top_srcdir}/tests/tests-asn1c-compiler/*.asn1.-*; do
 	fi
 done
 
-if [ $ec = 0 ]; then
-    trap '' EXIT
-fi
-
-exit $ec
+exit $finalExitCode
