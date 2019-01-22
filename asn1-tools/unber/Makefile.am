@@ -6,6 +6,12 @@ AM_CPPFLAGS =                       \
     -I${top_srcdir}/libasn1parser   \
     -I${top_srcdir}/skeletons
 
-unber_LDADD = $(top_builddir)/libasn1common/libasn1common.la
+noinst_LTLIBRARIES = libasn1-unber-tool.la
+
+libasn1_unber_tool_la_SOURCES =     \
+    libasn1_unber_tool.c libasn1_unber_tool.h
+
+unber_LDADD = libasn1-unber-tool.la                 \
+    $(top_builddir)/libasn1common/libasn1common.la
 
 bin_PROGRAMS = unber
