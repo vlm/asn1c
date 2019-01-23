@@ -225,7 +225,7 @@ process_deeper(const char *fname, input_stream_t *ibs, output_stream_t *os,
         }
 
         if(!expect_eoc || tagbuf[0] || tagbuf[1])
-            print_TL(os, 0, ibs->bytesRead(ibs), level, constr, tblen,
+            print_TL(os, 0, ibs->bytesRead(ibs) - tblen, level, constr, tblen,
                      tlv_tag, tlv_len, effective_size);
 
         if(limit != -1) {
@@ -248,7 +248,7 @@ process_deeper(const char *fname, input_stream_t *ibs, output_stream_t *os,
 
         if(expect_eoc && !tagbuf[0] && !tagbuf[1]) {
             /* End of content octets */
-            print_TL(os, 1, ibs->bytesRead(ibs), level - 1, 1, 2, 0, -1,
+            print_TL(os, 1, ibs->bytesRead(ibs) - 2, level - 1, 1, 2, 0, -1,
                      effective_size);
             return PD_FINISHED;
         }
@@ -642,6 +642,7 @@ unber_file(const char *fname) {
     ifs.istream.nextChar = file_input_stream_nextChar;
     ifs.istream.bytesRead = file_input_stream_bytesRead;
     ifs.fp = fp;
+    ifs.offset = 0;
 
     struct file_output_stream ofs;
     ofs.ostream.vprintf = file_output_stream_vprintf;
