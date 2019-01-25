@@ -207,8 +207,8 @@ process_deeper(const char *fname, input_stream_t *ibs, output_stream_t *os,
         case -1:
             osprintfError(os,
                           "%s: Fatal error decoding value length"
-                          " at %zu\n",
-                          fname, (size_t)ibs->bytesRead(ibs));
+                          " at %lld\n",
+                          fname, (long long)ibs->bytesRead(ibs));
             return PD_FAILED;
         case 0:
             /* More data expected */
@@ -219,8 +219,8 @@ process_deeper(const char *fname, input_stream_t *ibs, output_stream_t *os,
         if((t_len + l_len) != tblen) {
             osprintfError(os,
                           "%s: Outer tag length doesn't match inner tag length"
-                          " at %zu\n",
-                          fname, (size_t)ibs->bytesRead(ibs));
+                          " at %lld\n",
+                          fname, (long long)ibs->bytesRead(ibs));
             return PD_FAILED;
         }
 
