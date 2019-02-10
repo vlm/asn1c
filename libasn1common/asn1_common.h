@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2005-2019 Lev Walkin <vlm@lionet.info>. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdarg.h>
 #include <assert.h>
 #include <errno.h>
 
