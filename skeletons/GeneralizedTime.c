@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
+ * Copyright (c) 2003-2019 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
 #define	_POSIX_PTHREAD_SEMANTICS	/* for Sun */
@@ -57,7 +57,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
  * Where to look for offset from GMT, Phase I.
  * Several platforms are known.
  */
-#if defined(__FreeBSD__)				\
+#if defined(__FreeBSD__) || defined(__OpenBSD__)    \
 	|| (defined(__GNUC__) && defined(__APPLE_CC__))	\
 	|| (defined __GLIBC__ && __GLIBC__ >= 2)
 #undef	HAVE_TM_GMTOFF
