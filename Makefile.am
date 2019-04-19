@@ -11,8 +11,4 @@ SUBDIRS =                       \
     asn1-tools asn1c skeletons  \
     tests examples doc
 
-docsdir = $(datadir)/doc/asn1c
-
-docs_DATA = README.md INSTALL.md REQUIREMENTS.md FAQ ChangeLog BUGS
-
 EXTRA_DIST = README.md INSTALL.md REQUIREMENTS.md FAQ LICENSE BUGS
