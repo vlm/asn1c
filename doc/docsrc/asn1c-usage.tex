@@ -207,7 +207,7 @@ int main(int ac, char **av) {
     asn_enc_rval_t ec;      /* Encoder return value  */
 
     /* Allocate the Rectangle_t */
-    rectangle = calloc(1, sizeof(Rectangle_t)); /* not malloc! */
+    rectangle = calloc(1, sizeof(Rectangle_t)); /* must initialize to zero, not malloc! */
     if(!rectangle) {
         perror("calloc() failed");
         exit(1);
