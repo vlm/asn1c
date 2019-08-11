@@ -178,6 +178,129 @@ check_xer(int lineno, int tofail, char *xmldata, long orig_value) {
 	ASN_STRUCT_FREE(asn_DEF_INTEGER, st);
 }
 
+static void
+check_strtoimax() {
+    const intmax_t intmax_max = ((~(uintmax_t)0) >> 1);
+    const intmax_t intmax_min = -((intmax_t)intmax_max) - 1;
+    char positive_max[32];
+    char negative_min[32];
+    const int len_pmax = snprintf(positive_max, sizeof(positive_max),
+        "+%" ASN_PRIdMAX, intmax_max);
+    const int len_nmin = snprintf(negative_min, sizeof(negative_min),
+        "%" ASN_PRIdMAX, intmax_min);
+    assert(len_pmax < (int)sizeof(positive_max));
+    assert(len_nmin < (int)sizeof(negative_min));
+
+    enum asn_strtox_result_e result;
+    intmax_t value;
+
+    /*
+     * Test edge values first.
+     */
+    // Positive.
+    const char *last_pmax = &positive_max[len_pmax];
+    result = asn_strtoimax_lim(positive_max, &last_pmax, &value);
+    assert(result == ASN_STRTOX_OK);
+    assert(last_pmax == &positive_max[len_pmax]);
+    assert(value == intmax_max);
+    // Negative.
+    const char *last_nmin = &negative_min[len_nmin];
+    result = asn_strtoimax_lim(negative_min, &last_nmin, &value);
+    assert(result == ASN_STRTOX_OK);
+    assert(last_nmin == &negative_min[len_nmin]);
+    assert(value == intmax_min);
+
+    /*
+     * Test one smaller than edge evalues.
+     */
+    positive_max[len_pmax - 1]--;
+    negative_min[len_nmin - 1]--;
+    // Positive.
+    result = asn_strtoimax_lim(positive_max, &last_pmax, &value);
+    assert(result == ASN_STRTOX_OK);
+    assert(last_pmax == &positive_max[len_pmax]);
+    assert(value == intmax_max - 1);
+    // Negative.
+    result = asn_strtoimax_lim(negative_min, &last_nmin, &value);
+    assert(result == ASN_STRTOX_OK);
+    assert(last_nmin == &negative_min[len_nmin]);
+    assert(value == intmax_min + 1);
+
+    /*
+     * Test one bigger than edge evalues.
+     */
+    positive_max[len_pmax - 1] += 2;
+    negative_min[len_nmin - 1] += 2;
+    // Positive.
+    value = 42;
+    result = asn_strtoimax_lim(positive_max, &last_pmax, &value);
+    assert(result == ASN_STRTOX_ERROR_RANGE);
+    assert(last_pmax == &positive_max[len_pmax - 1]);
+    assert(value == 42);
+    // Negative.
+    value = 42;
+    result = asn_strtoimax_lim(negative_min, &last_nmin, &value);
+    assert(result == ASN_STRTOX_ERROR_RANGE);
+    assert(last_nmin == &negative_min[len_nmin - 1]);
+    assert(value == 42);
+
+    /*
+     * Get back to the edge.
+     * Append an extra digit at the end.
+     */
+    positive_max[len_pmax - 1]--;
+    negative_min[len_nmin - 1]--;
+    assert(len_pmax < (int)sizeof(positive_max) - 1);
+    assert(len_nmin < (int)sizeof(negative_min) - 1);
+    strcat(positive_max, "0");
+    strcat(negative_min, "0");
+    last_pmax++;
+    last_nmin++;
+    value = 42;
+    result = asn_strtoimax_lim(positive_max, &last_pmax, &value);
+    assert(result == ASN_STRTOX_OK);
+    assert(value == intmax_max);
+    result = asn_strtoimax_lim(negative_min, &last_nmin, &value);
+    assert(result == ASN_STRTOX_OK);
+    assert(value == intmax_min);
+}
+
+/*
+ * Check that asn_strtoimax_lim() always reaches the end of the numeric
+ * sequence, even if it can't fit into the range.
+ */
+static void
+check_strtoimax_span() {
+    const intmax_t intmax_max = ((~(uintmax_t)0) >> 1);
+    const intmax_t almost_min = -((intmax_t)(intmax_max - 10));
+    char buf[64];
+    intmax_t value = 42;
+    enum asn_strtox_result_e result;
+
+    // Check a particular way to integer overflow.
+    // Check that we scan until the very end.
+    int len = snprintf(buf, sizeof(buf), "%" PRIdMAX "0</end>", almost_min);
+    assert(len < (int)sizeof(buf));
+    const char *nmlast = &buf[len];
+    result = asn_strtoimax_lim(buf, &nmlast, &value);
+    assert(*nmlast == '0');
+    assert((ptrdiff_t)(nmlast - buf) == (ptrdiff_t)(len - strlen("0</end>")));
+    assert(result == ASN_STRTOX_ERROR_RANGE);
+    assert(value == 42);
+
+    // Check a particular way to integer overflow.
+    // Check that we scan until the very end.
+    len = snprintf(buf, sizeof(buf), "%" PRIdMAX "</end>", almost_min);
+    assert(len < (int)sizeof(buf));
+    nmlast = &buf[len];
+    result = asn_strtoimax_lim(buf, &nmlast, &value);
+    assert(*nmlast == '<');
+    assert((ptrdiff_t)(nmlast - buf) == (ptrdiff_t)(len - strlen("</end>")));
+    assert(result == ASN_STRTOX_EXTRA_DATA);
+    assert(value == almost_min);
+
+}
+
 int
 main() {
 	uint8_t buf1[] = { 1 };
@@ -297,6 +420,9 @@ main() {
                 assert(sizeof(long) == 8);
         }
 #endif
+
+    check_strtoimax();
+    check_strtoimax_span();
 
 	return 0;
 }

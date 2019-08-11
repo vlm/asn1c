@@ -35,6 +35,11 @@
         (Severity: low; Security impact: none)
       * Fix XER decoder crash on maliciously constructed ENUMERATED input.
         (Severity: medium; Security impact: medium)
+      * Fix XER decoder of INTEGER, OBJECT IDENTIFIER, and RELATIVE-OID.
+        In some cases an INTEGER overflow during parsing is not detected
+        and incorrect value is returned to the decoder instead of an error.
+        Reported by Nika Pona <npona@digamma.ai>.
+        (Severity: low; Security impact: medium).
 
     FIXES IN TOOLING:
       * CVE-2017-12966 verified not present.
