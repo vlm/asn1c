@@ -79,7 +79,7 @@ oer_support.h oer_support.c
 OPEN_TYPE.h OPEN_TYPE_oer.c constr_CHOICE.h
 INTEGER.h INTEGER_oer.c
 BIT_STRING.h BIT_STRING_oer.c OCTET_STRING.h
-OCTET_STRING.h OCTET_STRING_oer.c
+OCTET_STRING.h OCTET_STRING_oer.c BIT_STRING.h
 NativeInteger.h NativeInteger_oer.c
 NativeEnumerated.h NativeEnumerated_oer.c
 constr_CHOICE.h constr_CHOICE_oer.c
