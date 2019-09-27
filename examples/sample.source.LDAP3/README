@@ -13,7 +13,7 @@ http://www.ee.oulu.fi/research/ouspg/protos/testing/c06/ldapv3/index.html
 ldap3dump USAGE
 ==============
 
-	./ldap3dump LDAPMessage.ber	# Print as XML (BASIC-XER)
+    ./ldap3dump -p LDAPMessage -iber -oxer sample-LDAPMessage-1.ber # Print as XML (BASIC-XER)
 
 The full list of recognized command line options may be obtained with
 
