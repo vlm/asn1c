@@ -120,7 +120,7 @@ NativeReal_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
     /*
      * ASN.1 encoded REAL: buf_ptr, length
      * Fill the Dbl, at the same time checking for overflow.
-     * If overflow occured, return with RC_FAIL.
+     * If overflow occurred, return with RC_FAIL.
      */
     {
         uint8_t scratch[24]; /* Longer than %.16f in decimal */

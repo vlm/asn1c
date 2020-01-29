@@ -16,7 +16,7 @@ int asn1f_recurse_expr(arg_t *arg, int (*f)(arg_t *arg));
 int asn1f_check_unique_expr(arg_t *arg);
 
 /*
- * Check that every preceeding child of the given expr is not
+ * Check that every preceding child of the given expr is not
  * having the name of the given one.
  * If opt_compare == NULL, the default comparison of the argument's
  * names (identifiers) will be performed.

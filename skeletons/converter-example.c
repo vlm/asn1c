@@ -45,7 +45,7 @@ extern asn_TYPE_descriptor_t *asn_pdu_collection[];
 #endif
 
 /*
- * Open file and parse its contens.
+ * Open file and parse its contents.
  */
 static void *data_decode_from_file(enum asn_transfer_syntax,
                                    asn_TYPE_descriptor_t *asnTypeOfPDU,
@@ -225,7 +225,7 @@ main(int ac, char *av[]) {
 #endif
 
     /*
-     * Pocess the command-line argments.
+     * Process the command-line arguments.
      */
     while((ch = getopt(ac, av, "i:o:1b:cdn:p:hs:" JUNKOPT RANDOPT)) != -1)
     switch(ch) {
@@ -586,7 +586,7 @@ buffer_dump() {
 
 /*
  * Move the buffer content left N bits, possibly joining it with
- * preceeding content.
+ * preceding content.
  */
 static void
 buffer_shift_left(size_t offset, int bits) {

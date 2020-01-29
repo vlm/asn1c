@@ -369,7 +369,7 @@ print_V(const char *fname, input_stream_t *ibs, output_stream_t *os,
      * Determine how to print the value, either in its native binary form,
      * encoded with &xNN characters, or using pretty-printing.
      * The basic string types (including "useful types", like UTCTime)
-     * are excempt from this determination logic, because their alphabets
+     * are exempt from this determination logic, because their alphabets
      * are subsets of the XML's native UTF-8 encoding.
      */
     switch(etype) {

@@ -486,7 +486,7 @@ SEQUENCE_encode_oer(const asn_TYPE_descriptor_t *td,
     }
 
     /*
-     * Before encode extensions, encode extensions additions presense bitmap
+     * Before encode extensions, encode extensions additions presence bitmap
      # X.696 (08/2015) #16.4.
      */
     if(has_extensions) {

@@ -21,7 +21,7 @@
 /*
  * Basic integer type used in numerous places.
  * ASN.1 does not define any limits on this number, so it must be sufficiently
- * large to accomodate typical inputs. It does not have to be a dynamically
+ * large to accommodate typical inputs. It does not have to be a dynamically
  * allocated type with potentially unlimited width: consider the width of
  * an integer defined here as one of the "compiler limitations".
  * NOTE: this is NOT a type for ASN.1 "INTEGER" type representation, this

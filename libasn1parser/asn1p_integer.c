@@ -24,9 +24,9 @@ enum strtox_result_e {
     STRTOX_ERROR_RANGE = -3, /* Input outside of supported numeric range */
     STRTOX_ERROR_INVAL = -2, /* Invalid data encountered (e.g., "+-") */
     STRTOX_EXPECT_MORE = -1, /* More data expected (e.g. "+") */
-    STRTOX_OK = 0,           /* Conversion succeded, number ends at (*end) */
+    STRTOX_OK = 0,           /* Conversion succeeded, number ends at (*end) */
     STRTOX_EXTRA_DATA =
-        1 /* Conversion succeded, but the string has extra stuff */
+        1 /* Conversion succeeded, but the string has extra stuff */
 };
 
 static enum strtox_result_e
