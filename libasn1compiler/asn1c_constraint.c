@@ -228,9 +228,12 @@ asn1c_emit_constraint_checking_code(arg_t *arg) {
 		INDENT(+1);
 		switch(etype) {
 		case ASN_CONSTR_SEQUENCE_OF:
+			OUT("/* Perform validation of the inner elements */\n");
+			OUT("return SEQUENCE_OF_constraint(td, sptr, ctfailcb, app_key);\n");
+			break;
 		case ASN_CONSTR_SET_OF:
 			OUT("/* Perform validation of the inner elements */\n");
-			OUT("return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);\n");
+			OUT("return SET_OF_constraint(td, sptr, ctfailcb, app_key);\n");
 			break;
 		default:
 			OUT("/* Constraint check succeeded */\n");
