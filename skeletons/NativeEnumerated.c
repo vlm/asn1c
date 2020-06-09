@@ -169,11 +169,16 @@ NativeEnumerated_decode_aper(asn_codec_ctx_t *opt_codec_ctx,
 		/*
 		 * X.691, #10.6: normally small non-negative whole number;
 		 */
-		value = uper_get_nsnnwn(pd);
+		/* XXX handle indefinite index length > 64k */
+		value = aper_get_nsnnwn(pd, 65537);
 		if(value < 0) ASN__DECODE_STARVED;
 		value += specs->extension - 1;
-		if(value >= specs->map_count)
-			ASN__DECODE_FAILED;
+		if(value >= specs->map_count) {
+			ASN_DEBUG("Decoded unknown index value %s = %ld", td->name, value);
+			/* unknown index. Workaround => set the first enumeration value */
+			*native = specs->value2enum[0].nat_value;
+			return rval;
+		}
 	}
 
 	*native = specs->value2enum[value].nat_value;
