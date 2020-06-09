@@ -977,7 +977,7 @@ CHOICE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		rv = elm->type->aper_decoder(opt_codec_ctx, elm->type,
 			elm->per_constraints, memb_ptr2, pd);
 	} else {
-		rv = uper_open_type_get(opt_codec_ctx, elm->type,
+		rv = aper_open_type_get(opt_codec_ctx, elm->type,
 			elm->per_constraints, memb_ptr2, pd);
 	}
 
