@@ -115,16 +115,19 @@ asn1f_fix_enum(arg_t *arg) {
 			if (eval > max_value_ext) {
 				max_value_ext = eval;
 			} else {
-				FATAL(
+                char max_value_buf[128];
+                asn1p_itoa_s(max_value_buf, sizeof(max_value_buf),
+                             max_value_ext);
+                FATAL(
 					"Enumeration %s at line %d: "
-					"Explicit value \"%s(%" PRIdASN ")\" "
+					"Explicit value \"%s(%s)\" "
 					"is not greater "
-					"than previous values (max %" PRIdASN ")",
+					"than previous values (max %s)",
 					expr->Identifier,
 					ev->_lineno,
 					ev->Identifier,
-					eval,
-					max_value_ext);
+					asn1p_itoa(eval),
+					max_value_buf);
 				rvalue = -1;
 			}
 		}
@@ -143,12 +146,12 @@ asn1f_fix_enum(arg_t *arg) {
 			if (used_vals[uv_idx] == eval) {
 				FATAL(
 					"Enumeration %s at line %d: "
-					"Explicit value \"%s(%" PRIdASN ")\" "
+					"Explicit value \"%s(%s)\" "
 					"collides with previous values",
 					expr->Identifier,
 					ev->_lineno,
 					ev->Identifier,
-					eval);
+					asn1p_itoa(eval));
 				rvalue = -1;
 				unique = 0;
 			}
