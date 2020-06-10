@@ -1373,6 +1373,10 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		ASN_DEBUG("Read in extensions bitmap for %s of %lld bits (%x..)",
 			td->name, (long long)bmlength, *epres);
 
+		/* Deal with padding */
+		if (aper_get_align(pd) < 0)
+			ASN__DECODE_STARVED;
+
 	    /* Go over extensions and read them in */
 	    for(edx = specs->ext_after + 1; edx < td->elements_count; edx++) {
 		asn_TYPE_member_t *elm = &td->elements[edx];
@@ -1400,7 +1404,7 @@ SEQUENCE_decode_aper(asn_codec_ctx_t *opt_codec_ctx, asn_TYPE_descriptor_t *td,
 		}
 
 		ASN_DEBUG("Decoding member %s in %s %p", elm->name, td->name, *memb_ptr2);
-		rv = uper_open_type_get(opt_codec_ctx, elm->type,
+		rv = aper_open_type_get(opt_codec_ctx, elm->type,
 			elm->per_constraints, memb_ptr2, pd);
 		if(rv.code != RC_OK) {
 			FREEMEM(epres);

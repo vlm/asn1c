@@ -157,7 +157,7 @@ _edge_value(const asn1cnst_edge_t *edge) {
 	case ARE_MIN:	strcpy(buf, "MIN"); break;
 	case ARE_MAX:	strcpy(buf, "MAX"); break;
 	case ARE_VALUE:
-		snprintf(buf, sizeof(buf), "%" PRIdASN, edge->value);
+		snprintf(buf, sizeof(buf), "%s", asn1p_itoa(edge->value));
         break;
     default:
         assert(!"edge->type");
@@ -255,9 +255,9 @@ static int _range_fill(asn1p_value_t *val, const asn1cnst_range_t *minmax, asn1c
 	switch(val->type) {
 	case ATV_INTEGER:
 		if(type != ACT_EL_RANGE && type != ACT_CT_SIZE) {
-			FATAL("Integer %" PRIdASN " value invalid "
+			FATAL("Integer %s value invalid "
 				"for %s constraint at line %d",
-				val->value.v_integer,
+				asn1p_itoa(val->value.v_integer),
 				asn1p_constraint_type2str(type), lineno);
 			return -1;
 		}

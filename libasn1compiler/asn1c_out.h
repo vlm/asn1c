@@ -120,22 +120,22 @@ int asn1c_compiled_output(arg_t *arg, const char *fmt, ...);
 	if(iv == (-2147483647L - 1))				\
 		OUT("(-2147483647L - 1)");			\
 	else if (iv > 0 && (unsigned long long)iv > 4294967296UL)				\
-		OUT("%" PRIdASN "ull", iv);			\
+		OUT("%s", asn1p_itoa(iv));			\
 	else if (iv > 0 && (unsigned long)iv > 2147483647L)				\
-		OUT("%" PRIdASN "ul", iv);			\
+		OUT("%s", asn1p_itoa(iv));			\
 	else									\
-		OUT("%" PRIdASN "l", iv);			\
+		OUT("%s", asn1p_itoa(iv));			\
 } while(0)
 
 #define OINTS(iv)	do {					\
 	if(iv == (-2147483647L - 1))				\
 		OUT("(-2147483647L - 1)");			\
 	else if (iv > 0 && (unsigned long long)iv > 4294967296UL)				\
-		OUT("%" PRIdASN "ull", iv);			\
+		OUT("%s", asn1p_itoa(iv));			\
 	else if (iv > 0 && (unsigned long)iv > 2147483647L)				\
-		OUT("%" PRIdASN "ul", iv);			\
+		OUT("%s", asn1p_itoa(iv));			\
 	else									\
-		OUT("% " PRIdASN "l", iv);			\
+		OUT("%s", asn1p_itoa(iv));			\
 } while(0)
 
 #endif	/* ASN1_COMPILED_OUTPUT_H */

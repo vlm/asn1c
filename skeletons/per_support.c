@@ -119,7 +119,7 @@ per_get_few_bits(asn_per_data_t *pd, int nbits) {
 		(int)pd->moved,
 		(((long)pd->buffer) & 0xf),
 		(int)pd->nboff, (int)pd->nbits,
-		pd->buffer[0],
+		nbits ? pd->buffer[0] : 0,
 		(int)(pd->nbits - pd->nboff),
 		(int)accum);
 
@@ -324,7 +324,24 @@ aper_get_nsnnwn(asn_per_data_t *pd, int range) {
 		/* 2 bytes */
 		bytes = 2;
 	} else {
-		return -1;
+		int length;
+
+		/* handle indefinite range */
+		length = per_get_few_bits(pd, 1);
+		if (length == 0)
+		    return per_get_few_bits(pd, 6);
+
+		if (aper_get_align(pd) < 0)
+		    return -1;
+
+		length = per_get_few_bits(pd, 8);
+		/* the length is not likely to be that big */
+		if (length > 4)
+		    return -1;
+		value = 0;
+		if (per_get_many_bits(pd, &value, 0, length * 8) < 0)
+		    return -1;
+		return value;
 	}
 	if (aper_get_align(pd) < 0)
 		return -1;

@@ -83,8 +83,9 @@ aper_open_type_put(asn_TYPE_descriptor_t *td, asn_per_constraints_t *constraints
 }
 
 static asn_dec_rval_t
-uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
-	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+per_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd,
+        uint8_t is_uper) {
 	asn_dec_rval_t rv;
 	ssize_t chunk_bytes;
 	int repeat;
@@ -129,7 +130,10 @@ uper_open_type_get_simple(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	spd.nbits = bufLen << 3;
 
 	ASN_DEBUG_INDENT_ADD(+4);
-	rv = td->uper_decoder(ctx, td, constraints, sptr, &spd);
+	if (is_uper)
+		rv = td->uper_decoder(ctx, td, constraints, sptr, &spd);
+	else
+		rv = td->aper_decoder(ctx, td, constraints, sptr, &spd);
 	ASN_DEBUG_INDENT_ADD(-4);
 
 	if(rv.code == RC_OK) {
@@ -274,7 +278,14 @@ asn_dec_rval_t
 uper_open_type_get(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
 	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
 
-	return uper_open_type_get_simple(ctx, td, constraints, sptr, pd);
+	return per_open_type_get_simple(ctx, td, constraints, sptr, pd, 1);
+}
+
+asn_dec_rval_t
+aper_open_type_get(asn_codec_ctx_t *ctx, asn_TYPE_descriptor_t *td,
+	asn_per_constraints_t *constraints, void **sptr, asn_per_data_t *pd) {
+
+	return per_open_type_get_simple(ctx, td, constraints, sptr, pd, 0);
 }
 
 int

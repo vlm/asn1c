@@ -99,6 +99,8 @@ AC_C_BIGENDIAN
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
 AC_STRUCT_TM
+AC_CHECK_TYPE([__int128],
+    [AC_DEFINE(HAVE_128_BIT_INT, 1, [Have 128-bit integer])])
 AC_CHECK_TYPE(intmax_t, int64_t)
 
 dnl Test if we should check features that depend on 64-bitness.
