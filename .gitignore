@@ -97,3 +97,9 @@ doc/docsrc/*.xdv
 #code coverage
 *.gcno
 *.gcda
+
+# Eclipse
+.cproject
+.project
+.settings/
+

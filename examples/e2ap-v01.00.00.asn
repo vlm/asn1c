@@ -1,0 +1,1589 @@
+-- ASN1START
+-- **************************************************************
+--
+-- Elementary Procedure definitions
+-- Derived from 3GPP 38.413 v15.4.0 NGAP
+-- **************************************************************
+
+E2AP-PDU-Descriptions {
+iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 53148 e2(1) version1 (1) e2ap(1) e2ap-PDU-Descriptions (0) }
+
+DEFINITIONS AUTOMATIC TAGS ::= 
+
+BEGIN
+
+-- **************************************************************
+--
+-- IE parameter types from other modules.
+--
+-- **************************************************************
+
+IMPORTS
+	Criticality,
+	ProcedureCode
+FROM E2AP-CommonDataTypes
+
+
+
+	E2setupFailure,
+	E2setupRequest,
+	E2setupResponse,
+	ErrorIndication,
+	ResetRequest,
+	ResetResponse,
+	RICcontrolAcknowledge,
+	RICcontrolFailure,
+	RICcontrolRequest,
+	RICindication,
+	RICserviceQuery,
+	RICserviceUpdate,
+	RICserviceUpdateAcknowledge,
+	RICserviceUpdateFailure,
+	RICsubscriptionFailure,
+	RICsubscriptionRequest,
+	RICsubscriptionResponse,
+	RICsubscriptionDeleteFailure,
+	RICsubscriptionDeleteRequest,
+	RICsubscriptionDeleteResponse
+FROM E2AP-PDU-Contents
+
+	id-E2setup,
+	id-ErrorIndication,
+	id-Reset,
+	id-RICcontrol,
+	id-RICindication,
+	id-RICserviceQuery,
+	id-RICserviceUpdate,
+	id-RICsubscription,
+	id-RICsubscriptionDelete
+FROM E2AP-Constants;
+
+-- **************************************************************
+--
+-- Interface Elementary Procedure Class
+--
+-- **************************************************************
+
+E2AP-ELEMENTARY-PROCEDURE ::= CLASS {
+	&InitiatingMessage										,
+	&SuccessfulOutcome							OPTIONAL	,
+	&UnsuccessfulOutcome						OPTIONAL	,
+	&procedureCode				ProcedureCode	UNIQUE	,
+	&criticality				Criticality		DEFAULT ignore
+}
+
+WITH SYNTAX {
+	INITIATING MESSAGE			&InitiatingMessage
+	[SUCCESSFUL OUTCOME			&SuccessfulOutcome]
+	[UNSUCCESSFUL OUTCOME		&UnsuccessfulOutcome]
+	PROCEDURE CODE				&procedureCode
+	[CRITICALITY				&criticality]
+}
+
+-- **************************************************************
+--
+-- Interface PDU Definition
+--
+-- **************************************************************
+
+E2AP-PDU ::= CHOICE {
+	initiatingMessage			InitiatingMessage,
+	successfulOutcome			SuccessfulOutcome,
+	unsuccessfulOutcome			UnsuccessfulOutcome,
+	...
+}
+
+InitiatingMessage ::= SEQUENCE {
+	procedureCode	E2AP-ELEMENTARY-PROCEDURE.&procedureCode		({E2AP-ELEMENTARY-PROCEDURES}),
+	criticality		E2AP-ELEMENTARY-PROCEDURE.&criticality			({E2AP-ELEMENTARY-PROCEDURES}{@procedureCode}),
+	value			E2AP-ELEMENTARY-PROCEDURE.&InitiatingMessage	({E2AP-ELEMENTARY-PROCEDURES}{@procedureCode})
+}
+
+SuccessfulOutcome ::= SEQUENCE {
+	procedureCode	E2AP-ELEMENTARY-PROCEDURE.&procedureCode		({E2AP-ELEMENTARY-PROCEDURES}),
+	criticality		E2AP-ELEMENTARY-PROCEDURE.&criticality			({E2AP-ELEMENTARY-PROCEDURES}{@procedureCode}),
+	value			E2AP-ELEMENTARY-PROCEDURE.&SuccessfulOutcome	({E2AP-ELEMENTARY-PROCEDURES}{@procedureCode})
+}
+
+UnsuccessfulOutcome ::= SEQUENCE {
+	procedureCode	E2AP-ELEMENTARY-PROCEDURE.&procedureCode		({E2AP-ELEMENTARY-PROCEDURES}),
+	criticality		E2AP-ELEMENTARY-PROCEDURE.&criticality			({E2AP-ELEMENTARY-PROCEDURES}{@procedureCode}),
+	value			E2AP-ELEMENTARY-PROCEDURE.&UnsuccessfulOutcome	({E2AP-ELEMENTARY-PROCEDURES}{@procedureCode})
+}
+
+-- **************************************************************
+--
+-- Interface Elementary Procedure List
+--
+-- **************************************************************
+
+E2AP-ELEMENTARY-PROCEDURES E2AP-ELEMENTARY-PROCEDURE ::= {
+	E2AP-ELEMENTARY-PROCEDURES-CLASS-1					|
+	E2AP-ELEMENTARY-PROCEDURES-CLASS-2,	
+	...
+}
+
+E2AP-ELEMENTARY-PROCEDURES-CLASS-1 E2AP-ELEMENTARY-PROCEDURE ::= {
+	ricSubscription										|
+	ricSubscriptionDelete								|
+	ricServiceUpdate									|
+	ricControl											|
+	e2setup												|
+	reset,
+	...
+}
+
+E2AP-ELEMENTARY-PROCEDURES-CLASS-2 E2AP-ELEMENTARY-PROCEDURE ::= {
+	ricIndication										|
+	ricServiceQuery										|
+	errorIndication,	
+	...
+}
+
+-- **************************************************************
+--
+-- Interface Elementary Procedures
+--
+-- **************************************************************
+
+e2setup	E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		E2setupRequest
+	SUCCESSFUL OUTCOME		E2setupResponse
+	UNSUCCESSFUL OUTCOME	E2setupFailure
+	PROCEDURE CODE			id-E2setup
+	CRITICALITY				reject
+}
+
+errorIndication E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		ErrorIndication
+	PROCEDURE CODE			id-ErrorIndication
+	CRITICALITY				ignore
+}
+
+reset	E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		ResetRequest
+	SUCCESSFUL OUTCOME		ResetResponse
+	PROCEDURE CODE			id-Reset
+	CRITICALITY				reject
+}
+
+ricControl E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		RICcontrolRequest
+	SUCCESSFUL OUTCOME		RICcontrolAcknowledge
+	UNSUCCESSFUL OUTCOME	RICcontrolFailure
+	PROCEDURE CODE			id-RICcontrol
+	CRITICALITY				reject
+}
+
+ricIndication E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		RICindication
+	PROCEDURE CODE			id-RICindication
+	CRITICALITY				ignore
+}
+
+ricServiceQuery E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		RICserviceQuery
+	PROCEDURE CODE			id-RICserviceQuery
+	CRITICALITY				ignore
+}
+
+ricServiceUpdate E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		RICserviceUpdate
+	SUCCESSFUL OUTCOME		RICserviceUpdateAcknowledge
+	UNSUCCESSFUL OUTCOME	RICserviceUpdateFailure
+	PROCEDURE CODE			id-RICserviceUpdate
+	CRITICALITY				reject
+}
+
+ricSubscription E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		RICsubscriptionRequest
+	SUCCESSFUL OUTCOME		RICsubscriptionResponse
+	UNSUCCESSFUL OUTCOME	RICsubscriptionFailure
+	PROCEDURE CODE			id-RICsubscription
+	CRITICALITY				reject
+}
+
+ricSubscriptionDelete E2AP-ELEMENTARY-PROCEDURE ::= {
+	INITIATING MESSAGE		RICsubscriptionDeleteRequest
+	SUCCESSFUL OUTCOME		RICsubscriptionDeleteResponse
+	UNSUCCESSFUL OUTCOME	RICsubscriptionDeleteFailure
+	PROCEDURE CODE			id-RICsubscriptionDelete
+	CRITICALITY				reject
+}
+
+
+END
+-- ASN1STOP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- ASN1START
+-- **************************************************************
+--
+-- PDU definitions for E2AP
+-- Derived from 3GPP 38.413 v15.4.0 NGAP
+-- 
+-- **************************************************************
+
+E2AP-PDU-Contents {
+iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 53148 e2(1) version1 (1) e2ap(1) e2ap-PDU-Contents (1) }
+
+DEFINITIONS AUTOMATIC TAGS ::= 
+
+BEGIN
+
+-- **************************************************************
+--
+-- IE parameter types from other modules.
+--
+-- **************************************************************
+
+IMPORTS
+	Cause,
+	CriticalityDiagnostics,
+	GlobalE2node-ID,
+	GlobalRIC-ID,
+	RANfunctionDefinition,
+	RANfunctionID,
+	RANfunctionRevision,
+	RICactionDefinition,
+	RICactionID,
+	RICactionType,
+	RICcallProcessID,
+	RICcontrolAckRequest,
+	RICcontrolHeader,
+	RICcontrolMessage,
+	RICcontrolOutcome,
+	RICcontrolStatus,
+	RICeventTriggerDefinition,
+	RICindicationHeader,
+	RICindicationMessage,
+	RICindicationSN,
+	RICindicationType,
+	RICrequestID,
+	RICsubsequentAction,
+	TimeToWait
+FROM E2AP-IEs
+
+	ProtocolIE-Container{},
+	ProtocolIE-ContainerList{},
+	ProtocolIE-SingleContainer{},
+	E2AP-PROTOCOL-IES,
+	E2AP-PROTOCOL-IES-PAIR
+FROM E2AP-Containers
+
+	id-Cause,
+	id-CriticalityDiagnostics,
+	id-GlobalE2node-ID,
+	id-GlobalRIC-ID,
+	id-RANfunctionID,
+	id-RANfunctionID-Item,
+	id-RANfunctionIEcause-Item,
+	id-RANfunction-Item,
+	id-RANfunctionsAccepted,
+	id-RANfunctionsAdded,
+	id-RANfunctionsDeleted,
+	id-RANfunctionsModified,
+	id-RANfunctionsRejected,
+	id-RICaction-Admitted-Item,
+	id-RICactionID,
+	id-RICaction-NotAdmitted-Item,
+	id-RICactions-Admitted,
+	id-RICactions-NotAdmitted,
+	id-RICaction-ToBeSetup-Item,
+	id-RICcallProcessID,
+	id-RICcontrolAckRequest,
+	id-RICcontrolHeader,
+	id-RICcontrolMessage,
+	id-RICcontrolOutcome,
+	id-RICcontrolStatus,
+	id-RICindicationHeader,
+	id-RICindicationMessage,
+	id-RICindicationSN,
+	id-RICindicationType,
+	id-RICrequestID,
+	id-RICserviceQuery,
+	id-RICsubscriptionDetails,
+	id-TimeToWait,
+	
+	maxofRANfunctionID,
+	maxofRICactionID
+FROM E2AP-Constants;
+
+-- **************************************************************
+--
+-- MESSAGES FOR NEAR-RT RIC FUNCTIONAL PROCEDURES
+--
+-- **************************************************************
+
+-- **************************************************************
+--
+-- RIC Subscription Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- RIC SUBSCRIPTION REQUEST
+--
+-- **************************************************************
+RICsubscriptionRequest ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICsubscriptionRequest-IEs}},
+	...
+}
+
+RICsubscriptionRequest-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory}|
+	{ ID id-RICsubscriptionDetails		CRITICALITY reject	TYPE RICsubscriptionDetails			PRESENCE mandatory},
+	...
+}
+
+
+RICsubscriptionDetails ::= SEQUENCE {
+	ricEventTriggerDefinition	RICeventTriggerDefinition,
+	ricAction-ToBeSetup-List	RICactions-ToBeSetup-List,
+	...
+}
+
+RICactions-ToBeSetup-List ::= SEQUENCE (SIZE(1..maxofRICactionID)) OF ProtocolIE-SingleContainer { {RICaction-ToBeSetup-ItemIEs} }
+
+RICaction-ToBeSetup-ItemIEs 	E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICaction-ToBeSetup-Item	CRITICALITY ignore 	TYPE RICaction-ToBeSetup-Item 	PRESENCE mandatory },
+	...
+}
+
+RICaction-ToBeSetup-Item ::= SEQUENCE {
+	ricActionID					RICactionID,
+	ricActionType				RICactionType,
+	ricActionDefinition			RICactionDefinition 	OPTIONAL,
+	ricSubsequentAction			RICsubsequentAction 	OPTIONAL,
+	...
+}
+
+-- **************************************************************
+--
+-- RIC SUBSCRIPTION RESPONSE
+--
+-- **************************************************************
+RICsubscriptionResponse ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container{{RICsubscriptionResponse-IEs}},
+	...
+}
+
+RICsubscriptionResponse-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject		TYPE RICrequestID				PRESENCE mandatory } |
+	{ ID id-RANfunctionID				CRITICALITY reject		TYPE RANfunctionID				PRESENCE mandatory } |
+	{ ID id-RICactions-Admitted			CRITICALITY reject		TYPE RICaction-Admitted-List	PRESENCE mandatory } |
+	{ ID id-RICactions-NotAdmitted		CRITICALITY reject		TYPE RICaction-NotAdmitted-List	PRESENCE optional },
+	...	
+}
+
+
+
+RICaction-Admitted-List ::= SEQUENCE (SIZE(1..maxofRICactionID)) OF ProtocolIE-SingleContainer{{RICaction-Admitted-ItemIEs}}
+
+RICaction-Admitted-ItemIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICaction-Admitted-Item		CRITICALITY ignore		TYPE RICaction-Admitted-Item	PRESENCE mandatory },
+	...
+}
+
+RICaction-Admitted-Item ::= SEQUENCE {
+	ricActionID					RICactionID,
+	...
+}
+
+RICaction-NotAdmitted-List ::= SEQUENCE (SIZE(0..maxofRICactionID)) OF ProtocolIE-SingleContainer { {RICaction-NotAdmitted-ItemIEs} }
+
+RICaction-NotAdmitted-ItemIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICaction-NotAdmitted-Item	CRITICALITY ignore	TYPE RICaction-NotAdmitted-Item		PRESENCE mandatory },
+	...
+}
+
+RICaction-NotAdmitted-Item ::= SEQUENCE {
+	ricActionID					RICactionID,
+	cause						Cause,
+	...
+}
+
+-- **************************************************************
+--
+-- RIC SUBSCRIPTION FAILURE
+--E2AP-PROTOCOL-IES
+-- **************************************************************
+RICsubscriptionFailure ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICsubscriptionFailure-IEs}},
+	...
+}
+
+RICsubscriptionFailure-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	}|
+	{ ID id-RICactions-NotAdmitted		CRITICALITY reject	TYPE RICaction-NotAdmitted-List		PRESENCE mandatory	}|
+	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics			PRESENCE optional	},	
+	...
+}
+
+-- **************************************************************
+--
+-- RIC Subscription Delete Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- RIC SUBSCRIPTION DELETE REQUEST
+--
+-- **************************************************************
+RICsubscriptionDeleteRequest ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICsubscriptionDeleteRequest-IEs}},
+	...
+}
+
+RICsubscriptionDeleteRequest-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	},	
+	...
+}
+
+-- **************************************************************
+--E2AP-PROTOCOL-IES
+-- RIC SUBSCRIPTION DELETE RESPONSE
+--
+-- **************************************************************
+RICsubscriptionDeleteResponse ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICsubscriptionDeleteResponse-IEs}},
+	...
+}
+
+RICsubscriptionDeleteResponse-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	},	
+	...
+}
+-- **************************************************************
+--
+-- RIC SUBSCRIPTION DELETE FAILURE
+--
+-- **************************************************************
+RICsubscriptionDeleteFailure ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICsubscriptionDeleteFailure-IEs}},
+	...
+}
+
+RICsubscriptionDeleteFailure-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	}|
+	{ ID id-Cause						CRITICALITY ignore	TYPE Cause							PRESENCE mandatory	}|
+	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics			PRESENCE optional	},	
+	...
+}
+
+-- **************************************************************
+--
+-- RIC Indication Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- RIC INDICATION
+--
+-- **************************************************************
+RICindication ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICindication-IEs}},
+	...
+}
+
+RICindication-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	}|
+	{ ID id-RICactionID					CRITICALITY reject	TYPE RICactionID					PRESENCE mandatory	}|
+	{ ID id-RICindicationSN				CRITICALITY reject	TYPE RICindicationSN				PRESENCE optional	}|
+	{ ID id-RICindicationType			CRITICALITY reject	TYPE RICindicationType  			PRESENCE mandatory	}|
+	{ ID id-RICindicationHeader			CRITICALITY reject	TYPE RICindicationHeader			PRESENCE mandatory	}|
+	{ ID id-RICindicationMessage		CRITICALITY reject	TYPE RICindicationMessage			PRESENCE mandatory	}|
+	{ ID id-RICcallProcessID			CRITICALITY reject	TYPE RICcallProcessID				PRESENCE optional	},
+	...
+}
+
+-- **************************************************************
+--
+-- RIC Control Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- RIC CONTROL REQUEST
+--
+-- **************************************************************
+RICcontrolRequest ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICcontrolRequest-IEs}},
+	...
+}
+
+RICcontrolRequest-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	}|
+	{ ID id-RICcallProcessID			CRITICALITY reject	TYPE RICcallProcessID				PRESENCE optional	}|
+	{ ID id-RICcontrolHeader			CRITICALITY reject	TYPE RICcontrolHeader				PRESENCE mandatory	}|
+	{ ID id-RICcontrolMessage			CRITICALITY reject	TYPE RICcontrolMessage				PRESENCE mandatory	}|
+	{ ID id-RICcontrolAckRequest		CRITICALITY reject	TYPE RICcontrolAckRequest			PRESENCE optional	},
+	...
+}
+-- **************************************************************
+--
+-- RIC CONTROL ACKNOWLEDGE
+--
+-- **************************************************************
+RICcontrolAcknowledge ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICcontrolAcknowledge-IEs}},
+	...
+}
+
+RICcontrolAcknowledge-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	}|
+	{ ID id-RICcallProcessID			CRITICALITY reject	TYPE RICcallProcessID				PRESENCE optional	}|
+	{ ID id-RICcontrolStatus			CRITICALITY reject	TYPE RICcontrolStatus				PRESENCE mandatory	} |
+	{ ID id-RICcontrolOutcome			CRITICALITY reject	TYPE RICcontrolOutcome				PRESENCE optional	},
+	...
+}
+-- **************************************************************
+--
+-- RIC CONTROL FAILURE
+--
+-- **************************************************************
+RICcontrolFailure ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICcontrolFailure-IEs}},
+	...
+}
+
+RICcontrolFailure-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID					PRESENCE mandatory	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID					PRESENCE mandatory	}|
+	{ ID id-RICcallProcessID			CRITICALITY reject	TYPE RICcallProcessID				PRESENCE optional	}|
+	{ ID id-Cause						CRITICALITY ignore	TYPE Cause							PRESENCE mandatory	} |
+	{ ID id-RICcontrolOutcome			CRITICALITY reject	TYPE RICcontrolOutcome				PRESENCE optional	},
+	...
+}
+
+-- **************************************************************
+--
+-- MESSAGES FOR GLOBAL PROCEDURES
+--
+-- **************************************************************
+
+-- **************************************************************
+--
+-- Error Indication Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- ERROR INDICATION
+--
+-- **************************************************************
+ErrorIndication ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{ErrorIndication-IEs}},
+	...
+}
+
+ErrorIndication-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RICrequestID				CRITICALITY reject	TYPE RICrequestID				PRESENCE optional	}|
+	{ ID id-RANfunctionID				CRITICALITY reject	TYPE RANfunctionID				PRESENCE optional	}|
+	{ ID id-Cause						CRITICALITY ignore	TYPE Cause						PRESENCE optional	}|
+	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics		PRESENCE optional	},	
+	...
+}
+
+-- **************************************************************
+--
+-- E2 Setup Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- E2 SETUP REQUEST
+--
+-- **************************************************************
+
+E2setupRequest ::= SEQUENCE {
+	protocolIEs		ProtocolIE-Container		{ {E2setupRequestIEs} },
+	...
+}
+
+E2setupRequestIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-GlobalE2node-ID			CRITICALITY reject	TYPE GlobalE2node-ID				PRESENCE mandatory	}|
+	{ ID id-RANfunctionsAdded		CRITICALITY reject	TYPE RANfunctions-List				PRESENCE optional	},
+	...
+}
+
+-- **************************************************************
+--
+-- E2 SETUP RESPONSE
+--
+-- **************************************************************
+
+E2setupResponse ::= SEQUENCE {
+	protocolIEs		ProtocolIE-Container		{ {E2setupResponseIEs} },
+	...
+}
+
+E2setupResponseIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-GlobalRIC-ID				CRITICALITY reject	TYPE GlobalRIC-ID				PRESENCE mandatory	}|
+	{ ID id-RANfunctionsAccepted		CRITICALITY reject	TYPE RANfunctionsID-List		PRESENCE optional	}|
+	{ ID id-RANfunctionsRejected		CRITICALITY reject	TYPE RANfunctionsIDcause-List	PRESENCE optional	},
+	...
+}
+
+-- **************************************************************
+--
+-- E2 SETUP FAILURE
+--
+-- **************************************************************
+
+E2setupFailure ::= SEQUENCE {
+	protocolIEs		ProtocolIE-Container		{ {E2setupFailureIEs} },
+	...
+}
+
+E2setupFailureIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-Cause						CRITICALITY ignore	TYPE Cause						PRESENCE mandatory	}|
+	{ ID id-TimeToWait					CRITICALITY ignore	TYPE TimeToWait					PRESENCE optional	}|
+	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics		PRESENCE optional	},
+	...
+}
+
+-- **************************************************************
+--
+-- Reset Elementary Procedure
+--
+-- **************************************************************
+
+-- **************************************************************
+--
+-- RESET REQUEST
+--
+-- **************************************************************
+
+ResetRequest ::= SEQUENCE {
+	protocolIEs		ProtocolIE-Container		{ {ResetRequestIEs} },
+	...
+}
+
+ResetRequestIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-Cause						CRITICALITY ignore	TYPE Cause						PRESENCE mandatory	},
+	...
+}
+
+-- **************************************************************
+--
+-- RESET RESPONSE
+--
+-- **************************************************************
+
+ResetResponse ::= SEQUENCE {
+	protocolIEs		ProtocolIE-Container		{ {ResetResponseIEs} },
+	...
+}
+
+ResetResponseIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics		PRESENCE optional	},
+	...
+}
+
+-- **************************************************************
+--
+-- RIC Service Update Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- RIC SERVICE UPDATE
+--
+-- **************************************************************
+RICserviceUpdate ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICserviceUpdate-IEs}},
+	...
+}
+
+RICserviceUpdate-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RANfunctionsAdded			CRITICALITY reject	TYPE RANfunctions-List				PRESENCE optional	}|
+	{ ID id-RANfunctionsModified		CRITICALITY reject	TYPE RANfunctions-List				PRESENCE optional	}|
+	{ ID id-RANfunctionsDeleted			CRITICALITY reject	TYPE RANfunctionsID-List			PRESENCE optional	},
+	...
+}
+
+RANfunctions-List ::= SEQUENCE (SIZE(0..maxofRANfunctionID)) OF ProtocolIE-SingleContainer { {RANfunction-ItemIEs} }
+
+RANfunction-ItemIEs 	E2AP-PROTOCOL-IES ::= {
+	{ ID id-RANfunction-Item			CRITICALITY ignore 	TYPE RANfunction-Item 				PRESENCE mandatory	},
+	...
+}
+
+
+RANfunction-Item ::= SEQUENCE {
+	ranFunctionID				RANfunctionID,
+	ranFunctionDefinition  		RANfunctionDefinition,
+	ranFunctionRevision			RANfunctionRevision,
+	...
+}
+
+RANfunctionsID-List ::= SEQUENCE (SIZE(0..maxofRANfunctionID)) OF ProtocolIE-SingleContainer{{RANfunctionID-ItemIEs}}
+
+RANfunctionID-ItemIEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RANfunctionID-Item			CRITICALITY ignore		TYPE RANfunctionID-Item			PRESENCE mandatory	},
+	...
+}
+
+RANfunctionID-Item ::= SEQUENCE {
+	ranFunctionID				RANfunctionID,
+	ranFunctionRevision			RANfunctionRevision,
+	...
+}
+
+-- **************************************************************
+--
+-- RIC SERVICE UPDATE ACKNOWLEDGE
+--
+-- **************************************************************
+RICserviceUpdateAcknowledge ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICserviceUpdateAcknowledge-IEs}},
+	...
+}
+
+RICserviceUpdateAcknowledge-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RANfunctionsAccepted		CRITICALITY reject	TYPE RANfunctionsID-List			PRESENCE optional	}|
+	{ ID id-RANfunctionsRejected		CRITICALITY reject	TYPE RANfunctionsIDcause-List		PRESENCE optional	},
+	...
+}
+
+RANfunctionsIDcause-List ::= SEQUENCE (SIZE(0..maxofRANfunctionID)) OF ProtocolIE-SingleContainer { {RANfunctionIDcause-ItemIEs} }
+
+RANfunctionIDcause-ItemIEs 	E2AP-PROTOCOL-IES ::= {
+	{ ID id-RANfunctionIEcause-Item		CRITICALITY ignore 	TYPE RANfunctionIDcause-Item 		PRESENCE mandatory	},
+	...
+}
+
+
+RANfunctionIDcause-Item ::= SEQUENCE {
+	ranFunctionID				RANfunctionID,
+	cause						Cause,
+	...
+}
+
+
+-- **************************************************************
+--
+-- RIC SERVICE UPDATE FAILURE
+--
+-- **************************************************************
+RICserviceUpdateFailure ::= SEQUENCE {
+	protocolIEs			ProtocolIE-Container	{{RICserviceUpdateFailure-IEs}},
+	...
+}
+
+RICserviceUpdateFailure-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RANfunctionsRejected		CRITICALITY ignore	TYPE RANfunctionsIDcause-List		PRESENCE optional	}|
+	{ ID id-TimeToWait					CRITICALITY ignore	TYPE TimeToWait						PRESENCE optional	}|
+	{ ID id-CriticalityDiagnostics		CRITICALITY ignore	TYPE CriticalityDiagnostics			PRESENCE optional	},
+	...
+}
+
+-- **************************************************************
+--
+-- RIC Service Query Elementary Procedure
+--
+-- **************************************************************
+-- **************************************************************
+--
+-- RIC SERVICE QUERY
+--
+-- **************************************************************
+RICserviceQuery ::= SEQUENCE {
+	protocolIEs					ProtocolIE-Container	{{RICserviceQuery-IEs}},
+	...
+}
+
+RICserviceQuery-IEs E2AP-PROTOCOL-IES ::= {
+	{ ID id-RANfunctionsAccepted		CRITICALITY reject	TYPE RANfunctionsID-List			PRESENCE optional	},
+	...
+}
+
+END
+-- ASN1STOP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- ASN1START
+-- **************************************************************
+-- E2AP
+-- Information Element Definitions
+-- 
+-- **************************************************************
+
+E2AP-IEs {
+iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 53148 e2(1) version1 (1) e2ap(1) e2ap-IEs (2)}
+
+DEFINITIONS AUTOMATIC TAGS ::= 
+
+BEGIN
+
+IMPORTS
+	Criticality,
+	Presence,
+	ProcedureCode,
+	ProtocolIE-ID,
+	TriggeringMessage
+FROM E2AP-CommonDataTypes
+
+	maxnoofErrors,
+	maxProtocolIEs
+FROM E2AP-Constants;
+
+-- A
+-- B
+-- C
+Cause ::= CHOICE {
+	ricRequest			CauseRIC,
+	ricService			CauseRICservice,
+	transport			CauseTransport,
+	protocol			CauseProtocol,
+	misc				CauseMisc,
+	...
+}
+
+CauseMisc ::= ENUMERATED {
+	control-processing-overload,
+	hardware-failure,
+	om-intervention,
+	unspecified,
+	...
+}
+CauseProtocol ::= ENUMERATED {
+	transfer-syntax-error,
+	abstract-syntax-error-reject,
+	abstract-syntax-error-ignore-and-notify,
+	message-not-compatible-with-receiver-state,
+	semantic-error,
+	abstract-syntax-error-falsely-constructed-message,
+	unspecified,
+	...
+}
+
+CauseRIC ::= ENUMERATED {
+	ran-function-id-Invalid, 
+	action-not-supported, 
+	excessive-actions,
+	duplicate-action, 
+	duplicate-event,
+	function-resource-limit, 
+	request-id-unknown, 
+	inconsistent-action-subsequent-action-sequence, 
+	control-message-invalid, 
+	call-process-id-invalid,
+	unspecified,
+	...
+}
+
+CauseRICservice ::= ENUMERATED{
+	function-not-required, 
+	excessive-functions, 
+	ric-resource-limit,
+	...
+}
+CauseTransport ::= ENUMERATED {
+	unspecified,
+	transport-resource-unavailable,
+	...
+}
+
+-- **************************************************************
+-- copied from 3GPP 38.413 NGAP IEs v15.5.0
+-- note: ie-Extensions removed
+-- **************************************************************
+CriticalityDiagnostics ::= SEQUENCE {
+	procedureCode					ProcedureCode							OPTIONAL,
+	triggeringMessage				TriggeringMessage						OPTIONAL,
+	procedureCriticality			Criticality								OPTIONAL,
+	ricRequestorID					RICrequestID							OPTIONAL,
+	iEsCriticalityDiagnostics		CriticalityDiagnostics-IE-List			OPTIONAL,
+	...
+}
+
+CriticalityDiagnostics-IE-List ::= SEQUENCE (SIZE(1..maxnoofErrors)) OF CriticalityDiagnostics-IE-Item
+
+CriticalityDiagnostics-IE-Item ::= SEQUENCE {
+	iECriticality		Criticality,
+	iE-ID				ProtocolIE-ID,
+	typeOfError			TypeOfError,
+	...
+}
+
+-- D
+-- E
+
+-- **************************************************************
+-- copied from 3GPP X2AP IEs v15.4.0
+-- note: ie-Extensions removed
+-- **************************************************************
+ENB-ID ::= CHOICE {
+	macro-eNB-ID			BIT STRING (SIZE (20)),
+	home-eNB-ID				BIT STRING (SIZE (28)),
+	... ,
+	short-Macro-eNB-ID		BIT STRING (SIZE(18)),
+	long-Macro-eNB-ID		BIT STRING (SIZE(21))
+}
+-- **************************************************************
+-- copied from 3GPP 38.423 v15.5.0 XnAP IEs 
+-- **************************************************************
+ENB-ID-Choice ::= CHOICE {
+	enb-ID-macro			BIT STRING (SIZE(20)),
+	enb-ID-shortmacro		BIT STRING (SIZE(18)),
+	enb-ID-longmacro		BIT STRING (SIZE(21)),
+	...
+}
+
+-- **************************************************************
+-- copied from 3GPP X2AP IEs v15.4.0
+-- note: ie-Extensions removed
+-- Note: to avoid duplicate names with XnAP, GNB-ID renamed ENGNB-ID, GlobalGNB-ID renamed GlobalenGNB-ID
+-- **************************************************************
+ENGNB-ID ::= CHOICE {
+	gNB-ID	BIT STRING (SIZE (22..32)),
+	...
+}
+
+-- F
+-- G
+GlobalE2node-ID ::= CHOICE{
+	gNB					GlobalE2node-gNB-ID,
+	en-gNB				GlobalE2node-en-gNB-ID,
+	ng-eNB				GlobalE2node-ng-eNB-ID,
+	eNB					GlobalE2node-eNB-ID,
+	...
+}
+
+GlobalE2node-en-gNB-ID ::= SEQUENCE{
+	global-gNB-ID		GlobalenGNB-ID,
+	...
+}
+GlobalE2node-eNB-ID ::= SEQUENCE{
+	global-eNB-ID		GlobalENB-ID,
+	...
+}
+GlobalE2node-gNB-ID ::= SEQUENCE{
+	global-gNB-ID		GlobalgNB-ID,
+	gNB-CU-UP-ID		GNB-CU-UP-ID	OPTIONAL,
+	gNB-DU-ID			GNB-DU-ID		OPTIONAL,
+	...
+}
+GlobalE2node-ng-eNB-ID ::= SEQUENCE{
+	global-ng-eNB-ID	GlobalngeNB-ID,
+	...
+}
+-- **************************************************************
+-- copied from 3GPP X2AP IEs v15.4.0
+-- note: ie-Extensions removed
+-- **************************************************************
+
+GlobalENB-ID ::= SEQUENCE {
+	pLMN-Identity		PLMN-Identity,
+	eNB-ID				ENB-ID,
+	...
+}
+-- **************************************************************
+-- copied from 3GPP X2AP IEs v15.4.0
+-- Note: to avoid duplicate names with XnAP, GNB-ID renamed ENGNB-ID, GlobalGNB-ID renamed GlobalenGNB-ID
+-- **************************************************************
+GlobalenGNB-ID ::= SEQUENCE {
+	pLMN-Identity		PLMN-Identity,
+	gNB-ID				ENGNB-ID,
+	...
+}
+-- **************************************************************
+-- copied from 3GPP 38.423 v15.5.0 XnAP IEs 
+-- **************************************************************
+GlobalgNB-ID	::= SEQUENCE {
+	plmn-id				PLMN-Identity,
+	gnb-id				GNB-ID-Choice,
+	...
+}
+
+
+-- **************************************************************
+-- copied from 3GPP 38.423 v15.5.0 XnAP IEs 
+-- **************************************************************
+GlobalngeNB-ID	::= SEQUENCE {
+	plmn-id			PLMN-Identity,
+	enb-id			ENB-ID-Choice,
+	...
+}
+
+GlobalRIC-ID ::= SEQUENCE{
+	pLMN-Identity			PLMN-Identity,
+	ric-ID					BIT STRING (SIZE (20)),
+	...
+}
+
+-- **************************************************************
+-- copied from 3GPP 38.463 v15.5.0 E1AP IEs 
+-- **************************************************************
+GNB-CU-UP-ID::= 	INTEGER (0..68719476735)
+GNB-DU-ID::= 		INTEGER (0..68719476735)
+
+-- **************************************************************
+-- copied from 3GPP 38.423 v15.5.0 XnAP IEs 
+-- **************************************************************
+GNB-ID-Choice ::= CHOICE {
+	gnb-ID					BIT STRING (SIZE(22..32)),
+	...
+}
+-- H
+-- I
+-- J
+-- K
+-- L
+-- M
+-- N
+-- O
+-- P
+-- **************************************************************
+-- copied from 3GPP X2AP IEs v15.4.0
+-- **************************************************************
+PLMN-Identity ::= OCTET STRING (SIZE(3))
+
+-- Q
+-- R
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RANfunctionDefinition ::= OCTET STRING
+
+RANfunctionID ::= INTEGER (0..4095)
+
+RANfunctionRevision ::= INTEGER (0..4095)
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICactionDefinition ::= OCTET STRING
+
+RICactionID ::= INTEGER (0..255)
+
+RICactionType ::= ENUMERATED{
+	report,
+	insert,
+	policy,
+	...
+}
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICcallProcessID ::= OCTET STRING
+
+RICcontrolAckRequest ::= ENUMERATED{
+	noAck,
+	ack,
+	nAck,
+	...
+}
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICcontrolHeader ::= OCTET STRING
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICcontrolMessage ::= OCTET STRING
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICcontrolOutcome ::= OCTET STRING
+
+RICcontrolStatus ::= ENUMERATED{
+	success,
+	rejected,
+	failed,
+	...
+}
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICeventTriggerDefinition ::= OCTET STRING
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICindicationHeader ::= OCTET STRING
+
+-- **************************************************************
+-- Following IE defined in E2SM
+-- **************************************************************
+RICindicationMessage ::= OCTET STRING
+
+RICindicationSN ::= INTEGER (0..65535)
+
+RICindicationType ::= ENUMERATED{
+	report,
+	insert,
+	...
+}
+
+RICrequestID ::= SEQUENCE {
+	ricRequestorID	INTEGER (0..65535),
+	ricInstanceID	INTEGER (0..65535),
+	...
+}
+
+RICsubsequentAction ::=SEQUENCE{
+	ricSubsequentActionType		RICsubsequentActionType,
+	ricTimeToWait				RICtimeToWait,
+	...
+}
+
+RICsubsequentActionType ::= ENUMERATED{
+	continue,
+	wait,
+	...
+}
+
+RICtimeToWait ::= ENUMERATED{
+	zero,
+	w1ms,
+	w2ms,
+	w5ms,
+	w10ms,
+	w20ms,
+	w30ms,
+	w40ms,
+	w50ms,
+	w100ms,
+	w200ms,
+	w500ms,
+	w1s,
+	w2s,
+	w5s,
+	w10s,
+	w20s,
+	w60s,
+	...
+}
+-- S
+-- T
+-- **************************************************************
+-- copied from 3GPP 38.413 NGAP IEs v15.5.0
+-- **************************************************************
+TimeToWait ::= ENUMERATED {v1s, v2s, v5s, v10s, v20s, v60s, ...}
+
+-- **************************************************************
+-- copied from 3GPP 38.413 NGAP IEs v15.5.0
+-- **************************************************************
+TypeOfError ::= ENUMERATED {
+	not-understood,
+	missing,
+	...
+}
+
+-- U
+-- V
+-- W
+-- X
+-- Y
+-- Z
+
+END
+-- ASN1STOP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- ASN1START
+-- **************************************************************
+-- 
+-- Common definitions
+-- Derived from 3GPP 38.413 v15.4.0
+--
+-- **************************************************************
+
+E2AP-CommonDataTypes {
+iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 53148 e2(1) version1 (1) e2ap(1) e2ap-CommonDataTypes (3) }
+
+DEFINITIONS AUTOMATIC TAGS ::= 
+
+BEGIN
+
+Criticality		::= ENUMERATED { reject, ignore, notify }
+
+Presence		::= ENUMERATED { optional, conditional, mandatory }
+
+ProcedureCode		::= INTEGER (0..255)
+
+ProtocolIE-ID		::= INTEGER (0..65535)
+
+TriggeringMessage	::= ENUMERATED { initiating-message, successful-outcome, unsuccessfull-outcome }
+
+END
+-- ASN1STOP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- ASN1START
+-- **************************************************************
+--
+-- Constant definitions
+--
+-- **************************************************************
+
+E2AP-Constants {
+iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 53148 e2(1) version1 (1) e2ap(1) e2ap-Constants (4) }
+
+DEFINITIONS AUTOMATIC TAGS ::= 
+
+BEGIN
+
+IMPORTS
+	ProcedureCode,
+	ProtocolIE-ID
+FROM E2AP-CommonDataTypes;
+
+-- **************************************************************
+--
+-- Elementary Procedures
+-- 
+-- **************************************************************
+id-E2setup									ProcedureCode ::= 1
+id-ErrorIndication							ProcedureCode ::= 2
+id-Reset									ProcedureCode ::= 3
+id-RICcontrol								ProcedureCode ::= 4
+id-RICindication							ProcedureCode ::= 5
+id-RICserviceQuery							ProcedureCode ::= 6
+id-RICserviceUpdate							ProcedureCode ::= 7
+id-RICsubscription							ProcedureCode ::= 8
+id-RICsubscriptionDelete					ProcedureCode ::= 9
+
+-- **************************************************************
+--
+-- Extension constants
+--
+-- **************************************************************
+
+maxProtocolIEs								INTEGER ::= 65535
+
+
+-- **************************************************************
+--
+-- Lists
+-- 
+-- **************************************************************
+maxnoofErrors								INTEGER ::= 256
+maxofRANfunctionID							INTEGER ::= 256
+maxofRICactionID							INTEGER ::= 16
+
+-- **************************************************************
+--
+-- IEs
+-- 
+-- **************************************************************
+id-Cause									ProtocolIE-ID ::= 1
+id-CriticalityDiagnostics					ProtocolIE-ID ::= 2
+id-GlobalE2node-ID							ProtocolIE-ID ::= 3
+id-GlobalRIC-ID								ProtocolIE-ID ::= 4
+id-RANfunctionID   							ProtocolIE-ID ::= 5
+id-RANfunctionID-Item   					ProtocolIE-ID ::= 6
+id-RANfunctionIEcause-Item					ProtocolIE-ID ::= 7
+id-RANfunction-Item							ProtocolIE-ID ::= 8
+id-RANfunctionsAccepted						ProtocolIE-ID ::= 9
+id-RANfunctionsAdded						ProtocolIE-ID ::= 10
+id-RANfunctionsDeleted						ProtocolIE-ID ::= 11
+id-RANfunctionsModified						ProtocolIE-ID ::= 12
+id-RANfunctionsRejected						ProtocolIE-ID ::= 13
+id-RICaction-Admitted-Item					ProtocolIE-ID ::= 14
+id-RICactionID								ProtocolIE-ID ::= 15
+id-RICaction-NotAdmitted-Item				ProtocolIE-ID ::= 16
+id-RICactions-Admitted						ProtocolIE-ID ::= 17
+id-RICactions-NotAdmitted					ProtocolIE-ID ::= 18
+id-RICaction-ToBeSetup-Item					ProtocolIE-ID ::= 19
+id-RICcallProcessID							ProtocolIE-ID ::= 20
+id-RICcontrolAckRequest						ProtocolIE-ID ::= 21
+id-RICcontrolHeader							ProtocolIE-ID ::= 22
+id-RICcontrolMessage						ProtocolIE-ID ::= 23
+id-RICcontrolStatus							ProtocolIE-ID ::= 24
+id-RICindicationHeader						ProtocolIE-ID ::= 25
+id-RICindicationMessage						ProtocolIE-ID ::= 26
+id-RICindicationSN							ProtocolIE-ID ::= 27
+id-RICindicationType						ProtocolIE-ID ::= 28
+id-RICrequestID								ProtocolIE-ID ::= 29
+id-RICsubscriptionDetails					ProtocolIE-ID ::= 30
+id-TimeToWait								ProtocolIE-ID ::= 31
+id-RICcontrolOutcome						ProtocolIE-ID ::= 32
+
+
+END
+-- ASN1STOP
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- ASN1START
+-- **************************************************************
+-- 
+-- Container definitions
+--
+-- derived from 3GPP 38.413 v15.4.0
+-- **************************************************************
+
+E2AP-Containers {
+iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 53148 e2(1) version1 (1) e2ap(1) e2ap-Containers (5) }
+
+DEFINITIONS AUTOMATIC TAGS ::= 
+
+BEGIN
+
+-- **************************************************************
+--
+-- IE parameter types from other modules.
+--
+-- **************************************************************
+
+IMPORTS
+
+	Criticality,
+	Presence,
+	PrivateIE-ID,
+	ProtocolExtensionID,
+	ProtocolIE-ID
+FROM E2AP-CommonDataTypes
+
+	maxProtocolIEs
+FROM E2AP-Constants;
+
+-- **************************************************************
+--
+-- Class Definition for Protocol IEs
+--
+-- **************************************************************
+
+E2AP-PROTOCOL-IES ::= CLASS {
+	&id				ProtocolIE-ID					UNIQUE,
+	&criticality	Criticality,
+	&Value,
+	&presence		Presence
+}
+WITH SYNTAX {
+	ID				&id
+	CRITICALITY		&criticality
+	TYPE			&Value
+	PRESENCE		&presence
+}
+
+-- **************************************************************
+--
+-- Class Definition for Protocol IEs
+--
+-- **************************************************************
+
+E2AP-PROTOCOL-IES-PAIR ::= CLASS {
+	&id					ProtocolIE-ID				UNIQUE,
+	&firstCriticality	Criticality,
+	&FirstValue,
+	&secondCriticality	Criticality,
+	&SecondValue,
+	&presence			Presence
+}
+WITH SYNTAX {
+	ID						&id
+	FIRST CRITICALITY		&firstCriticality
+	FIRST TYPE				&FirstValue
+	SECOND CRITICALITY		&secondCriticality
+	SECOND TYPE				&SecondValue
+	PRESENCE				&presence
+}
+
+
+
+
+-- **************************************************************
+--
+-- Container for Protocol IEs
+--
+-- **************************************************************
+
+ProtocolIE-Container {E2AP-PROTOCOL-IES : IEsSetParam} ::= 
+	SEQUENCE (SIZE (0..maxProtocolIEs)) OF
+	ProtocolIE-Field {{IEsSetParam}}
+
+ProtocolIE-SingleContainer {E2AP-PROTOCOL-IES : IEsSetParam} ::= 
+	ProtocolIE-Field {{IEsSetParam}}
+
+ProtocolIE-Field {E2AP-PROTOCOL-IES : IEsSetParam} ::= SEQUENCE {
+	id				E2AP-PROTOCOL-IES.&id				({IEsSetParam}),
+	criticality		E2AP-PROTOCOL-IES.&criticality		({IEsSetParam}{@id}),
+	value			E2AP-PROTOCOL-IES.&Value			({IEsSetParam}{@id})
+}
+
+-- **************************************************************
+--
+-- Container for Protocol IE Pairs
+--
+-- **************************************************************
+
+ProtocolIE-ContainerPair {E2AP-PROTOCOL-IES-PAIR : IEsSetParam} ::= 
+	SEQUENCE (SIZE (0..maxProtocolIEs)) OF
+	ProtocolIE-FieldPair {{IEsSetParam}}
+
+ProtocolIE-FieldPair {E2AP-PROTOCOL-IES-PAIR : IEsSetParam} ::= SEQUENCE {
+	id					E2AP-PROTOCOL-IES-PAIR.&id					({IEsSetParam}),
+	firstCriticality	E2AP-PROTOCOL-IES-PAIR.&firstCriticality	({IEsSetParam}{@id}),
+	firstValue			E2AP-PROTOCOL-IES-PAIR.&FirstValue			({IEsSetParam}{@id}),
+	secondCriticality	E2AP-PROTOCOL-IES-PAIR.&secondCriticality	({IEsSetParam}{@id}),
+	secondValue			E2AP-PROTOCOL-IES-PAIR.&SecondValue			({IEsSetParam}{@id})
+}
+
+-- **************************************************************
+--
+-- Container Lists for Protocol IE Containers
+--
+-- **************************************************************
+
+ProtocolIE-ContainerList {INTEGER : lowerBound, INTEGER : upperBound, E2AP-PROTOCOL-IES : IEsSetParam} ::=
+	SEQUENCE (SIZE (lowerBound..upperBound)) OF
+	ProtocolIE-SingleContainer {{IEsSetParam}}
+
+ProtocolIE-ContainerPairList {INTEGER : lowerBound, INTEGER : upperBound, E2AP-PROTOCOL-IES-PAIR : IEsSetParam} ::=
+	SEQUENCE (SIZE (lowerBound..upperBound)) OF
+	ProtocolIE-ContainerPair {{IEsSetParam}}
+
+
+END
+-- ASN1STOP
