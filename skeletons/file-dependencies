@@ -16,7 +16,7 @@ GraphicString.h GraphicString.c OCTET_STRING.h
 IA5String.h IA5String.c OCTET_STRING.h
 INTEGER.h INTEGER.c
 ISO646String.h ISO646String.c OCTET_STRING.h
-NULL.h NULL.c BOOLEAN.h
+NULL.h NULL.c
 NativeEnumerated.h NativeEnumerated.c NativeInteger.h
 NativeInteger.h NativeInteger.c INTEGER.h
 NativeReal.h NativeReal.c REAL.h
