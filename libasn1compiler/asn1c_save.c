@@ -232,8 +232,9 @@ asn1c__save_example_mk_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
         "\nregen: regenerate-from-asn1-source\n"
         "\nregenerate-from-asn1-source:\n\t");
 
-    for(int i = 0; i < argc; i++)
+    for(int i = 0; i < argc; i++) {
         safe_fprintf(mkf, "%s%s", i ? " " : "", argv[i]);
+    }
 	safe_fprintf(mkf, "\n\n");
 
     fclose(mkf);

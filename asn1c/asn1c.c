@@ -74,7 +74,7 @@ main(int ac, char **av) {
     /*
      * Process command-line options.
      */
-    while((ch = getopt(ac, av, "D:d:EFf:g:hn:LPp:RS:vW:X:B")) != -1) switch(ch) {
+    while((ch = getopt(ac, av, "D:d:EFf:g:hn:LPp:RS:vW:XB")) != -1) switch(ch) {
         case 'D':
             if(optarg && *optarg) {
                 size_t optarg_len = strlen(optarg);
@@ -550,6 +550,7 @@ usage(const char *av0) {
 "                        (Default is \"%s\")\n"
 "  -D <dir>              Destination directory for generated files (default current dir)\n"
 "  -X                    Generate and print the XML DTD\n"
+"  -B                    Generate and print the protoBuf\n"
 "\n"
 
 "  -Werror               Treat warnings as errors; abort if any warning\n"
