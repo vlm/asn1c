@@ -1,0 +1,6 @@
+RectangleModule DEFINITIONS ::= BEGIN
+	Rectangle ::= SEQUENCE {
+		height INTEGER,
+		width INTEGER
+	}
+END

@@ -48,6 +48,9 @@ and other encoding rules.
 -X
 :   Generate an XML DTD schema for the specified ASN.1 files.
 
+-B
+:   Generate a Protobuf definition for the specified ASN.1 files.
+
 ## Warning Options
 
 -Werror

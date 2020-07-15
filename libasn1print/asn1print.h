@@ -8,6 +8,7 @@ enum asn1print_flags {
 	APF_PRINT_XML_DTD	= 0x04,	/* Generate XML DTD */
 	APF_PRINT_CONSTRAINTS	= 0x08,	/* Explain constraints */
 	APF_PRINT_CLASS_MATRIX	= 0x10,	/* Dump class matrix */
+	APF_PRINT_PROTOBUF	= 0x20,	/* Generate Protobuf */
 };
 
 /*

@@ -74,7 +74,7 @@ main(int ac, char **av) {
     /*
      * Process command-line options.
      */
-    while((ch = getopt(ac, av, "D:d:EFf:g:hn:LPp:RS:vW:X")) != -1) switch(ch) {
+    while((ch = getopt(ac, av, "D:d:EFf:g:hn:LPp:RS:vW:XB")) != -1) switch(ch) {
         case 'D':
             if(optarg && *optarg) {
                 size_t optarg_len = strlen(optarg);
@@ -244,6 +244,11 @@ main(int ac, char **av) {
             print_arg__print_out = 1;   /* Implicit -E */
             print_arg__fix_n_print = 1; /* Implicit -F */
             asn1_printer_flags |= APF_PRINT_XML_DTD;
+            break;
+        case 'B':
+            print_arg__print_out = 1;   /* Implicit -E */
+            print_arg__fix_n_print = 1; /* Implicit -F */
+            asn1_printer_flags |= APF_PRINT_PROTOBUF;
             break;
         default:
             usage(av[0]);
@@ -545,6 +550,7 @@ usage(const char *av0) {
 "                        (Default is \"%s\")\n"
 "  -D <dir>              Destination directory for generated files (default current dir)\n"
 "  -X                    Generate and print the XML DTD\n"
+"  -B                    Generate and print the protoBuf\n"
 "\n"
 
 "  -Werror               Treat warnings as errors; abort if any warning\n"
