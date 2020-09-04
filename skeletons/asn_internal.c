@@ -20,6 +20,7 @@ asn__format_to_callback(int (*cb)(const void *, size_t, void *key), void *key,
                 va_end(args);
                 return -1;
             }
+            va_end(args);
             break;
         }
 
@@ -43,7 +44,6 @@ asn__format_to_callback(int (*cb)(const void *, size_t, void *key), void *key,
 
     cb_ret = cb(buf, wrote, key);
     if(buf != scratch) FREEMEM(buf);
-    va_end(args);  
     if(cb_ret < 0) {
         return -1;
     }
