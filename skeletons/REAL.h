@@ -42,7 +42,7 @@ ssize_t REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *a
  * Convert between native double type and REAL representation (DER).
  * RETURN VALUES:
  *  0: Value converted successfully
- * -1: An error occured while converting the value: invalid format.
+ * -1: An error occurred while converting the value: invalid format.
  */
 int asn_REAL2double(const REAL_t *real_ptr, double *d);
 int asn_double2REAL(REAL_t *real_ptr, double d);

@@ -109,7 +109,7 @@ NativeInteger_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * ASN.1 encoded INTEGER: buf_ptr, length
 	 * Fill the native, at the same time checking for overflow.
-	 * If overflow occured, return with RC_FAIL.
+	 * If overflow occurred, return with RC_FAIL.
 	 */
 	{
 		INTEGER_t tmp;
