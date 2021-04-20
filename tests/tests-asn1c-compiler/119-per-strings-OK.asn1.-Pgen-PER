@@ -27,36 +27,36 @@ typedef struct PDU {
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
 	} *many;
-	IA5String_t	*ia5	/* OPTIONAL */;
-	IA5String_t	*ia5_c	/* OPTIONAL */;
-	IA5String_t	*ia5_ce	/* OPTIONAL */;
-	IA5String_t	*ia5_ir	/* OPTIONAL */;
-	VisibleString_t	*vs	/* OPTIONAL */;
-	VisibleString_t	*vs_c	/* OPTIONAL */;
-	VisibleString_t	*vs_ce	/* OPTIONAL */;
-	VisibleString_t	*vs_ir	/* OPTIONAL */;
-	PrintableString_t	*pr	/* OPTIONAL */;
-	PrintableString_t	*pr_c	/* OPTIONAL */;
-	PrintableString_t	*pr_ir	/* OPTIONAL */;
-	NumericString_t	*ns	/* OPTIONAL */;
-	NumericString_t	*ns_c	/* OPTIONAL */;
-	NumericString_t	*ns_ce	/* OPTIONAL */;
-	NumericString_t	*ns_ir	/* OPTIONAL */;
-	UTF8String_t	*ut_c	/* OPTIONAL */;
-	UTF8String_t	*ut_ce	/* OPTIONAL */;
-	UTF8String_t	*ut_ir	/* OPTIONAL */;
-	BMPString_t	*bm	/* OPTIONAL */;
-	BMPString_t	*bm_c	/* OPTIONAL */;
-	BMPString_t	*bm_cs	/* OPTIONAL */;
-	BMPString_t	*bm_ce	/* OPTIONAL */;
-	BMPString_t	*bm_ir	/* OPTIONAL */;
-	UniversalString_t	*us	/* OPTIONAL */;
-	UniversalString_t	*us_c	/* OPTIONAL */;
-	UniversalString_t	*us_cs	/* OPTIONAL */;
-	UniversalString_t	*us_ce	/* OPTIONAL */;
-	UniversalString_t	*us_ir	/* OPTIONAL */;
-	double	*real	/* OPTIONAL */;
-	OBJECT_IDENTIFIER_t	*oid	/* OPTIONAL */;
+	IA5String_t	*ia5;	/* OPTIONAL */
+	IA5String_t	*ia5_c;	/* OPTIONAL */
+	IA5String_t	*ia5_ce;	/* OPTIONAL */
+	IA5String_t	*ia5_ir;	/* OPTIONAL */
+	VisibleString_t	*vs;	/* OPTIONAL */
+	VisibleString_t	*vs_c;	/* OPTIONAL */
+	VisibleString_t	*vs_ce;	/* OPTIONAL */
+	VisibleString_t	*vs_ir;	/* OPTIONAL */
+	PrintableString_t	*pr;	/* OPTIONAL */
+	PrintableString_t	*pr_c;	/* OPTIONAL */
+	PrintableString_t	*pr_ir;	/* OPTIONAL */
+	NumericString_t	*ns;	/* OPTIONAL */
+	NumericString_t	*ns_c;	/* OPTIONAL */
+	NumericString_t	*ns_ce;	/* OPTIONAL */
+	NumericString_t	*ns_ir;	/* OPTIONAL */
+	UTF8String_t	*ut_c;	/* OPTIONAL */
+	UTF8String_t	*ut_ce;	/* OPTIONAL */
+	UTF8String_t	*ut_ir;	/* OPTIONAL */
+	BMPString_t	*bm;	/* OPTIONAL */
+	BMPString_t	*bm_c;	/* OPTIONAL */
+	BMPString_t	*bm_cs;	/* OPTIONAL */
+	BMPString_t	*bm_ce;	/* OPTIONAL */
+	BMPString_t	*bm_ir;	/* OPTIONAL */
+	UniversalString_t	*us;	/* OPTIONAL */
+	UniversalString_t	*us_c;	/* OPTIONAL */
+	UniversalString_t	*us_cs;	/* OPTIONAL */
+	UniversalString_t	*us_ce;	/* OPTIONAL */
+	UniversalString_t	*us_ir;	/* OPTIONAL */
+	double	*real;	/* OPTIONAL */
+	OBJECT_IDENTIFIER_t	*oid;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

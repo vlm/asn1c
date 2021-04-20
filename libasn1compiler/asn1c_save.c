@@ -54,6 +54,7 @@ static int pdu_collection_has_unused_types(arg_t *arg);
 static const char *generate_pdu_C_definition(void);
 static void asn1c__cleanup_pdu_type(void);
 static int asn1c__pdu_type_lookup(const char *typename);
+static int generate_constant_file(arg_t *arg, const char *destdir);
 
 static int
 asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
@@ -72,9 +73,10 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
-				[arg->expr->expr_type].type_cb) {
+				[arg->expr->expr_type].type_cb &&
+				(arg->expr->meta_type != AMT_VALUE)) {
 				safe_fprintf(mkf, "\t\\\n\t%s%s.c", destdir,
-				asn1c_make_identifier(AMI_MASK_ONLY_SPACES, arg->expr, 0));
+				asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_USE_PREFIX, arg->expr, 0));
 			}
 		}
 	}
@@ -82,10 +84,11 @@ asn1c__save_library_makefile(arg_t *arg, const asn1c_dep_chainset *deps,
 	TQ_FOR(mod, &(arg->asn->modules), mod_next) {
 		TQ_FOR(arg->expr, &(mod->members), next) {
 			if(asn1_lang_map[arg->expr->meta_type]
-				[arg->expr->expr_type].type_cb) {
+				[arg->expr->expr_type].type_cb &&
+				(arg->expr->meta_type != AMT_VALUE)) {
                 safe_fprintf(
                     mkf, "\t\\\n\t%s%s.h", destdir,
-                    asn1c_make_identifier(AMI_MASK_ONLY_SPACES, arg->expr, 0));
+                    asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_USE_PREFIX, arg->expr, 0));
             }
 		}
 	}
@@ -394,7 +397,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char *destdir,
         TQ_FOR(mod, &(arg->asn->modules), mod_next) {
             TQ_FOR(arg->expr, &(mod->members), next) {
                 if(asn1_lang_map[arg->expr->meta_type][arg->expr->expr_type]
-                       .type_cb) {
+                       .type_cb &&
+                   (arg->expr->meta_type != AMT_VALUE)) {
                     ret = asn1c_dump_streams(arg, deps, destdir, optc, argv);
                     if(ret) break;
                 }
@@ -435,6 +439,8 @@ asn1c_save_compiled_output(arg_t *arg, const char *datadir, const char *destdir,
 
     asn1c_dep_chainset_free(deps);
     asn1c__cleanup_pdu_type();
+
+    generate_constant_file(arg, destdir);
 
     return ret;
 }
@@ -495,7 +501,8 @@ asn1c_save_streams(arg_t *arg, asn1c_dep_chainset *deps, const char *destdir,
 		return -1;
 	}
 
-	filename = strdup(asn1c_make_identifier(AMI_MASK_ONLY_SPACES, expr, (char*)0));
+	filename = strdup(asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_USE_PREFIX,
+						expr, (char*)0));
 	fp_c = asn1c_open_file(destdir, filename, ".c", &tmpname_c);
     if(fp_c == NULL) {
         return -1;
@@ -511,7 +518,7 @@ asn1c_save_streams(arg_t *arg, asn1c_dep_chainset *deps, const char *destdir,
 	generate_preamble(arg, fp_c, optc, argv);
 	generate_preamble(arg, fp_h, optc, argv);
 
-	header_id = asn1c_make_identifier(0, expr, NULL);
+	header_id = asn1c_make_identifier(AMI_USE_PREFIX, expr, NULL);
 	safe_fprintf(fp_h,
 		"#ifndef\t_%s_H_\n"
 		"#define\t_%s_H_\n"
@@ -535,7 +542,7 @@ asn1c_save_streams(arg_t *arg, asn1c_dep_chainset *deps, const char *destdir,
 	SAVE_STREAM(fp_h, OT_DEPS,	"Dependencies", 0);
 	SAVE_STREAM(fp_h, OT_FWD_DECLS,	"Forward declarations", 0);
 	SAVE_STREAM(fp_h, OT_FWD_DEFS,	"Forward definitions", 0);
-	SAVE_STREAM(fp_h, OT_TYPE_DECLS, expr->Identifier, 0);
+	SAVE_STREAM(fp_h, OT_TYPE_DECLS, filename, 0);
 	SAVE_STREAM(fp_h, OT_FUNC_DECLS,"Implementation", 0);
 	safe_fprintf(fp_h, "\n#ifdef __cplusplus\n}\n#endif\n");
 
@@ -791,7 +798,7 @@ generate_pdu_collection(arg_t *arg) {
             abuf_printf(buf,
                         "extern struct asn_TYPE_descriptor_s "
                         "asn_DEF_%s;\n",
-                        asn1c_make_identifier(0, arg->expr, NULL));
+                        asn1c_make_identifier(AMI_USE_PREFIX, arg->expr, NULL));
         }
     }
 
@@ -816,7 +823,7 @@ generate_pdu_collection(arg_t *arg) {
                              arg->expr->module->source_file_name);
             }
             abuf_printf(buf, "\t&asn_DEF_%s,\t\n",
-                         asn1c_make_identifier(0, arg->expr, NULL));
+                         asn1c_make_identifier(AMI_USE_PREFIX, arg->expr, NULL));
         }
     }
 
@@ -924,7 +931,8 @@ pdu_collection_has_unused_types(arg_t *arg) {
 
 static enum include_type_result
 include_type_to_pdu_collection(arg_t *arg) {
-    if(!asn1_lang_map[arg->expr->meta_type][arg->expr->expr_type].type_cb)
+    if(!asn1_lang_map[arg->expr->meta_type][arg->expr->expr_type].type_cb ||
+        (arg->expr->meta_type == AMT_VALUE))
         return 0;
 
     /* Parameterized types can't serve as PDU's without instantiation. */
@@ -942,5 +950,71 @@ include_type_to_pdu_collection(arg_t *arg) {
         return 1;
     }
 
+    return 0;
+}
+
+static abuf *
+generate_constant_collection(arg_t *arg) {
+    asn1p_module_t *mod;
+    abuf *buf = abuf_new();
+    int empty_file = 1;
+
+    abuf_printf(buf, "/*\n * Generated by asn1c-" VERSION
+                     " (http://lionet.info/asn1c)\n */\n\n");
+    abuf_printf(buf, "#ifndef _%sASN_CONSTANT_H\n#define _%sASN_CONSTANT_H\n\n", asn1c_prefix(), asn1c_prefix());
+
+    abuf_printf(buf, "#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n");
+
+    TQ_FOR(mod, &(arg->asn->modules), mod_next) {
+        TQ_FOR(arg->expr, &(mod->members), next) {
+            if(arg->expr->meta_type != AMT_VALUE)
+                continue;
+
+            if(arg->expr->expr_type == ASN_BASIC_INTEGER) {
+                abuf_printf(buf, "#define %s (%s)\n",
+                            asn1c_make_identifier(AMI_USE_PREFIX, arg->expr, 0),
+                            asn1p_itoa(arg->expr->value->value.v_integer));
+                empty_file = 0;
+            }
+        }
+    }
+
+    abuf_printf(buf, "\n\n#ifdef __cplusplus\n}\n#endif\n\n#endif /* _%sASN_CONSTANT_H */\n", asn1c_prefix());
+
+    if(empty_file) {
+        abuf_free(buf);
+        return 0;
+    }
+    return buf;
+}
+
+static int
+generate_constant_file(arg_t *arg, const char *destdir) {
+    abuf *buf = generate_constant_collection(arg);
+    char *filename;
+    int filename_len;
+
+    if(!buf) return 0;
+
+    filename_len = strlen(asn1c_prefix()) + strlen("asn_constant");
+    filename = calloc(filename_len + 1, 1);
+    snprintf(filename, filename_len + 1, "%sasn_constant", asn1c_prefix());
+
+    if(arg->flags & A1C_PRINT_COMPILED) {
+        printf("\n/*** <<< asn_constant.h >>> ***/\n\n");
+        safe_fwrite(buf->buffer, buf->length, 1, stdout);
+    } else {
+
+        FILE *fp = asn1c_open_file(destdir, filename, ".h", 0);
+        if(fp == NULL) {
+            perror("asn_constant.h");
+            return -1;
+        }
+        safe_fwrite(buf->buffer, buf->length, 1, fp);
+        fclose(fp);
+    }
+    safe_fprintf(stderr, "Generated %s.h\n", filename);
+    free(filename);
+    abuf_free(buf);
     return 0;
 }

@@ -7,7 +7,7 @@
 /*** <<< TYPE-DECLS [Message] >>> ***/
 
 typedef struct Message {
-	SpecializedContent_30P0_t	 content;
+	RegionalExtension_t	 content;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -23,7 +23,7 @@ static asn_TYPE_member_t asn_MBR_Message_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Message, content),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_SpecializedContent_30P0,
+		.type = &asn_DEF_RegionalExtension,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		0, 0, /* No default value */
@@ -66,8 +66,8 @@ asn_TYPE_descriptor_t asn_DEF_Message = {
 #include <NativeInteger.h>
 #include <ANY.h>
 #include <asn_ioc.h>
-#include <OPEN_TYPE.h>
 #include <BOOLEAN.h>
+#include <OPEN_TYPE.h>
 #include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
 
@@ -81,11 +81,11 @@ typedef enum value_PR {
 
 /*** <<< TYPE-DECLS [SpecializedContent] >>> ***/
 
-typedef struct SpecializedContent_30P0 {
+typedef struct RegionalExtension {
 	long	 id;
 	struct value {
 		value_PR present;
-		union SpecializedContent_30P0__value_u {
+		union RegionalExtension__value_u {
 			long	 INTEGER;
 			BOOLEAN_t	 BOOLEAN;
 		} choice;
@@ -96,13 +96,13 @@ typedef struct SpecializedContent_30P0 {
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} SpecializedContent_30P0_t;
+} RegionalExtension_t;
 
 /*** <<< FUNC-DECLS [SpecializedContent] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_SpecializedContent_30P0;
-extern asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_30P0_specs_1;
-extern asn_TYPE_member_t asn_MBR_SpecializedContent_30P0_1[2];
+extern asn_TYPE_descriptor_t asn_DEF_RegionalExtension;
+extern asn_SEQUENCE_specifics_t asn_SPC_RegionalExtension_specs_1;
+extern asn_TYPE_member_t asn_MBR_RegionalExtension_1[2];
 
 /*** <<< IOC-TABLES [SpecializedContent] >>> ***/
 
@@ -110,12 +110,12 @@ static const long asn_VAL_1_1 = 1;
 static const long asn_VAL_2_2 = 2;
 static const asn_ioc_cell_t asn_IOS_RegionalExtension_1_rows[] = {
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_1 },
-	{ "&Type", ,
+	{ "&Type", aioc__type, &asn_DEF_NativeInteger },
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
-	{ "&Type", 
+	{ "&Type", aioc__type, &asn_DEF_BOOLEAN }
 };
 static const asn_ioc_set_t asn_IOS_RegionalExtension_1[] = {
-	2, 2, asn_IOS_RegionalExtension_1_rows
+	{ 2, 2, asn_IOS_RegionalExtension_1_rows }
 };
 
 /*** <<< CODE [SpecializedContent] >>> ***/
@@ -140,21 +140,25 @@ memb_id_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static asn_type_selector_result_t
-select_SpecializedContent_30P0_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+select_RegionalExtension_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
 	asn_type_selector_result_t result = {0, 0};
 	const asn_ioc_set_t *itable = asn_IOS_RegionalExtension_1;
 	size_t constraining_column = 0; /* &id */
 	size_t for_column = 1; /* &Type */
-	size_t row;
-	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct SpecializedContent_30P0, id));
+	size_t row, presence_index = 0;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct RegionalExtension, id));
 	
 	for(row=0; row < itable->rows_count; row++) {
 	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
 	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
 	
+	    if(type_cell->cell_kind == aioc__undefined)
+	        continue;
+	
+	    presence_index++;
 	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
 	        result.type_descriptor = type_cell->type_descriptor;
-	        result.presence_index = row + 1;
+	        result.presence_index = presence_index;
 	        break;
 	    }
 	}
@@ -249,8 +253,8 @@ asn_TYPE_descriptor_t asn_DEF_value_3 = {
 	&asn_SPC_value_specs_3	/* Additional specs */
 };
 
-asn_TYPE_member_t asn_MBR_SpecializedContent_30P0_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_30P0, id),
+asn_TYPE_member_t asn_MBR_RegionalExtension_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct RegionalExtension, id),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
@@ -259,43 +263,43 @@ asn_TYPE_member_t asn_MBR_SpecializedContent_30P0_1[] = {
 		0, 0, /* No default value */
 		.name = "id"
 		},
-	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_30P0, value),
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct RegionalExtension, value),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_value_3,
-		.type_selector = select_SpecializedContent_30P0_value_type,
+		.type_selector = select_RegionalExtension_value_type,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_value_constr_3, .general_constraints =  memb_value_constraint_1 },
 		0, 0, /* No default value */
 		.name = "value"
 		},
 };
-static const ber_tlv_tag_t asn_DEF_SpecializedContent_30P0_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_RegionalExtension_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_SpecializedContent_30P0_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_RegionalExtension_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* id */
 };
-asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_30P0_specs_1 = {
-	sizeof(struct SpecializedContent_30P0),
-	offsetof(struct SpecializedContent_30P0, _asn_ctx),
-	.tag2el = asn_MAP_SpecializedContent_30P0_tag2el_1,
+asn_SEQUENCE_specifics_t asn_SPC_RegionalExtension_specs_1 = {
+	sizeof(struct RegionalExtension),
+	offsetof(struct RegionalExtension, _asn_ctx),
+	.tag2el = asn_MAP_RegionalExtension_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* First extension addition */
 };
-asn_TYPE_descriptor_t asn_DEF_SpecializedContent_30P0 = {
-	"SpecializedContent",
-	"SpecializedContent",
+asn_TYPE_descriptor_t asn_DEF_RegionalExtension = {
+	"RegionalExtension",
+	"RegionalExtension",
 	&asn_OP_SEQUENCE,
-	asn_DEF_SpecializedContent_30P0_tags_1,
-	sizeof(asn_DEF_SpecializedContent_30P0_tags_1)
-		/sizeof(asn_DEF_SpecializedContent_30P0_tags_1[0]), /* 1 */
-	asn_DEF_SpecializedContent_30P0_tags_1,	/* Same as above */
-	sizeof(asn_DEF_SpecializedContent_30P0_tags_1)
-		/sizeof(asn_DEF_SpecializedContent_30P0_tags_1[0]), /* 1 */
+	asn_DEF_RegionalExtension_tags_1,
+	sizeof(asn_DEF_RegionalExtension_tags_1)
+		/sizeof(asn_DEF_RegionalExtension_tags_1[0]), /* 1 */
+	asn_DEF_RegionalExtension_tags_1,	/* Same as above */
+	sizeof(asn_DEF_RegionalExtension_tags_1)
+		/sizeof(asn_DEF_RegionalExtension_tags_1[0]), /* 1 */
 	{ 0, 0, SEQUENCE_constraint },
-	asn_MBR_SpecializedContent_30P0_1,
+	asn_MBR_RegionalExtension_1,
 	2,	/* Elements count */
-	&asn_SPC_SpecializedContent_30P0_specs_1	/* Additional specs */
+	&asn_SPC_RegionalExtension_specs_1	/* Additional specs */
 };
 

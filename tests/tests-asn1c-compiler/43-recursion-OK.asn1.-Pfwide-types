@@ -27,7 +27,7 @@ typedef struct Test_structure_1 {
 		/* Context for parsing across buffer boundaries */
 		asn_struct_ctx_t _asn_ctx;
 	} t_member2;
-	struct Test_structure_1	*t_member3	/* OPTIONAL */;
+	struct Test_structure_1	*t_member3;	/* OPTIONAL */
 	INTEGER_t	 t_member4;
 	
 	/* Context for parsing across buffer boundaries */
@@ -370,7 +370,7 @@ struct Test_structure_3;
 /*** <<< TYPE-DECLS [Test-structure-2] >>> ***/
 
 typedef struct Test_structure_2 {
-	struct Test_structure_3	*m1	/* OPTIONAL */;
+	struct Test_structure_3	*m1;	/* OPTIONAL */
 	
 	/* Presence bitmask: ASN_SET_ISPRESENT(pTest_structure_2, Test_structure_2_PR_x) */
 	unsigned int _presence_map
@@ -461,7 +461,7 @@ struct Test_structure_2;
 /*** <<< TYPE-DECLS [Test-structure-3] >>> ***/
 
 typedef struct Test_structure_3 {
-	struct Test_structure_2	*m1	/* OPTIONAL */;
+	struct Test_structure_2	*m1;	/* OPTIONAL */
 	
 	/* Presence bitmask: ASN_SET_ISPRESENT(pTest_structure_3, Test_structure_3_PR_x) */
 	unsigned int _presence_map

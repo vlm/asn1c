@@ -110,4 +110,6 @@ void asn1c_debug_type_naming(asn1p_t *asn, enum asn1c_flags,
 
 void asn1c__add_pdu_type(const char *typename);
 
+int asn1c_attach_streams(asn1p_expr_t *expr);
+
 #endif	/* ASN1_COMPILER_H */

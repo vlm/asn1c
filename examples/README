@@ -36,6 +36,9 @@ This directory contains a few examples.
     Before trying to compile, read the README file in that directory.
     WARNING WARNING WARNING: WORK IN PROGRESS. Not supposed to work yet.
 
+11. The ./sample.source.S1AP directory contain the 3GPP S1AP decoder for
+    S1AP version 14.4.0. Read the README file in that directory.
+
 The crfc2asn1.pl script can be used to extract ASN.1 data from RFC texts.
 For instance, it is used to extract X.509, MEGACO, and LDAPv3 ASN.1 modules
 from the corresponding RFC texts (rfc3280.txt, rfc3525.txt, rfc4211.txt).

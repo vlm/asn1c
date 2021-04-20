@@ -21,13 +21,13 @@ typedef enum Flag_15P1__field {
 /*** <<< TYPE-DECLS [Flag] >>> ***/
 
 typedef struct Flag_15P0 {
-	long	*field	/* DEFAULT 5 */;
+	long	*field;	/* DEFAULT 5 */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
 } Flag_15P0_t;
 typedef struct Flag_15P1 {
-	long	*field	/* DEFAULT 5 */;
+	long	*field;	/* DEFAULT 5 */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
