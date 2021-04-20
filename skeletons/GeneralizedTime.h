@@ -28,6 +28,8 @@ asn_random_fill_f  GeneralizedTime_random_fill;
 #define GeneralizedTime_decode_xer     OCTET_STRING_decode_xer_utf8
 #define GeneralizedTime_decode_uper    OCTET_STRING_decode_uper
 #define GeneralizedTime_encode_uper    OCTET_STRING_encode_uper
+#define GeneralizedTime_decode_aper    OCTET_STRING_decode_aper
+#define GeneralizedTime_encode_aper    OCTET_STRING_encode_aper
 
 /***********************
  * Some handy helpers. *

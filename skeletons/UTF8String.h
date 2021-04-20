@@ -29,6 +29,8 @@ asn_random_fill_f  UTF8String_random_fill;
 #define UTF8String_encode_xer   OCTET_STRING_encode_xer_utf8
 #define UTF8String_decode_uper  OCTET_STRING_decode_uper
 #define UTF8String_encode_uper  OCTET_STRING_encode_uper
+#define UTF8String_decode_aper  OCTET_STRING_decode_aper
+#define UTF8String_encode_aper  OCTET_STRING_encode_aper
 
 /*
  * Returns length of the given UTF-8 string in characters,

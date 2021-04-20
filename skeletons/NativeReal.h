@@ -31,6 +31,8 @@ ber_type_decoder_f NativeReal_decode_ber;
 der_type_encoder_f NativeReal_encode_der;
 per_type_decoder_f NativeReal_decode_uper;
 per_type_encoder_f NativeReal_encode_uper;
+per_type_decoder_f NativeReal_decode_aper;
+per_type_encoder_f NativeReal_encode_aper;
 oer_type_decoder_f NativeReal_decode_oer;
 oer_type_encoder_f NativeReal_encode_oer;
 xer_type_decoder_f NativeReal_decode_xer;

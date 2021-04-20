@@ -19,6 +19,8 @@ xer_type_decoder_f UnconstrainedREAL_decode_xer;
 xer_type_encoder_f UnconstrainedREAL_encode_xer;
 per_type_decoder_f UnconstrainedREAL_decode_uper;
 per_type_encoder_f UnconstrainedREAL_encode_uper;
+per_type_decoder_f UnconstrainedREAL_decode_aper;
+per_type_encoder_f UnconstrainedREAL_encode_aper;
 
 /*** <<< CODE [UnconstrainedREAL] >>> ***/
 
@@ -68,6 +70,8 @@ xer_type_decoder_f WeirdlyConstrainedREAL_decode_xer;
 xer_type_encoder_f WeirdlyConstrainedREAL_encode_xer;
 per_type_decoder_f WeirdlyConstrainedREAL_decode_uper;
 per_type_encoder_f WeirdlyConstrainedREAL_encode_uper;
+per_type_decoder_f WeirdlyConstrainedREAL_decode_aper;
+per_type_encoder_f WeirdlyConstrainedREAL_encode_aper;
 
 /*** <<< CODE [WeirdlyConstrainedREAL] >>> ***/
 
@@ -152,6 +156,8 @@ xer_type_decoder_f Indirect_IEEE_binary32_decode_xer;
 xer_type_encoder_f Indirect_IEEE_binary32_encode_xer;
 per_type_decoder_f Indirect_IEEE_binary32_decode_uper;
 per_type_encoder_f Indirect_IEEE_binary32_encode_uper;
+per_type_decoder_f Indirect_IEEE_binary32_decode_aper;
+per_type_encoder_f Indirect_IEEE_binary32_encode_aper;
 
 /*** <<< CODE [Indirect-IEEE-binary32] >>> ***/
 
@@ -233,6 +239,8 @@ xer_type_decoder_f IEEE_binary32_w_decode_xer;
 xer_type_encoder_f IEEE_binary32_w_encode_xer;
 per_type_decoder_f IEEE_binary32_w_decode_uper;
 per_type_encoder_f IEEE_binary32_w_encode_uper;
+per_type_decoder_f IEEE_binary32_w_decode_aper;
+per_type_encoder_f IEEE_binary32_w_encode_aper;
 
 /*** <<< CODE [IEEE-binary32-w] >>> ***/
 
@@ -314,6 +322,8 @@ xer_type_decoder_f IEEE_binary32_0w_decode_xer;
 xer_type_encoder_f IEEE_binary32_0w_encode_xer;
 per_type_decoder_f IEEE_binary32_0w_decode_uper;
 per_type_encoder_f IEEE_binary32_0w_encode_uper;
+per_type_decoder_f IEEE_binary32_0w_decode_aper;
+per_type_encoder_f IEEE_binary32_0w_encode_aper;
 
 /*** <<< CODE [IEEE-binary32-0w] >>> ***/
 
@@ -395,6 +405,8 @@ xer_type_decoder_f IEEE_binary32_w0_decode_xer;
 xer_type_encoder_f IEEE_binary32_w0_encode_xer;
 per_type_decoder_f IEEE_binary32_w0_decode_uper;
 per_type_encoder_f IEEE_binary32_w0_encode_uper;
+per_type_decoder_f IEEE_binary32_w0_decode_aper;
+per_type_encoder_f IEEE_binary32_w0_encode_aper;
 
 /*** <<< CODE [IEEE-binary32-w0] >>> ***/
 
@@ -475,6 +487,8 @@ xer_type_decoder_f IEEE_binary64_w_decode_xer;
 xer_type_encoder_f IEEE_binary64_w_encode_xer;
 per_type_decoder_f IEEE_binary64_w_decode_uper;
 per_type_encoder_f IEEE_binary64_w_encode_uper;
+per_type_decoder_f IEEE_binary64_w_decode_aper;
+per_type_encoder_f IEEE_binary64_w_encode_aper;
 
 /*** <<< CODE [IEEE-binary64-w] >>> ***/
 
@@ -552,6 +566,8 @@ xer_type_decoder_f IEEE_binary64_0w_decode_xer;
 xer_type_encoder_f IEEE_binary64_0w_encode_xer;
 per_type_decoder_f IEEE_binary64_0w_decode_uper;
 per_type_encoder_f IEEE_binary64_0w_encode_uper;
+per_type_decoder_f IEEE_binary64_0w_decode_aper;
+per_type_encoder_f IEEE_binary64_0w_encode_aper;
 
 /*** <<< CODE [IEEE-binary64-0w] >>> ***/
 
@@ -629,6 +645,8 @@ xer_type_decoder_f IEEE_binary64_w0_decode_xer;
 xer_type_encoder_f IEEE_binary64_w0_encode_xer;
 per_type_decoder_f IEEE_binary64_w0_decode_uper;
 per_type_encoder_f IEEE_binary64_w0_encode_uper;
+per_type_decoder_f IEEE_binary64_w0_decode_aper;
+per_type_encoder_f IEEE_binary64_w0_encode_aper;
 
 /*** <<< CODE [IEEE-binary64-w0] >>> ***/
 
