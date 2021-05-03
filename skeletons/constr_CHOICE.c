@@ -479,7 +479,7 @@ CHOICE_outmost_tag(const asn_TYPE_descriptor_t *td, const void *ptr, int tag_mod
 		return asn_TYPE_outmost_tag(elm->type, memb_ptr,
 			elm->tag_mode, elm->tag);
 	} else {
-		return (ber_tlv_tag_t)-1;
+		return ASN_TAG_AMBIGUOUS;
 	}
 }
 

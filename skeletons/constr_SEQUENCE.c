@@ -293,7 +293,7 @@ SEQUENCE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 				edx = n;
 				ctx->step = 1 + 2 * edx;	/* Remember! */
 				goto microphase2;
-			} else if(elements[n].tag == (ber_tlv_tag_t)-1) {
+			} else if(elements[n].tag == ASN_TAG_AMBIGUOUS) {
 				use_bsearch = 1;
 				break;
 			}

@@ -222,7 +222,7 @@ memb_vparts_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 
 static asn_TYPE_member_t asn_MBR_vparts_2[] = {
 	{ ATF_POINTER, 0, 0,
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_VariablePart,
 		.type_selector = 0,

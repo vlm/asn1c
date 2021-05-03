@@ -185,7 +185,7 @@ static asn_TYPE_member_t asn_MBR_Frame_1[] = {
 		.name = "ident"
 		},
 	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct Frame, value),
-		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_value_3,
 		.type_selector = select_Frame_value_type,
