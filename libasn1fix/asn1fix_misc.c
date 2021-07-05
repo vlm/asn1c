@@ -84,7 +84,7 @@ asn1f_printable_value(asn1p_value_t *v) {
 			int i;
 			/*
 			 * Compute number of bytes necessary
-			 * to represend the binary value.
+			 * to represent the binary value.
 			 */
 			int bits = v->value.binary_vector.size_in_bits;
 			len = ((bits%8)?bits:(bits >> 2)) + sizeof("''H");
@@ -251,7 +251,7 @@ asn1f_check_unique_expr(arg_t *arg) {
 }
 
 /*
- * Check that every preceeding child of the given expr is not
+ * Check that every preceding child of the given expr is not
  * having the name of the given one.
  */
 int

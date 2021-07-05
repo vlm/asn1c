@@ -62,7 +62,7 @@ asn1p_expr_t *asn1f_find_terminal_type(arg_t *arg, asn1p_expr_t *tc);
  * 	value Type2 ::= value2
  * 	value2 Type3 ::= 3
  * Then this function will return the expression for value2 if given
- * the v as an argment.
+ * the v as an argument.
  */
 asn1p_expr_t *asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *tc);
 

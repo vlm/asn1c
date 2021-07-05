@@ -71,7 +71,7 @@
     * Add -fline-refs to avoid being unfriendly to version control systems.
     * Default constraint checking fix.
       Thanks to Bartosz Marcinkiewicz <bma@megawatt.com.pl>
-    * Get rid of non-standard pointer arithmetics on void* pointer.
+    * Get rid of non-standard pointer arithmetic on void* pointer.
     * PER-encoding of integers wider than 32 bits.
 
 0.9.24:    2013-Mar-16
@@ -315,7 +315,7 @@
     * Added ASN1C_ENVIRONMENT_VERSION and get_asn1c_environment_version().
     * Fixed ANY type decoding (Severity: high; Security impact: low).
     * Fixed BER decoder restartability problem with certain primitive
-      types (BOOLEAN, INTEGER, and REAL). The problem occured when the
+      types (BOOLEAN, INTEGER, and REAL). The problem occurred when the
       encoding of such type is split between several bytes.
       (Severity: high; Security impact: low)
     * Support for cross-referencing type definitions (updated ./tests/43-*).
@@ -332,7 +332,7 @@
       the "Spouse" case in A.3.
       (Severity: medium; Security impact: low)
     * Added converters between any generic type and the ANY type.
-    * Parser fixed: Information Object Class fields may be taged.
+    * Parser fixed: Information Object Class fields may be tagged.
     * Parser fixed: tagged types inside SEQUENCE OF/SET OF support.
     * Improved DEFAULT Value parsing and pretty-printing.
     * Condition on distinct tags checker was incorrectly dealing with
@@ -414,7 +414,7 @@
       When encoding data for certain ASN.1 specifications containing
       explicit tags, the tag is always written incorrectly due to
       incorrect memory reference. The encoding will almost always produce
-      unparseable data and might well reference unmapped region so program
+      unparsable data and might well reference unmapped region so program
       would produce segmentation violation. Fortunately, memory is
       read, not written, so remote exploits cannot execute arbitrary
       code and triggering unmapped memory reference is highly unlikely
@@ -503,7 +503,7 @@
 0.8.3:    2004-Mar-14    T-version-0-8-3
 
     * Fixed SET::BER decoder: restart after reaching a buffer boundary
-      weas broken (Severity: high; Security impact: low).
+      was broken (Severity: high; Security impact: low).
     * Fixed OCTET STRING::BER decoder: restart after reaching a buffer
       boundary was broken (Severity: high; Security impact: low).
       Reported by <vss@high.net.ru>

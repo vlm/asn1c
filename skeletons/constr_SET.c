@@ -155,7 +155,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		}
 
 		if(ctx->left >= 0)
-			ctx->left += rval.consumed; /* ?Substracted below! */
+			ctx->left += rval.consumed; /* ?Subtracted below! */
 		ADVANCE(rval.consumed);
 
 		NEXT_PHASE(ctx);
@@ -171,7 +171,7 @@ SET_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		 * try to decode the next member from the list of
 		 * this structure's elements.
 		 * Note that elements in BER may arrive out of
-		 * order, yet DER mandates that they shall arive in the
+		 * order, yet DER mandates that they shall arrive in the
 		 * canonical order of their tags. So, there is a room
 		 * for optimization.
 		 */
