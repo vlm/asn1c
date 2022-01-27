@@ -648,5 +648,6 @@ BIT_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     }
 
     result_ok.length = st->size;
+    FREEMEM(buf);
     return result_ok;
 }
