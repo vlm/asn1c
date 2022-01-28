@@ -1,13 +1,13 @@
-#ifndef	ASN1FIX_TAGS_H
-#define	ASN1FIX_TAGS_H
+#ifndef ASN1FIX_TAGS_H
+#define ASN1FIX_TAGS_H
 
-struct asn1_namespace_s;   /* Forward declaration */
+struct asn1_namespace_s; /* Forward declaration */
 
 enum asn1f_aft_flags_e {
-	AFT_IMAGINARY_ANY	= 0x01,	/* Treat ANY tag as [IMAGINARY ANY] */
-	AFT_FETCH_OUTMOST	= 0x02,	/* Fetch only outmost tag */
-	AFT_FULL_COLLECT	= 0x04,	/* Collect all tags */
-	AFT_CANON_CHOICE	= 0x08,	/* Fetch the minimal CHOICE root tag */
+    AFT_IMAGINARY_ANY = 0x01, /* Treat ANY tag as [IMAGINARY ANY] */
+    AFT_FETCH_OUTMOST = 0x02, /* Fetch only outmost tag */
+    AFT_FULL_COLLECT = 0x04,  /* Collect all tags */
+    AFT_CANON_CHOICE = 0x08,  /* Fetch the minimal CHOICE root tag */
 };
 
 /*
@@ -34,4 +34,4 @@ int asn1f_fetch_outmost_tag(asn1p_t *asn, struct asn1_namespace_s *ns,
                             struct asn1p_type_tag_s *tag,
                             enum asn1f_aft_flags_e);
 
-#endif	/* ASN1FIX_TAGS_H */
+#endif /* ASN1FIX_TAGS_H */

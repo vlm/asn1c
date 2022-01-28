@@ -1,16 +1,16 @@
 /*
  * Functions related with processing values.
  */
-#ifndef	ASN1FIX_VALUE_H
-#define	ASN1FIX_VALUE_H
+#ifndef ASN1FIX_VALUE_H
+#define ASN1FIX_VALUE_H
 
-struct asn1p_namespace_s;   /* Forward declaration */
+struct asn1p_namespace_s; /* Forward declaration */
 
 /*
  * Resolve the value given by reference.
  * This function also takes a parameter which specifies the desired
  * value's type.
- * 
+ *
  * RETURN VALUES:
  * 0:		Value resolved successfully.
  * -1/EPERM:	Recursive looping detected.
@@ -25,7 +25,7 @@ int asn1f_value_resolve(arg_t *arg, asn1p_expr_t *tc,
  * within the type provided. If yes, it will replace referenced value with
  * the appropriate inline value.
  */
-int asn1f_look_value_in_type(arg_t *arg,
-		asn1p_expr_t *type_expr, asn1p_expr_t *value_expr);
+int asn1f_look_value_in_type(arg_t *arg, asn1p_expr_t *type_expr,
+                             asn1p_expr_t *value_expr);
 
-#endif	/* ASN1FIX_VALUE_H */
+#endif /* ASN1FIX_VALUE_H */

@@ -1,8 +1,8 @@
 /*
  * Miscellaneous functions necessary for several other modules.
  */
-#ifndef	ASN1FIX_RETRIEVE_H
-#define	ASN1FIX_RETRIEVE_H
+#ifndef ASN1FIX_RETRIEVE_H
+#define ASN1FIX_RETRIEVE_H
 
 /*
  * Simple search for the label in the descendants of the given node.
@@ -20,7 +20,8 @@ asn1p_expr_t *asn1f_lookup_child(asn1p_expr_t *tc, const char *name);
  * NULL/EPERM:	The name was not found in EXPORTS section of the source module.
  * Also, NULL with errno values defined by asn1f_lookup_module().
  */
-asn1p_module_t *asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const char *name);
+asn1p_module_t *asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod,
+                                        const char *name);
 
 /*
  * Return a module by its name or optional OID.
@@ -29,9 +30,8 @@ asn1p_module_t *asn1f_lookup_in_imports(arg_t *arg, asn1p_module_t *mod, const c
  * NULL/ENOENT:	No module was found by the specified name and oid
  * NULL/ETOOMANYREFS:	Several modules are matching the specified name and oid
  */
-asn1p_module_t *asn1f_lookup_module(arg_t *arg,
-		const char *module_name,
-		const asn1p_oid_t *module_oid);
+asn1p_module_t *asn1f_lookup_module(arg_t *arg, const char *module_name,
+                                    const asn1p_oid_t *module_oid);
 
 /*
  * Return the reference to a destination of the given reference,
@@ -70,7 +70,8 @@ asn1p_expr_t *asn1f_find_terminal_value(arg_t *arg, asn1p_expr_t *tc);
  * Recursively find the original type with constraint for the given
  * expression.
  */
-asn1p_expr_t *asn1f_find_ancestor_type_with_PER_constraint(arg_t *arg, asn1p_expr_t *tc);
+asn1p_expr_t *asn1f_find_ancestor_type_with_PER_constraint(arg_t *arg,
+                                                           asn1p_expr_t *tc);
 
 
-#endif	/* ASN1FIX_RETRIEVE_H */
+#endif /* ASN1FIX_RETRIEVE_H */

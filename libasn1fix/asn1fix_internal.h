@@ -1,41 +1,42 @@
-#ifndef	ASN1FIX_INTERNAL_H
-#define	ASN1FIX_INTERNAL_H
+#ifndef ASN1FIX_INTERNAL_H
+#define ASN1FIX_INTERNAL_H
 
-#ifdef	HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
 /*
  * System headers required in various modules.
  */
+#include <assert.h>
+#include <ctype.h> /* isupper() */
+#include <errno.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
-#include <ctype.h>		/* isupper() */
-#include <errno.h>
-#include <assert.h>
 
-#ifdef	HAVE_UNISTD_H
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
-#include <asn1parser.h>		/* Our lovely ASN.1 parser module */
 #include <asn1_namespace.h>
+#include <asn1parser.h> /* Our lovely ASN.1 parser module */
 #include <genhash.h>
+
 #include "asn1fix.h"
 
-#ifdef	_WIN32
-#define	EX_NOINPUT	66
-#define	EX_DATAERR	65
-#define	snprintf	_snprintf
+#ifdef _WIN32
+#define EX_NOINPUT 66
+#define EX_DATAERR 65
+#define snprintf _snprintf
 #if defined HAVE_DECL_STRCASECMP && !HAVE_DECL_STRCASECMP
-#define	strcasecmp	stricmp
+#define strcasecmp stricmp
 #endif
 #endif
 
-#ifndef	ETOOMANYREFS
-#define	ETOOMANYREFS	144
+#ifndef ETOOMANYREFS
+#define ETOOMANYREFS 144
 #endif
 
 /*
@@ -60,24 +61,24 @@ typedef struct arg_s {
 /*
  * Functions performing normalization of various types.
  */
-#include "asn1fix_misc.h"		/* Support functions */
-#include "asn1fix_value.h"		/* Value processing */
-#include "asn1fix_cstring.h"		/* Fix cstring values */
-#include "asn1fix_compat.h"		/* Data compatibility */
-#include "asn1fix_constr.h"		/* Constructed types */
-#include "asn1fix_class.h"		/* CLASS support */
-#include "asn1fix_cws.h"		/* CLASS WITH SYNTAX support */
-#include "asn1fix_param.h"		/* Parameterization */
-#include "asn1fix_retrieve.h"		/* Data retrieval */
-#include "asn1fix_enum.h"		/* Process ENUMERATED */
-#include "asn1fix_integer.h"		/* Process INTEGER */
-#include "asn1fix_bitstring.h"		/* Process BIT STRING */
-#include "asn1fix_dereft.h"		/* Dereference types */
-#include "asn1fix_derefv.h"		/* Dereference values */
-#include "asn1fix_tags.h"		/* Tags-related stuff */
-#include "asn1fix_constraint.h"		/* Constraint manipulation */
-#include "asn1fix_crange.h"		/* Constraint groking, exportable */
-#include "asn1fix_export.h"		/* Exported functions */
+#include "asn1fix_bitstring.h"  /* Process BIT STRING */
+#include "asn1fix_class.h"      /* CLASS support */
+#include "asn1fix_compat.h"     /* Data compatibility */
+#include "asn1fix_constr.h"     /* Constructed types */
+#include "asn1fix_constraint.h" /* Constraint manipulation */
+#include "asn1fix_crange.h"     /* Constraint groking, exportable */
+#include "asn1fix_cstring.h"    /* Fix cstring values */
+#include "asn1fix_cws.h"        /* CLASS WITH SYNTAX support */
+#include "asn1fix_dereft.h"     /* Dereference types */
+#include "asn1fix_derefv.h"     /* Dereference values */
+#include "asn1fix_enum.h"       /* Process ENUMERATED */
+#include "asn1fix_export.h"     /* Exported functions */
+#include "asn1fix_integer.h"    /* Process INTEGER */
+#include "asn1fix_misc.h"       /* Support functions */
+#include "asn1fix_param.h"      /* Parameterization */
+#include "asn1fix_retrieve.h"   /* Data retrieval */
+#include "asn1fix_tags.h"       /* Tags-related stuff */
+#include "asn1fix_value.h"      /* Value processing */
 
 
 /*
@@ -139,9 +140,9 @@ typedef struct arg_s {
         }                                                                \
     } while(0)
 
-#define	DEBUG(fmt, args...)	LOG(-1, fmt, ##args)
-#define	FATAL(fmt, args...)	LOG( 1, fmt, ##args)
-#define	WARNING(fmt, args...)	LOG( 0, fmt, ##args)
+#define DEBUG(fmt, args...) LOG(-1, fmt, ##args)
+#define FATAL(fmt, args...) LOG(1, fmt, ##args)
+#define WARNING(fmt, args...) LOG(0, fmt, ##args)
 
 
 /*
@@ -149,10 +150,10 @@ typedef struct arg_s {
  */
 #if __STDC_VERSION__ < 199901
 #if !(__GNUC__ == 2 && __GNUC_MINOR__ >= 7 || __GNUC__ >= 3)
-#define __func__	(char *)0	/* Name of the current function */
-#endif	/* GNUC */
+#define __func__ (char *)0 /* Name of the current function */
+#endif                     /* GNUC */
 /* __func__ is supposed to be defined */
 #endif
 
 
-#endif	/* ASN1FIX_INTERNAL_H */
+#endif /* ASN1FIX_INTERNAL_H */

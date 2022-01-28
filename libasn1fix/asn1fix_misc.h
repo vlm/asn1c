@@ -1,8 +1,8 @@
 /*
  * Miscellaneous functions necessary for several other modules.
  */
-#ifndef	ASN1FIX_MISC_H
-#define	ASN1FIX_MISC_H
+#ifndef ASN1FIX_MISC_H
+#define ASN1FIX_MISC_H
 
 /*
  * Recursively invoke a given function over the given expr and all its
@@ -22,8 +22,9 @@ int asn1f_check_unique_expr(arg_t *arg);
  * names (identifiers) will be performed.
  */
 int asn1f_check_unique_expr_child(arg_t *arg, asn1p_expr_t *child,
-		int (*opt_compare)(asn1p_expr_t *a, asn1p_expr_t *b),
-		const char *opt_property_name);
+                                  int (*opt_compare)(asn1p_expr_t *a,
+                                                     asn1p_expr_t *b),
+                                  const char *opt_property_name);
 
 /*
  * Return number of children.
@@ -35,4 +36,4 @@ int asn1f_count_children(asn1p_expr_t *parent);
  */
 int asn1f_check_known_external_type(const char *);
 
-#endif	/* ASN1FIX_MISC_H */
+#endif /* ASN1FIX_MISC_H */

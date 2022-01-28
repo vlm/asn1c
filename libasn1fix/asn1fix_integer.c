@@ -1,13 +1,12 @@
 #include "asn1fix_internal.h"
 
-static int _compare_value(asn1p_expr_t *expr1, asn1p_expr_t *expr2) {
-	if(expr2->value->type == ATV_INTEGER
-	&& expr1->value->type == ATV_INTEGER) {
-		return expr2->value->value.v_integer
-			- expr1->value->value.v_integer;
-	} else {
-		return -1;
-	}
+static int
+_compare_value(asn1p_expr_t *expr1, asn1p_expr_t *expr2) {
+    if(expr2->value->type == ATV_INTEGER && expr1->value->type == ATV_INTEGER) {
+        return expr2->value->value.v_integer - expr1->value->value.v_integer;
+    } else {
+        return -1;
+    }
 }
 
 /*
@@ -15,95 +14,88 @@ static int _compare_value(asn1p_expr_t *expr1, asn1p_expr_t *expr2) {
  */
 int
 asn1f_fix_integer(arg_t *arg) {
-	asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *iv;
-	int rvalue = 0;
-	int ret;
+    asn1p_expr_t *expr = arg->expr;
+    asn1p_expr_t *iv;
+    int rvalue = 0;
+    int ret;
 
-	if(expr->expr_type != ASN_BASIC_INTEGER)
-		return 0;	/* Just ignore it */
+    if(expr->expr_type != ASN_BASIC_INTEGER) return 0; /* Just ignore it */
 
-	DEBUG("(\"%s\", %x) for line %d",
-		expr->Identifier, expr->expr_type, expr->_lineno);
+    DEBUG("(\"%s\", %x) for line %d", expr->Identifier, expr->expr_type,
+          expr->_lineno);
 
-	/*
-	 * Scan the integer values in search for inconsistencies.
-	 */
-	TQ_FOR(iv, &(expr->members), next) {
+    /*
+     * Scan the integer values in search for inconsistencies.
+     */
+    TQ_FOR(iv, &(expr->members), next) {
+        DEBUG("\tItem %s(%s)", iv->Identifier,
+              asn1f_printable_value(iv->value));
 
-		DEBUG("\tItem %s(%s)", iv->Identifier,
-			asn1f_printable_value(iv->value));
+        /*
+         * Found "...", check correctness.
+         */
+        if(iv->expr_type == A1TC_EXTENSIBLE) {
+            FATAL(
+                "INTEGER %s at line %d: "
+                "Extension marker is not allowed",
+                expr->Identifier, iv->_lineno);
+            rvalue = -1;
+            continue;
+        }
 
-		/*
-		 * Found "...", check correctness.
-		 */
-		if(iv->expr_type == A1TC_EXTENSIBLE) {
-			FATAL("INTEGER %s at line %d: "
-				"Extension marker is not allowed",
-				expr->Identifier,
-				iv->_lineno);
-			rvalue = -1;
-			continue;
-		}
+        if(iv->Identifier == NULL || iv->expr_type != A1TC_UNIVERVAL) {
+            FATAL(
+                "INTEGER %s at line %d: "
+                "Unsupported enumeration element %s",
+                expr->Identifier, iv->_lineno,
+                iv->Identifier ? iv->Identifier : "<Anonymous>");
+            rvalue = -1;
+            continue;
+        }
 
-		if(iv->Identifier == NULL
-		|| iv->expr_type != A1TC_UNIVERVAL) {
-			FATAL("INTEGER %s at line %d: "
-				"Unsupported enumeration element %s",
-				expr->Identifier,
-				iv->_lineno,
-				iv->Identifier?iv->Identifier:"<Anonymous>"
-			);
-			rvalue = -1;
-			continue;
-		}
+        if(iv->value == NULL) {
+            FATAL(
+                "INTEGER %s at line %d: "
+                "Value for the identifier %s "
+                "must be set explicitly",
+                expr->Identifier, iv->_lineno, iv->Identifier);
+            rvalue = -1;
+            continue;
+        } else if(iv->value->type == ATV_REFERENCED) {
+            /*
+             * Resolve the value, once and for all.
+             */
+            if(asn1f_value_resolve(arg, iv, 0)) {
+                /* This function will emit messages */
+                rvalue = -1;
+                continue;
+            }
+        }
 
-		if(iv->value == NULL) {
-			FATAL("INTEGER %s at line %d: "
-				"Value for the identifier %s "
-				"must be set explicitly",
-				expr->Identifier,
-				iv->_lineno,
-				iv->Identifier
-			);
-			rvalue = -1;
-			continue;
-		} else if(iv->value->type == ATV_REFERENCED) {
-			/*
-			 * Resolve the value, once and for all.
-			 */
-			if(asn1f_value_resolve(arg, iv, 0)) {
-				/* This function will emit messages */
-				rvalue = -1;
-				continue;
-			}
-		}
+        if(iv->value->type != ATV_INTEGER) {
+            FATAL(
+                "INTEGER %s at line %d: "
+                "Value for the identifier %s "
+                "is not compatible with INTEGER type",
+                expr->Identifier, iv->_lineno);
+            rvalue = -1;
+            continue;
+        }
 
-		if(iv->value->type != ATV_INTEGER) {
-			FATAL("INTEGER %s at line %d: "
-				"Value for the identifier %s "
-				"is not compatible with INTEGER type",
-				expr->Identifier,
-				iv->_lineno);
-			rvalue = -1;
-			continue;
-		}
-
-		/*
-		 * Check that all identifiers are distinct.
-		 */
-		ret = asn1f_check_unique_expr_child(arg, iv, 0, "identifier");
-		RET2RVAL(ret, rvalue);
-		/*
-		 * Check that all values are distinct.
-		 */
-		ret = asn1f_check_unique_expr_child(arg, iv,
-				_compare_value, "value");
-		RET2RVAL(ret, rvalue);
-	}
+        /*
+         * Check that all identifiers are distinct.
+         */
+        ret = asn1f_check_unique_expr_child(arg, iv, 0, "identifier");
+        RET2RVAL(ret, rvalue);
+        /*
+         * Check that all values are distinct.
+         */
+        ret = asn1f_check_unique_expr_child(arg, iv, _compare_value, "value");
+        RET2RVAL(ret, rvalue);
+    }
 
 
-	return rvalue;
+    return rvalue;
 }
 
 #if 0
@@ -156,5 +148,3 @@ _asn1f_make_sure_type_is(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_type_e type)
 	return ret;
 }
 #endif
-
-
