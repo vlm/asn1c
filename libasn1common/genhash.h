@@ -39,28 +39,26 @@
 typedef struct genhash_s genhash_t;
 
 /*
- * Create a new hash table 
+ * Create a new hash table
  * keycmpf	: function which returns 0 if keys are equal, else !0
  * keyhashf	: function which computes the hash value of a key
  * keydestroyf	: function for destroying keys, can be NULL for no destructor
  * valuedestroyf: function for destroying values, can be NULL for no destructor
  */
-genhash_t *genhash_new(
-	int (*keycmpf) (const void *key1, const void *key2),
-	unsigned int (*keyhashf) (const void *key),
-	void (*keydestroyf) (void *key),
-	void (*valuedestroyf) (void *value));
+genhash_t *genhash_new(int (*keycmpf)(const void *key1, const void *key2),
+                       unsigned int (*keyhashf)(const void *key),
+                       void (*keydestroyf)(void *key),
+                       void (*valuedestroyf)(void *value));
 
 /*
  * Re-initialize genhash structure with new callback functions.
  * (Rarely ever used).
  */
-int genhash_reinit(
-	genhash_t *hash,
-	int (*keycmpf) (const void *key1, const void *key2),
-	unsigned int (*keyhashf) (const void *key),
-	void (*keydestroyf) (void *key),
-	void (*valuedestroyf) (void *value));
+int genhash_reinit(genhash_t *hash,
+                   int (*keycmpf)(const void *key1, const void *key2),
+                   unsigned int (*keyhashf)(const void *key),
+                   void (*keydestroyf)(void *key),
+                   void (*valuedestroyf)(void *value));
 
 /*
  * Initialize the LRU-driven elements count limiting
@@ -70,7 +68,7 @@ int genhash_reinit(
  * The deletion may be skipped if the hash is very small
  * (currently, "small" means no longer than 4 entries).
  * This function is immune to NULL argument.
- * 
+ *
  * RETURN VALUES:
  * 	The previous LRU limit, or -1/EINVAL when h is NULL.
  * EXAMPLE:
@@ -102,7 +100,7 @@ void genhash_destroy(genhash_t *h);
  * Optionally, it may be told to invoke, or not invoke the corresponding
  * key/value destructors.
  * This function is immune to NULL argument.
- * 
+ *
  * EXAMPLE:
  * 	genhash_empty(h, 1, 1);	// Remove all entries, invoking destructors
  */
@@ -159,14 +157,14 @@ int genhash_count(genhash_t *h);
  * genhash_iter*() functions.
  */
 typedef struct genhash_iter_s {
-	genhash_t *hash_ptr;
-	union {
-		int item_number;
-		void *location;
-	} un;
-	int order_lru_first;
-	struct genhash_iter_s *iter_prev;
-	struct genhash_iter_s *iter_next;
+    genhash_t *hash_ptr;
+    union {
+        int item_number;
+        void *location;
+    } un;
+    int order_lru_first;
+    struct genhash_iter_s *iter_prev;
+    struct genhash_iter_s *iter_next;
 } genhash_iter_t;
 
 /*
@@ -183,8 +181,8 @@ typedef struct genhash_iter_s {
  * RETURN VALUES:
  * 	number of entries the hash had at the moment.
  */
-int genhash_iter_init(genhash_iter_t *iter,
-	genhash_t *hash_to_use, int reverse_order);
+int genhash_iter_init(genhash_iter_t *iter, genhash_t *hash_to_use,
+                      int reverse_order);
 
 /*
  * Returns the key and value of each element in optional (key) and (value),
@@ -202,7 +200,7 @@ int genhash_iter_init(genhash_iter_t *iter,
  *		print_keyval(key, val);		// Use key and value
  * 	genhash_iter_done(&iter);		// Done iterations.
  */
-int genhash_iter(genhash_iter_t *iter, void */***/key, void */***/val);
+int genhash_iter(genhash_iter_t *iter, void * /***/ key, void * /***/ val);
 
 /*
  * Dispose of the iterator.
@@ -211,20 +209,20 @@ int genhash_iter(genhash_iter_t *iter, void */***/key, void */***/val);
  */
 void genhash_iter_done(genhash_iter_t *iter);
 
-
+
 /****************************************************************************/
 
 /*
  * The following hashing and comparison functions are provided for
  * you, or you may supply your own.
  */
-unsigned int hashf_int (const void *key); /* Key is an int * */
-int cmpf_int (const void *key1, const void *key2);
+unsigned int hashf_int(const void *key); /* Key is an int * */
+int cmpf_int(const void *key1, const void *key2);
 
-unsigned int hashf_void (const void *key);
-int cmpf_void (const void *key1, const void *key2);
+unsigned int hashf_void(const void *key);
+int cmpf_void(const void *key1, const void *key2);
 
-unsigned int hashf_string (const void *key);
-int cmpf_string (const void *key1, const void *key2);
+unsigned int hashf_string(const void *key);
+int cmpf_string(const void *key1, const void *key2);
 
-#endif	/* __GENHASH_H__ */
+#endif /* __GENHASH_H__ */

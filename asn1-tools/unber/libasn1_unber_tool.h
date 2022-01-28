@@ -68,4 +68,3 @@ int unber_stream(const char *fname, input_stream_t *, output_stream_t *);
  * Decode the TLV given by the given string.
  */
 int decode_tlv_from_hex_string(const char *datastring);
-

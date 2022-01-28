@@ -1,12 +1,12 @@
 /*
  * Structures and prototypes related to parameterization
  */
-#ifndef	ASN1_NAMESPACE_H
-#define	ASN1_NAMESPACE_H
+#ifndef ASN1_NAMESPACE_H
+#define ASN1_NAMESPACE_H
 
-struct asn1p_ref_s;     /* Forward declaration */
-struct asn1p_expr_s;    /* Forward declaration */
-struct asn1p_module_s;  /* Forward declaration */
+struct asn1p_ref_s;    /* Forward declaration */
+struct asn1p_expr_s;   /* Forward declaration */
+struct asn1p_module_s; /* Forward declaration */
 
 typedef struct asn1_namespace_s {
     struct asn1_namespace_element_s {
@@ -17,15 +17,15 @@ typedef struct asn1_namespace_s {
         union {
             struct {
                 struct asn1p_module_s *module;
-                int stop_search;    /* This module MUST contain the symbol */
+                int stop_search; /* This module MUST contain the symbol */
             } space;
             struct {
-                struct asn1p_ref_s *opt_governor;   /* optional */
+                struct asn1p_ref_s *opt_governor; /* optional */
                 char *identifier;
                 struct asn1p_expr_s *resolution;
             } symbol;
         } u;
-    } *elements;
+    } * elements;
     size_t elements_count;
     size_t elements_size;
 } asn1_namespace_t;
@@ -41,15 +41,16 @@ void asn1_namespace_free(asn1_namespace_t *);
 
 asn1_namespace_t *asn1_namespace_clone(const asn1_namespace_t *);
 
-asn1_namespace_t *asn1_namespace_new_from_module(struct asn1p_module_s *mod, int stop_search);
+asn1_namespace_t *asn1_namespace_new_from_module(struct asn1p_module_s *mod,
+                                                 int stop_search);
 
 void asn1_namespace_add_module(asn1_namespace_t *,
                                struct asn1p_module_s *module, int stop_search);
 
 void asn1_namespace_add_symbol(asn1_namespace_t *,
-                                struct asn1p_ref_s *opt_governor,
-                                const char *identifier,
-                                struct asn1p_expr_s *resolved_argument);
+                               struct asn1p_ref_s *opt_governor,
+                               const char *identifier,
+                               struct asn1p_expr_s *resolved_argument);
 
 /*
  * Human-readable namespace layout.
@@ -68,13 +69,13 @@ asn1_namespace_t *asn1_namespace_new_ND(const asn1_namespace_t *ns1,
  * Introduce and destroy namespace around the given code.
  * This aids memory management around dynamic namespaces.
  */
-#define WITH_MODULE_NAMESPACE(mod, ns_var, code)     \
-    ({                                               \
+#define WITH_MODULE_NAMESPACE(mod, ns_var, code)    \
+    ({                                              \
         struct asn1_namespace_s *ns_var =           \
             asn1_namespace_new_from_module(mod, 1); \
-        typeof(code) ret = code;                     \
+        typeof(code) ret = code;                    \
         asn1_namespace_free(ns_var);                \
-        ret;                                         \
+        ret;                                        \
     })
 
-#endif	/* ASN1_NAMESPACE_H */
+#endif /* ASN1_NAMESPACE_H */

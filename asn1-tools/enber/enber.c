@@ -23,14 +23,14 @@
  * SUCH DAMAGE.
  *
  */
-#include "asn1_common.h"
-
 #include <asn1parser.h> /* For static string tables */
-
 #include <asn_application.h>
-#include <constraints.c>
-#include <ber_tlv_tag.c>
+
 #include <ber_tlv_length.c>
+#include <ber_tlv_tag.c>
+#include <constraints.c>
+
+#include "asn1_common.h"
 
 #undef COPYRIGHT
 #define COPYRIGHT "Copyright (c) 2004, 2005 Lev Walkin <vlm@lionet.info>\n"

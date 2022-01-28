@@ -9,7 +9,8 @@ struct memory_buffer_stream {
     size_t offset;
 };
 
-static int memory_buffer_stream_nextChar(input_stream_t *ibs) {
+static int
+memory_buffer_stream_nextChar(input_stream_t *ibs) {
     struct memory_buffer_stream *bs = (struct memory_buffer_stream *)ibs;
 
     if(bs->offset < bs->size) {
@@ -19,7 +20,8 @@ static int memory_buffer_stream_nextChar(input_stream_t *ibs) {
     }
 }
 
-static off_t memory_buffer_stream_bytesRead(input_stream_t *ibs) {
+static off_t
+memory_buffer_stream_bytesRead(input_stream_t *ibs) {
     struct memory_buffer_stream *bs = (struct memory_buffer_stream *)ibs;
 
     return (off_t)bs->offset;
@@ -38,7 +40,6 @@ int LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size);
 
 int
 LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
-
     // Read from a memory buffer.
     struct memory_buffer_stream mbs;
     mbs.istream.nextChar = memory_buffer_stream_nextChar;
@@ -57,8 +58,9 @@ LLVMFuzzerTestOneInput(const uint8_t *Data, size_t Size) {
     return 0;
 }
 
-#ifndef  ENABLE_LIBFUZZER
-int main() {
+#ifndef ENABLE_LIBFUZZER
+int
+main() {
     printf("libfuzzer is not compiled-in, pretend the test went OK.\n");
     return 0;
 }

@@ -1,9 +1,10 @@
-#include "asn1c_internal.h"
 #include "asn1c_fdeps.h"
+
+#include "asn1c_internal.h"
 
 static asn1c_dep_filename *asn1c_dep_filename_new(const char *filename);
 static void asn1c_dep_add(asn1c_dep_chain *dlist, const char *filename,
-                         int lineno, int column);
+                          int lineno, int column);
 static asn1c_dep_chain *asn1c_dep_chain_new(void);
 
 static asn1c_dep_chain *
@@ -49,9 +50,9 @@ asn1c_activate_dependency(asn1c_dep_chainset *deps, const char *data,
             end = strchr(start, '\"');
         }
         if(end) {
-            assert((end-start) + 1 < (ssize_t)sizeof(fname_scratch));
+            assert((end - start) + 1 < (ssize_t)sizeof(fname_scratch));
             memcpy(fname_scratch, start, end - start);
-            fname_scratch[end-start] = '\0';
+            fname_scratch[end - start] = '\0';
             fname = fname_scratch;
         } else {
             return;
@@ -75,67 +76,65 @@ asn1c_activate_dependency(asn1c_dep_chainset *deps, const char *data,
 
 asn1c_dep_chainset *
 asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
-	char buf[4096];
-	asn1c_dep_chainset *deps;
-	FILE *f;
+    char buf[4096];
+    asn1c_dep_chainset *deps;
+    FILE *f;
     int lineno = 0;
 
-	if(!datadir || strlen(datadir) > sizeof(buf) / 2) {
-		errno = EINVAL;
-		return NULL;
-	} else {
-		sprintf(buf, "%s/file-dependencies", datadir);
-	}
+    if(!datadir || strlen(datadir) > sizeof(buf) / 2) {
+        errno = EINVAL;
+        return NULL;
+    } else {
+        sprintf(buf, "%s/file-dependencies", datadir);
+    }
 
-	f = fopen(buf, "r");
-	if(!f) return NULL;
+    f = fopen(buf, "r");
+    if(!f) return NULL;
 
-	deps = calloc(1, sizeof(*deps));
-	assert(deps);
+    deps = calloc(1, sizeof(*deps));
+    assert(deps);
     enum asn1c_dep_section section = FDEP_COMMON_FILES;
     int activate = 0;
 
     while(fgets(buf, sizeof(buf), f)) {
-		char *p = strchr(buf, '#');
-		if(p) *p = '\0';	/* Remove comments */
+        char *p = strchr(buf, '#');
+        if(p) *p = '\0'; /* Remove comments */
 
         lineno++;
 
         asn1c_dep_chain *dc = asn1c_dep_chains_add_new(deps, section, activate);
 
-        for(p = strtok(buf, " \t\r\n"); p;
-				p = strtok(NULL, " \t\r\n")) {
-
-			/*
-			 * Special "prefix" section.
-			 */
-			if(strchr(p, ':')) {
-				if(strcmp(p, "COMMON-FILES:") == 0) {
-					section = FDEP_COMMON_FILES;
+        for(p = strtok(buf, " \t\r\n"); p; p = strtok(NULL, " \t\r\n")) {
+            /*
+             * Special "prefix" section.
+             */
+            if(strchr(p, ':')) {
+                if(strcmp(p, "COMMON-FILES:") == 0) {
+                    section = FDEP_COMMON_FILES;
                     activate = 1;
-				} else if(strcmp(p, "CONVERTER:") == 0) {
+                } else if(strcmp(p, "CONVERTER:") == 0) {
                     activate = 1;
-					section = FDEP_CONVERTER;
-				} else if((arg->flags & A1C_GEN_OER)
-					  && strcmp(p, "CODEC-OER:") == 0) {
+                    section = FDEP_CONVERTER;
+                } else if((arg->flags & A1C_GEN_OER)
+                          && strcmp(p, "CODEC-OER:") == 0) {
                     activate = 0;
-					section = FDEP_CODEC_OER;
-				} else if((arg->flags & A1C_GEN_PER)
-					  && strcmp(p, "CODEC-PER:") == 0) {
+                    section = FDEP_CODEC_OER;
+                } else if((arg->flags & A1C_GEN_PER)
+                          && strcmp(p, "CODEC-PER:") == 0) {
                     activate = 0;
-					section = FDEP_CODEC_PER;
-				} else {
-					section = FDEP_IGNORE;
+                    section = FDEP_CODEC_PER;
+                } else {
+                    section = FDEP_IGNORE;
                     activate = 0;
                 }
                 break;
-			}
+            }
 
             asn1c_dep_add(dc, p, lineno, p - buf);
         }
-	}
+    }
 
-	fclose(f);
+    fclose(f);
 
     /* A single filename by itself means that we should include that */
     for(size_t i = 0; i < deps->chains_count; i++) {
@@ -146,7 +145,7 @@ asn1c_read_file_dependencies(arg_t *arg, const char *datadir) {
         }
     }
 
-	return deps;
+    return deps;
 }
 
 static asn1c_dep_filename *
@@ -160,7 +159,7 @@ asn1c_dep_filename_new(const char *filename) {
     d->filename = strdup(filename);
     assert(d->filename);
 
-	return d;
+    return d;
 }
 
 static asn1c_dep_chain *
@@ -169,7 +168,8 @@ asn1c_dep_chain_new() {
 }
 
 static void
-asn1c_dep_add(asn1c_dep_chain *dlist, const char *filename, int lineno, int column) {
+asn1c_dep_add(asn1c_dep_chain *dlist, const char *filename, int lineno,
+              int column) {
     asn1c_dep_filename *df = asn1c_dep_filename_new(filename);
     df->lineno = lineno;
     df->column = column;
@@ -196,14 +196,14 @@ asn1c_deps_flatten(const asn1c_dep_chainset *deps,
                    enum asn1c_dep_section include_section) {
     asn1c_dep_chain *dlist;
 
-	if(!deps) {
-		errno = EINVAL;
-		return 0;
-	}
+    if(!deps) {
+        errno = EINVAL;
+        return 0;
+    }
 
-	dlist = asn1c_dep_chain_new();
+    dlist = asn1c_dep_chain_new();
 
-	for(size_t i = 0; i < deps->chains_count; i++) {
+    for(size_t i = 0; i < deps->chains_count; i++) {
         asn1c_tagged_dep_chain *tc = deps->chains[i];
         asn1c_dep_chain *dc = tc->chain;
 
@@ -215,14 +215,14 @@ asn1c_deps_flatten(const asn1c_dep_chainset *deps,
         }
 
         for(size_t j = 0; j < dc->deps_count; j++) {
-            if(!asn1c_dep_has_filename(dlist, dc->deps[j]->filename))  {
+            if(!asn1c_dep_has_filename(dlist, dc->deps[j]->filename)) {
                 asn1c_dep_add(dlist, dc->deps[j]->filename, dc->deps[j]->lineno,
                               dc->deps[j]->column);
             }
         }
     }
 
-	return dlist;
+    return dlist;
 }
 
 void
@@ -239,7 +239,7 @@ asn1c_dep_chain_free(asn1c_dep_chain *dc) {
 
 void
 asn1c_dep_chainset_free(asn1c_dep_chainset *deps) {
-	if(deps) {
+    if(deps) {
         for(size_t i = 0; i < deps->chains_count; i++) {
             asn1c_dep_chain_free(deps->chains[i]->chain);
             free(deps->chains[i]->activated.by);

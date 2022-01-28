@@ -1,12 +1,11 @@
-#ifndef	ASN1C_FDEPS_H
-#define	ASN1C_FDEPS_H
+#ifndef ASN1C_FDEPS_H
+#define ASN1C_FDEPS_H
 
 typedef struct {
     char *filename;
     int lineno;
     int column;
 } asn1c_dep_filename;
-
 
 /*
  * Format:
@@ -58,4 +57,4 @@ asn1c_dep_chain *asn1c_deps_flatten(const asn1c_dep_chainset *deps,
 void asn1c_dep_chain_free(asn1c_dep_chain *);
 void asn1c_dep_chainset_free(asn1c_dep_chainset *);
 
-#endif	/* ASN1C_FDEPS_H */
+#endif /* ASN1C_FDEPS_H */

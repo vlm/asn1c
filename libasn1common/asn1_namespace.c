@@ -1,12 +1,13 @@
+#include "asn1_namespace.h"
+
+#include <assert.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-#include <assert.h>
 
-#include "asn1_ref.h"
 #include "asn1_buffer.h"
-#include "asn1_namespace.h"
+#include "asn1_ref.h"
 
 static void (*_add_standard_namespaces_cb)(asn1_namespace_t *);
 
@@ -52,14 +53,14 @@ asn1_namespace_clone(const asn1_namespace_t *old_ns) {
         switch(old_ns->elements[i].selector) {
         case NAM_SPACE:
             asn1_namespace_add_module(new_ns,
-                                       old_ns->elements[i].u.space.module,
-                                       old_ns->elements[i].u.space.stop_search);
+                                      old_ns->elements[i].u.space.module,
+                                      old_ns->elements[i].u.space.stop_search);
             break;
         case NAM_SYMBOL:
-            asn1_namespace_add_symbol(
-                new_ns, old_ns->elements[i].u.symbol.opt_governor,
-                old_ns->elements[i].u.symbol.identifier,
-                old_ns->elements[i].u.symbol.resolution);
+            asn1_namespace_add_symbol(new_ns,
+                                      old_ns->elements[i].u.symbol.opt_governor,
+                                      old_ns->elements[i].u.symbol.identifier,
+                                      old_ns->elements[i].u.symbol.resolution);
             break;
         }
     }
@@ -132,7 +133,7 @@ asn1_namespace_string(const asn1_namespace_t *ns) {
                 abuf_printf(&ab, "S:\"%s%s%s\"",
                             ns->elements[i].u.symbol.opt_governor
                                 ? asn1p_ref_string(
-                                      ns->elements[i].u.symbol.opt_governor)
+                                    ns->elements[i].u.symbol.opt_governor)
                                 : "",
                             ns->elements[i].u.symbol.opt_governor ? ":" : "",
                             ns->elements[i].u.symbol.identifier);
@@ -145,4 +146,3 @@ asn1_namespace_string(const asn1_namespace_t *ns) {
         return "<no namespace>";
     }
 }
-

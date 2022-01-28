@@ -24,24 +24,25 @@
  * SUCH DAMAGE.
  *
  */
-#include "asn1_common.h"
 #include "libasn1_unber_tool.h"
+
+#include "asn1_common.h"
 
 #define ASN_DISABLE_PER_SUPPORT 1
 #define ASN_DISABLE_OER_SUPPORT 1
 
 #include <asn1parser.h> /* For static string tables */
-
 #include <asn_application.h>
-#include <constraints.c>
-#include <ber_tlv_tag.c>
-#include <ber_tlv_length.c>
+
 #include <INTEGER.c>
 #include <OBJECT_IDENTIFIER.c>
 #include <RELATIVE-OID.c>
-#include <asn_codecs_prim.c>
 #include <asn1p_integer.c>
+#include <asn_codecs_prim.c>
 #include <asn_internal.c>
+#include <ber_tlv_length.c>
+#include <ber_tlv_tag.c>
+#include <constraints.c>
 
 static int single_type_decoding = 0;   /* -1 enables that */
 static int minimalistic = 0;           /* -m enables that */
@@ -49,11 +50,26 @@ static int pretty_printing = 1;        /* -p disables that */
 static long skip_bytes = 0;            /* -s controls that */
 static char indent_bytes[16] = "    "; /* -i controls that */
 
-void set_minimalistic_output(int v) { minimalistic = v; }
-void set_single_type_decoding(int v) { single_type_decoding = v; }
-void set_pretty_printing(int v) { pretty_printing = v; }
-int set_skip_bytes(long v) { if(v < 0) return -1; skip_bytes = v; return 0; }
-int set_indent_size(int indent_size) {
+void
+set_minimalistic_output(int v) {
+    minimalistic = v;
+}
+void
+set_single_type_decoding(int v) {
+    single_type_decoding = v;
+}
+void
+set_pretty_printing(int v) {
+    pretty_printing = v;
+}
+int
+set_skip_bytes(long v) {
+    if(v < 0) return -1;
+    skip_bytes = v;
+    return 0;
+}
+int
+set_indent_size(int indent_size) {
     if(indent_size < 0 || indent_size >= (int)sizeof(indent_bytes)) {
         return -1;
     }
@@ -68,8 +84,8 @@ typedef enum pd_code {
     PD_EOF = 1,
 } pd_code_e;
 static pd_code_e process_deeper(const char *fname, input_stream_t *,
-                                output_stream_t *os, int level,
-                                ssize_t limit, ber_tlv_len_t *frame_size,
+                                output_stream_t *os, int level, ssize_t limit,
+                                ber_tlv_len_t *frame_size,
                                 ber_tlv_len_t effective_size, int expect_eoc);
 static void print_TL(output_stream_t *, int fin, off_t offset, int level,
                      int constr, ssize_t tlen, ber_tlv_tag_t, ber_tlv_len_t,
@@ -77,7 +93,10 @@ static void print_TL(output_stream_t *, int fin, off_t offset, int level,
 static int print_V(const char *fname, input_stream_t *, output_stream_t *,
                    ber_tlv_tag_t, ber_tlv_len_t);
 
-static int ibs_getc(input_stream_t *ibs) { return ibs->nextChar(ibs); }
+static int
+ibs_getc(input_stream_t *ibs) {
+    return ibs->nextChar(ibs);
+}
 static int __attribute__((format(printf, 2, 3)))
 osprintf(output_stream_t *os, const char *fmt, ...) {
     va_list ap;
@@ -291,8 +310,8 @@ process_deeper(const char *fname, input_stream_t *ibs, output_stream_t *os,
             local_esize += tlv_len;
         }
 
-        print_TL(os, 1, ibs->bytesRead(ibs), level, constr, tblen,
-                 tlv_tag, tlv_len, local_esize);
+        print_TL(os, 1, ibs->bytesRead(ibs), level, constr, tblen, tlv_tag,
+                 tlv_len, local_esize);
 
         tblen = 0;
 
@@ -574,7 +593,7 @@ print_V(const char *fname, input_stream_t *ibs, output_stream_t *os,
                || vbuf[i] == 0x26 /* '&' */
                || vbuf[i] == 0x3c /* '<' */
                || vbuf[i] == 0x3e /* '>' */
-               )
+            )
                 osprintf(os, "&#x%02x;", vbuf[i]);
             else
                 osprintf(os, "%c", vbuf[i]);
@@ -592,7 +611,8 @@ struct file_input_stream {
     off_t offset;
 };
 
-static int file_input_stream_nextChar(input_stream_t *ibs) {
+static int
+file_input_stream_nextChar(input_stream_t *ibs) {
     struct file_input_stream *fs = (struct file_input_stream *)ibs;
     int ret = fgetc(fs->fp);
     if(ret != -1) {
@@ -601,7 +621,8 @@ static int file_input_stream_nextChar(input_stream_t *ibs) {
     return ret;
 }
 
-static off_t file_input_stream_bytesRead(input_stream_t *ibs) {
+static off_t
+file_input_stream_bytesRead(input_stream_t *ibs) {
     struct file_input_stream *fs = (struct file_input_stream *)ibs;
     return fs->offset;
 }
@@ -619,7 +640,8 @@ file_output_stream_vprintf(output_stream_t *os, const char *fmt, va_list ap) {
 }
 
 static int
-file_output_stream_vprintfError(output_stream_t *os, const char *fmt, va_list ap) {
+file_output_stream_vprintfError(output_stream_t *os, const char *fmt,
+                                va_list ap) {
     struct file_output_stream *fos = (struct file_output_stream *)os;
     return vfprintf(fos->errorFile, fmt, ap);
 }
@@ -831,4 +853,3 @@ asn_random_between(intmax_t a, intmax_t b) {
     (void)b;
     return a;
 };
-

@@ -1,9 +1,11 @@
-#include "asn1c_internal.h"
 #include "asn1c_ioc.h"
-#include "asn1c_out.h"
-#include "asn1c_misc.h"
+
 #include <asn1fix_export.h>
 #include <asn1print.h>
+
+#include "asn1c_internal.h"
+#include "asn1c_misc.h"
+#include "asn1c_out.h"
 
 #define MKID(expr) asn1c_make_identifier(0, (expr), 0)
 
@@ -12,9 +14,8 @@
  * ({ObjectSetName}{...}) returns "ObjectSetName" as a reference.
  */
 const asn1p_ref_t *
-asn1c_get_information_object_set_reference_from_constraint(arg_t *arg,
-    const asn1p_constraint_t *ct) {
-
+asn1c_get_information_object_set_reference_from_constraint(
+    arg_t *arg, const asn1p_constraint_t *ct) {
     if(!ct) return NULL;
     assert(ct->type == ACT_CA_CRC);
     assert(ct->el_count >= 1);
@@ -24,7 +25,8 @@ asn1c_get_information_object_set_reference_from_constraint(arg_t *arg,
     assert(ct->elements[0]->type == ACT_EL_VALUE);
 
     asn1p_value_t *val = ct->elements[0]->value;
-    if(val->type == ATV_VALUESET && val->value.constraint->type == ACT_EL_TYPE) {
+    if(val->type == ATV_VALUESET
+       && val->value.constraint->type == ACT_EL_TYPE) {
         asn1p_value_t *csub = val->value.constraint->containedSubtype;
         if(!csub) {
             /* Ignore */
@@ -46,8 +48,9 @@ asn1c_get_information_object_set_reference_from_constraint(arg_t *arg,
 }
 
 static asn1c_ioc_table_and_objset_t
-asn1c_get_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref, asn1p_expr_t *objset) {
-    asn1c_ioc_table_and_objset_t ioc_tao = { 0, 0, 1 };
+asn1c_get_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref,
+                                asn1p_expr_t *objset) {
+    asn1c_ioc_table_and_objset_t ioc_tao = {0, 0, 1};
 
     (void)objset_ref;
 
@@ -66,11 +69,11 @@ asn1c_get_ioc_table_from_objset(arg_t *arg, const asn1p_ref_t *objset_ref, asn1p
 asn1c_ioc_table_and_objset_t
 asn1c_get_ioc_table(arg_t *arg) {
     asn1p_expr_t *expr = arg->expr;
-	asn1p_expr_t *memb;
+    asn1p_expr_t *memb;
     asn1p_expr_t *objset = 0;
     const asn1p_ref_t *objset_ref = NULL;
     asn1c_ioc_table_and_objset_t safe_ioc_tao = {0, 0, 0};
-    asn1c_ioc_table_and_objset_t failed_ioc_tao = { 0, 0, 1 };
+    asn1c_ioc_table_and_objset_t failed_ioc_tao = {0, 0, 1};
 
     TQ_FOR(memb, &(expr->members), next) {
         const asn1p_constraint_t *cr_ct =
@@ -88,7 +91,6 @@ asn1c_get_ioc_table(arg_t *arg) {
             }
             objset_ref = tmpref;
         }
-
     }
 
     if(!objset_ref) {
@@ -108,7 +110,6 @@ asn1c_get_ioc_table(arg_t *arg) {
 
 static int
 emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
-
     if(cell->value && cell->value->meta_type == AMT_VALUE) {
         const char *prim_type = NULL;
         int primitive_representation = 0;
@@ -178,7 +179,8 @@ emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
                         OUT("\"\\x%02x\", 1", (int)v);
                         break;
                     } else if(v <= 32767) {
-                        OUT("\"\\x%02x\\x%02x\", 2", (int)(v >> 8), (int)(v & 0xff));
+                        OUT("\"\\x%02x\\x%02x\", 2", (int)(v >> 8),
+                            (int)(v & 0xff));
                         break;
                     }
                 }
@@ -191,7 +193,7 @@ emit_ioc_value(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
             OUT("\"not supported\", 0 };\n");
             FATAL("Inappropriate value %s for type %s",
                   asn1f_printable_value(expr_value->value), MKID(cell->value));
-            return 0;   /* TEMPORARY FIXME FIXME */
+            return 0; /* TEMPORARY FIXME FIXME */
         default:
             FATAL("Inappropriate value %s for type %s",
                   asn1f_printable_value(expr_value->value), MKID(cell->value));
@@ -238,7 +240,8 @@ emit_ioc_cell(arg_t *arg, struct asn1p_ioc_cell_s *cell) {
  * Refer to skeletons/asn_ioc.h
  */
 int
-emit_ioc_table(arg_t *arg, asn1p_expr_t *context, asn1c_ioc_table_and_objset_t ioc_tao) {
+emit_ioc_table(arg_t *arg, asn1p_expr_t *context,
+               asn1c_ioc_table_and_objset_t ioc_tao) {
     size_t columns = 0;
 
     (void)context;
@@ -289,4 +292,3 @@ emit_ioc_table(arg_t *arg, asn1p_expr_t *context, asn1c_ioc_table_and_objset_t i
 
     return 0;
 }
-

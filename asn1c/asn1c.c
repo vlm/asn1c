@@ -31,19 +31,19 @@
 #include "asn1_common.h"
 
 #undef COPYRIGHT
-#define COPYRIGHT "Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info> and contributors.\n"
-
-#include <asn1parser.h>   /* Parse the ASN.1 file and build a tree */
-#include <asn1fix.h>      /* Fix the ASN.1 tree */
-#include <asn1print.h>    /* Print the ASN.1 tree */
-#include <asn1compiler.h> /* Compile the ASN.1 tree */
-#include <asn1fix_export.h>
+#define COPYRIGHT \
+    "Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info> and contributors.\n"
 
 #include <asn1c_compat.h> /* Portable basename(3) and dirname(3) */
+#include <asn1compiler.h> /* Compile the ASN.1 tree */
+#include <asn1fix.h>      /* Fix the ASN.1 tree */
+#include <asn1fix_export.h>
+#include <asn1parser.h> /* Parse the ASN.1 file and build a tree */
+#include <asn1print.h>  /* Print the ASN.1 tree */
 
 #ifdef _WIN32
-#include <io.h>
 #include <direct.h>
+#include <io.h>
 #else
 #include <dirent.h>
 #endif
@@ -65,11 +65,11 @@ main(int ac, char **av) {
     char *destdir = NULL;           /* Destination for generated files */
     char **debug_type_names = 0;    /* Debug stuff */
     size_t debug_type_names_count = 0;
-    asn1p_t *asn = 0;               /* An ASN.1 parsed tree */
-    int ret;                        /* Return value from misc functions */
-    int ch;                         /* Command line character */
-    int i;                          /* Index in some loops */
-    int exit_code = 0;              /* Exit code */
+    asn1p_t *asn = 0;  /* An ASN.1 parsed tree */
+    int ret;           /* Return value from misc functions */
+    int ch;            /* Command line character */
+    int i;             /* Index in some loops */
+    int exit_code = 0; /* Exit code */
 
     /*
      * Process command-line options.
@@ -422,7 +422,7 @@ main(int ac, char **av) {
 cleanup:
     asn1p_delete(asn);
     asn1p_lex_destroy();
-    if (exit_code) exit(exit_code);
+    if(exit_code) exit(exit_code);
 
     return 0;
 }
@@ -529,8 +529,7 @@ importStandardModules(asn1p_t *asn, const char *skeletons_dir) {
 /*
  * Print the usage screen and exit(EX_USAGE).
  */
-static void __attribute__((noreturn))
-usage(const char *av0) {
+static void __attribute__((noreturn)) usage(const char *av0) {
     /* clang-format off */
 	fprintf(stderr,
 "ASN.1 Compiler, v" VERSION "\n" COPYRIGHT

@@ -1,13 +1,14 @@
 #define _GNU_SOURCE
-#include <sys/types.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <string.h>
-#include <stdio.h>
-#include <assert.h>
-#include "config.h"
-
 #include "asn1_buffer.h"
+
+#include <assert.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include "config.h"
 
 #if !defined(HAVE_DECL_VASPRINTF) || (HAVE_DECL_VASPRINTF == 0)
 int vasprintf(char **ret, const char *fmt, va_list args);
@@ -27,7 +28,8 @@ abuf_new() {
     return ab;
 }
 
-void abuf_free(abuf *ab) {
+void
+abuf_free(abuf *ab) {
     if(ab) {
         union {
             const char *c_buf;
@@ -80,7 +82,8 @@ abuf_resize_by(abuf *ab, size_t size) {
     ab->size = new_size;
 }
 
-void abuf_add_bytes(abuf *ab, const char *str, size_t size) {
+void
+abuf_add_bytes(abuf *ab, const char *str, size_t size) {
     abuf_resize_by(ab, size + 1);
     union {
         const char *c_buf;
@@ -92,15 +95,18 @@ void abuf_add_bytes(abuf *ab, const char *str, size_t size) {
     const_cast.nc_buf[ab->length] = '\0';
 }
 
-void abuf_str(abuf *ab, const char *str) {
+void
+abuf_str(abuf *ab, const char *str) {
     abuf_add_bytes(ab, str, strlen(str));
 }
 
-void abuf_buf(abuf *ab, const abuf *buf) {
+void
+abuf_buf(abuf *ab, const abuf *buf) {
     abuf_add_bytes(ab, buf->buffer, buf->length);
 }
 
-int abuf_printf(abuf *ab, const char *fmt, ...) {
+int
+abuf_printf(abuf *ab, const char *fmt, ...) {
     va_list ap;
 
     for(;;) {
@@ -124,7 +130,8 @@ int abuf_printf(abuf *ab, const char *fmt, ...) {
     }
 }
 
-int abuf_vprintf(abuf *ab, const char *fmt, va_list ap) {
+int
+abuf_vprintf(abuf *ab, const char *fmt, va_list ap) {
     int ret;
     char *str = 0;
 

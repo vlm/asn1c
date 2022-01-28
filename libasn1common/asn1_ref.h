@@ -1,46 +1,45 @@
 /*
  * Generic reference to the yet unknown type defined elsewhere.
  */
-#ifndef	ASN1_REFERENCE_H
-#define	ASN1_REFERENCE_H
+#ifndef ASN1_REFERENCE_H
+#define ASN1_REFERENCE_H
 
 struct asn1p_module_s;
 
 typedef struct asn1p_ref_s {
+    /*
+     * A set of reference name components.
+     * A reference name consists of several components separated by dots:
+     * "OBJECT-CLASS.&Algorithm.&id"
+     */
+    struct asn1p_ref_component_s {
+        enum asn1p_ref_lex_type_e {
+            RLT_UNKNOWN, /* Invalid? */
+            /*
+             * Object class reference "OCLASS1",
+             * type reference "Type1",
+             * value reference "id",
+             * type field reference "&Type1",
+             * value field reference "&id",
+             * "OBJECT-CLASS"
+             */
+            RLT_CAPITALS,
+            RLT_Uppercase,
+            RLT_lowercase,
+            RLT_AmpUppercase,
+            RLT_Amplowercase,
+            RLT_Atlowercase,
+            RLT_AtDotlowercase,
+            RLT_MAX
+        } lex_type; /* Inferred lexical type of the identifier */
+        char *name; /* An identifier */
+    } * components;
 
-	/*
-	 * A set of reference name components.
-	 * A reference name consists of several components separated by dots:
-	 * "OBJECT-CLASS.&Algorithm.&id"
-	 */
-	struct asn1p_ref_component_s {
-		enum asn1p_ref_lex_type_e {
-			RLT_UNKNOWN,		/* Invalid? */
-			/*
-			 * Object class reference "OCLASS1",
-			 * type reference "Type1",
-			 * value reference "id",
-			 * type field reference "&Type1",
-			 * value field reference "&id",
-			 * "OBJECT-CLASS"
-			 */
-			RLT_CAPITALS,
-			RLT_Uppercase,
-			RLT_lowercase,
-			RLT_AmpUppercase,
-			RLT_Amplowercase,
-			RLT_Atlowercase,
-			RLT_AtDotlowercase,
-			RLT_MAX
-		} lex_type;	/* Inferred lexical type of the identifier */
-		char *name;	/* An identifier */
-	} *components;
+    size_t comp_count; /* Number of the components in the reference name. */
+    size_t comp_size;  /* Number of allocated structures */
 
-	size_t comp_count;	/* Number of the components in the reference name. */
-	size_t comp_size;	/* Number of allocated structures */
-
-	struct asn1p_module_s *module;	/* Defined in module */
-	int _lineno;	/* Number of line in the file */
+    struct asn1p_module_s *module; /* Defined in module */
+    int _lineno;                   /* Number of line in the file */
 } asn1p_ref_t;
 
 /*
@@ -74,7 +73,7 @@ const char *asn1p_ref_string(const asn1p_ref_t *);
  * -1/EINVAL:	Invalid arguments
  * -1/ENOMEM:	Memory allocation failed
  */
-int asn1p_ref_add_component(asn1p_ref_t *,
-	const char *name, enum asn1p_ref_lex_type_e);
+int asn1p_ref_add_component(asn1p_ref_t *, const char *name,
+                            enum asn1p_ref_lex_type_e);
 
-#endif	/* ASN1_REFERENCE_H */
+#endif /* ASN1_REFERENCE_H */

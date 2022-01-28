@@ -1,9 +1,10 @@
-#include "asn1c_internal.h"
 #include "asn1c_naming.h"
-#include "asn1c_misc.h"
-#include "asn1c_misc.h"
+
 #include <asn1_buffer.h>
 #include <genhash.h>
+
+#include "asn1c_internal.h"
+#include "asn1c_misc.h"
 
 struct intl_name {
     asn1p_expr_t *expr;
@@ -57,8 +58,7 @@ register_global_name(asn1p_expr_t *expr, const char *name) {
         }
     }
 
-    if(expr->_mark & TM_NAMEGIVEN)
-        return;
+    if(expr->_mark & TM_NAMEGIVEN) return;
 
     char *name_copy = strdup(name);
 
@@ -175,8 +175,7 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
 
 
     if((arg->flags & A1C_COMPOUND_NAMES)) {
-        if((expr_type & ASN_CONSTR_MASK)
-           || expr_type == ASN_BASIC_ENUMERATED
+        if((expr_type & ASN_CONSTR_MASK) || expr_type == ASN_BASIC_ENUMERATED
            || ((expr_type == ASN_BASIC_INTEGER
                 || expr_type == ASN_BASIC_BIT_STRING))) {
             compound_names = 1;
@@ -203,7 +202,8 @@ c_name_impl(arg_t *arg, asn1p_expr_t *expr, int avoid_keywords) {
         }
     }
     abuf_printf(&b_full_name, "struct %s", b_base_name.buffer);
-    abuf_printf(&b_presence_enum, "enum %s_PR", tmp_compoundable_part_name.buffer);
+    abuf_printf(&b_presence_enum, "enum %s_PR",
+                tmp_compoundable_part_name.buffer);
     abuf_printf(&b_presence_name, "%s_PR", tmp_compoundable_part_name.buffer);
     abuf_printf(&b_members_enum, "enum %s", b_base_name.buffer);
     abuf_printf(&b_members_name, "e_%s", tmp_compoundable_part_name.buffer);
@@ -309,4 +309,3 @@ c_names_format(struct c_names ns) {
     abuf_printf(&nbuf, " .members_name=\"%s\" }", ns.members_name);
     return nbuf.buffer;
 }
-

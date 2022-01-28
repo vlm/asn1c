@@ -1,5 +1,5 @@
-#ifndef	ASN1_BUFFER_H
-#define	ASN1_BUFFER_H
+#ifndef ASN1_BUFFER_H
+#define ASN1_BUFFER_H
 
 #include <stdarg.h>
 
@@ -33,4 +33,4 @@ int abuf_printf(abuf *, const char *fmt, ...)
     __attribute__((format(printf, 2, 3)));
 int abuf_vprintf(abuf *, const char *fmt, va_list);
 
-#endif	/* ASN1_BUFFER_H */
+#endif /* ASN1_BUFFER_H */
