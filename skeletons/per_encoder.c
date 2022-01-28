@@ -23,7 +23,7 @@ uper_encode(const asn_TYPE_descriptor_t *td,
      * Invoke type-specific encoder.
      */
     if(!td || !td->op->uper_encoder)
-        ASN__ENCODE_FAILED;	/* PER is not compiled in */
+        ASN__ENCODE_FAILED; /* PER is not compiled in */
 
     po.buffer = po.tmpspace;
     po.nboff = 0;
@@ -51,20 +51,20 @@ uper_encode(const asn_TYPE_descriptor_t *td,
  * Argument type and callback necessary for uper_encode_to_buffer().
  */
 typedef struct enc_to_buf_arg {
-	void *buffer;
-	size_t left;
+    void *buffer;
+    size_t left;
 } enc_to_buf_arg;
-static int encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
-	enc_to_buf_arg *arg = (enc_to_buf_arg *)key;
+static int
+encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
+    enc_to_buf_arg *arg = (enc_to_buf_arg *)key;
 
-	if(arg->left < size)
-		return -1;	/* Data exceeds the available buffer size */
+    if(arg->left < size) return -1; /* Data exceeds the available buffer size */
 
-	memcpy(arg->buffer, buffer, size);
-	arg->buffer = ((char *)arg->buffer) + size;
-	arg->left -= size;
+    memcpy(arg->buffer, buffer, size);
+    arg->buffer = ((char *)arg->buffer) + size;
+    arg->left -= size;
 
-	return 0;
+    return 0;
 }
 
 asn_enc_rval_t
@@ -82,9 +82,9 @@ uper_encode_to_buffer(const asn_TYPE_descriptor_t *td,
 }
 
 typedef struct enc_dyn_arg {
-	void *buffer;
-	size_t length;
-	size_t allocated;
+    void *buffer;
+    size_t length;
+    size_t allocated;
 } enc_dyn_arg;
 static int
 encode_dyn_cb(const void *buffer, size_t size, void *key) {
@@ -115,30 +115,30 @@ uper_encode_to_new_buffer(const asn_TYPE_descriptor_t *td,
                           const asn_per_constraints_t *constraints,
                           const void *sptr, void **buffer_r) {
     asn_enc_rval_t er;
-	enc_dyn_arg key;
+    enc_dyn_arg key;
 
-	memset(&key, 0, sizeof(key));
+    memset(&key, 0, sizeof(key));
 
-	er = uper_encode(td, constraints, sptr, encode_dyn_cb, &key);
-	switch(er.encoded) {
-	case -1:
-		FREEMEM(key.buffer);
-		return -1;
-	case 0:
-		FREEMEM(key.buffer);
-		key.buffer = MALLOC(1);
-		if(key.buffer) {
-			*(char *)key.buffer = '\0';
-			*buffer_r = key.buffer;
-			return 1;
-		} else {
-			return -1;
-		}
-	default:
-		*buffer_r = key.buffer;
-		ASN_DEBUG("Complete encoded in %ld bits", (long)er.encoded);
-		return ((er.encoded + 7) >> 3);
-	}
+    er = uper_encode(td, constraints, sptr, encode_dyn_cb, &key);
+    switch(er.encoded) {
+    case -1:
+        FREEMEM(key.buffer);
+        return -1;
+    case 0:
+        FREEMEM(key.buffer);
+        key.buffer = MALLOC(1);
+        if(key.buffer) {
+            *(char *)key.buffer = '\0';
+            *buffer_r = key.buffer;
+            return 1;
+        } else {
+            return -1;
+        }
+    default:
+        *buffer_r = key.buffer;
+        ASN_DEBUG("Complete encoded in %ld bits", (long)er.encoded);
+        return ((er.encoded + 7) >> 3);
+    }
 }
 
 /*
@@ -148,18 +148,16 @@ uper_encode_to_new_buffer(const asn_TYPE_descriptor_t *td,
 /* Flush partially filled buffer */
 static int
 _uper_encode_flush_outp(asn_per_outp_t *po) {
-	uint8_t *buf;
+    uint8_t *buf;
 
-	if(po->nboff == 0 && po->buffer == po->tmpspace)
-		return 0;
+    if(po->nboff == 0 && po->buffer == po->tmpspace) return 0;
 
-	buf = po->buffer + (po->nboff >> 3);
-	/* Make sure we account for the last, partially filled */
-	if(po->nboff & 0x07) {
-		buf[0] &= 0xff << (8 - (po->nboff & 0x07));
-		buf++;
-	}
+    buf = po->buffer + (po->nboff >> 3);
+    /* Make sure we account for the last, partially filled */
+    if(po->nboff & 0x07) {
+        buf[0] &= 0xff << (8 - (po->nboff & 0x07));
+        buf++;
+    }
 
-	return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
+    return po->output(po->tmpspace, buf - po->tmpspace, po->op_key);
 }
-

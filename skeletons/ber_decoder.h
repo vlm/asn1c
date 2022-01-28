@@ -2,8 +2,8 @@
  * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_BER_DECODER_H_
-#define	_BER_DECODER_H_
+#ifndef _BER_DECODER_H_
+#define _BER_DECODER_H_
 
 #include <asn_application.h>
 
@@ -11,8 +11,8 @@
 extern "C" {
 #endif
 
-struct asn_TYPE_descriptor_s;	/* Forward declaration */
-struct asn_codec_ctx_s;		/* Forward declaration */
+struct asn_TYPE_descriptor_s; /* Forward declaration */
+struct asn_codec_ctx_s;       /* Forward declaration */
 
 /*
  * The BER decoder of any type.
@@ -63,4 +63,4 @@ asn_dec_rval_t ber_check_tags(
 }
 #endif
 
-#endif	/* _BER_DECODER_H_ */
+#endif /* _BER_DECODER_H_ */

@@ -3,9 +3,8 @@
  * All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#include <asn_system.h>
 #include <asn_internal.h>
-
+#include <asn_system.h>
 #include <oer_support.h>
 
 /*
@@ -18,7 +17,7 @@
 ssize_t
 oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
     uint8_t first_byte;
-    size_t len_len;    /* Length of the length determinant */
+    size_t len_len; /* Length of the length determinant */
     const uint8_t *b;
     const uint8_t *bend;
     size_t len;
@@ -29,8 +28,8 @@ oer_fetch_length(const void *bufptr, size_t size, size_t *len_r) {
     }
 
     first_byte = *(const uint8_t *)bufptr;
-    if((first_byte & 0x80) == 0) {   /* Short form */
-        *len_r = first_byte; /* 0..127 */
+    if((first_byte & 0x80) == 0) { /* Short form */
+        *len_r = first_byte;       /* 0..127 */
         return 1;
     }
 
@@ -77,7 +76,7 @@ oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb,
                      void *app_key) {
     uint8_t scratch[1 + sizeof(length)];
     uint8_t *sp = scratch;
-    int littleEndian = 1;   /* Run-time detection */
+    int littleEndian = 1; /* Run-time detection */
     const uint8_t *pstart;
     const uint8_t *pend;
     const uint8_t *p;
@@ -106,7 +105,7 @@ oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb,
         if(*p) break;
     }
 
-    for(sp = scratch + 1; ; p += add) {
+    for(sp = scratch + 1;; p += add) {
         *sp++ = *p;
         if(p == pend) break;
     }
@@ -119,4 +118,3 @@ oer_serialize_length(size_t length, asn_app_consume_bytes_f *cb,
 
     return sp - scratch;
 }
-

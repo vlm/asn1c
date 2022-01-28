@@ -2,8 +2,8 @@
  * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_INTEGER_H_
-#define	_INTEGER_H_
+#ifndef _INTEGER_H_
+#define _INTEGER_H_
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
@@ -19,25 +19,25 @@ extern asn_TYPE_operation_t asn_OP_INTEGER;
 
 /* Map with <tag> to integer value association */
 typedef struct asn_INTEGER_enum_map_s {
-	long		 nat_value;	/* associated native integer value */
-	size_t		 enum_len;	/* strlen("tag") */
-	const char	*enum_name;	/* "tag" */
+    long nat_value;        /* associated native integer value */
+    size_t enum_len;       /* strlen("tag") */
+    const char *enum_name; /* "tag" */
 } asn_INTEGER_enum_map_t;
 
 /* This type describes an enumeration for INTEGER and ENUMERATED types */
 typedef struct asn_INTEGER_specifics_s {
-	const asn_INTEGER_enum_map_t *value2enum;	/* N -> "tag"; sorted by N */
-	const unsigned int *enum2value;		/* "tag" => N; sorted by tag */
-	int map_count;				/* Elements in either map */
-	int extension;				/* This map is extensible */
-	int strict_enumeration;			/* Enumeration set is fixed */
-	int field_width;			/* Size of native integer */
-	int field_unsigned;			/* Signed=0, unsigned=1 */
+    const asn_INTEGER_enum_map_t *value2enum; /* N -> "tag"; sorted by N */
+    const unsigned int *enum2value;           /* "tag" => N; sorted by tag */
+    int map_count;                            /* Elements in either map */
+    int extension;                            /* This map is extensible */
+    int strict_enumeration;                   /* Enumeration set is fixed */
+    int field_width;                          /* Size of native integer */
+    int field_unsigned;                       /* Signed=0, unsigned=1 */
 } asn_INTEGER_specifics_t;
 
-#define INTEGER_free    ASN__PRIMITIVE_TYPE_free
-#define INTEGER_decode_ber	ber_decode_primitive
-#define INTEGER_constraint	asn_generic_no_constraint
+#define INTEGER_free ASN__PRIMITIVE_TYPE_free
+#define INTEGER_decode_ber ber_decode_primitive
+#define INTEGER_constraint asn_generic_no_constraint
 asn_struct_print_f INTEGER_print;
 asn_struct_compare_f INTEGER_compare;
 der_type_encoder_f INTEGER_encode_der;
@@ -47,7 +47,7 @@ oer_type_decoder_f INTEGER_decode_oer;
 oer_type_encoder_f INTEGER_encode_oer;
 per_type_decoder_f INTEGER_decode_uper;
 per_type_encoder_f INTEGER_encode_uper;
-asn_random_fill_f  INTEGER_random_fill;
+asn_random_fill_f INTEGER_random_fill;
 
 /***********************************
  * Some handy conversion routines. *
@@ -76,11 +76,12 @@ int asn_ulong2INTEGER(INTEGER_t *i, unsigned long l);
 
 /* A version of strtol/strtoimax(3) with nicer error reporting. */
 enum asn_strtox_result_e {
-    ASN_STRTOX_ERROR_RANGE = -3,  /* Input outside of supported numeric range */
-    ASN_STRTOX_ERROR_INVAL = -2,  /* Invalid data encountered (e.g., "+-") */
-    ASN_STRTOX_EXPECT_MORE = -1,  /* More data expected (e.g. "+") */
-    ASN_STRTOX_OK          =  0,  /* Conversion succeded, number ends at (*end) */
-    ASN_STRTOX_EXTRA_DATA  =  1   /* Conversion succeded, but the string has extra stuff */
+    ASN_STRTOX_ERROR_RANGE = -3, /* Input outside of supported numeric range */
+    ASN_STRTOX_ERROR_INVAL = -2, /* Invalid data encountered (e.g., "+-") */
+    ASN_STRTOX_EXPECT_MORE = -1, /* More data expected (e.g. "+") */
+    ASN_STRTOX_OK = 0, /* Conversion succeded, number ends at (*end) */
+    ASN_STRTOX_EXTRA_DATA =
+        1 /* Conversion succeded, but the string has extra stuff */
 };
 enum asn_strtox_result_e asn_strtol_lim(const char *str, const char **end,
                                         long *l);
@@ -101,4 +102,4 @@ const asn_INTEGER_enum_map_t *INTEGER_map_value2enum(
 }
 #endif
 
-#endif	/* _INTEGER_H_ */
+#endif /* _INTEGER_H_ */

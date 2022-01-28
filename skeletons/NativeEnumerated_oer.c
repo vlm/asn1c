@@ -5,8 +5,8 @@
  */
 #ifndef ASN_DISABLE_OER_SUPPORT
 
-#include <asn_internal.h>
 #include <NativeEnumerated.h>
+#include <asn_internal.h>
 #include <errno.h>
 
 static long
@@ -123,7 +123,7 @@ NativeEnumerated_encode_oer(const asn_TYPE_descriptor_t *td,
     } else {
         /* #11.2 Long form */
         uint8_t buf[1 + sizeof(native)];
-        uint8_t *b = &buf[sizeof(native)];  /* Last addressable */
+        uint8_t *b = &buf[sizeof(native)]; /* Last addressable */
         long final_pattern = -1 * (native < 0);
 
         for(;;) {
@@ -146,4 +146,4 @@ NativeEnumerated_encode_oer(const asn_TYPE_descriptor_t *td,
     }
 }
 
-#endif  /* ASN_DISABLE_OER_SUPPORT */
+#endif /* ASN_DISABLE_OER_SUPPORT */

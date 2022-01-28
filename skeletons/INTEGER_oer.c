@@ -5,8 +5,8 @@
  */
 #ifndef ASN_DISABLE_OER_SUPPORT
 
-#include <asn_internal.h>
 #include <INTEGER.h>
+#include <asn_internal.h>
 #include <errno.h>
 
 asn_dec_rval_t
@@ -58,7 +58,7 @@ INTEGER_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
 
     if(ct.positive) {
         /* X.969 08/2015 10.2(a) */
-        unsigned msb;   /* Most significant bit */
+        unsigned msb; /* Most significant bit */
         size_t useful_size;
 
         /* Check most significant bit */
@@ -75,7 +75,7 @@ INTEGER_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
          */
         st->buf[0] = '\0';
         memcpy(st->buf + msb, ptr, req_bytes);
-        st->buf[useful_size] = '\0';    /* Just in case, 0-terminate */
+        st->buf[useful_size] = '\0'; /* Just in case, 0-terminate */
         st->size = useful_size;
 
         rval.consumed += req_bytes;
@@ -164,7 +164,7 @@ INTEGER_encode_oer(const asn_TYPE_descriptor_t *td,
     er.encoded += req_bytes;
 
     for(; req_bytes > useful_bytes; req_bytes--) {
-        if(cb(sign?"\xff":"\0", 1, app_key) < 0) {
+        if(cb(sign ? "\xff" : "\0", 1, app_key) < 0) {
             ASN__ENCODE_FAILED;
         }
     }
@@ -176,4 +176,4 @@ INTEGER_encode_oer(const asn_TYPE_descriptor_t *td,
     ASN__ENCODED_OK(er);
 }
 
-#endif  /* ASN_DISABLE_OER_SUPPORT */
+#endif /* ASN_DISABLE_OER_SUPPORT */

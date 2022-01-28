@@ -60,4 +60,4 @@ asn_enc_rval_t OPEN_TYPE_encode_uper(
 }
 #endif
 
-#endif	/* ASN_OPEN_TYPE_H */
+#endif /* ASN_OPEN_TYPE_H */

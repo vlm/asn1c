@@ -2,8 +2,8 @@
  * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	ASN_SET_OF_H
-#define	ASN_SET_OF_H
+#ifndef ASN_SET_OF_H
+#define ASN_SET_OF_H
 
 #ifdef __cplusplus
 #define A_SET_OF(type)                   \
@@ -13,13 +13,13 @@
         int size;  /* Allocated size */  \
         void (*free)(decltype(*array));  \
     }
-#else   /* C */
+#else /* C */
 #define A_SET_OF(type)                   \
     struct {                             \
         type **array;                    \
         int count; /* Meaningful size */ \
         int size;  /* Allocated size */  \
-        void (*free)(type *);    \
+        void (*free)(type *);            \
     }
 #endif
 
@@ -27,8 +27,7 @@
 extern "C" {
 #endif
 
-#define	ASN_SET_ADD(headptr, ptr)		\
-	asn_set_add((headptr), (ptr))
+#define ASN_SET_ADD(headptr, ptr) asn_set_add((headptr), (ptr))
 
 /*******************************************
  * Implementation of the SET OF structure.
@@ -39,7 +38,7 @@ extern "C" {
  * RETURN VALUES:
  * 0 for success and -1/errno for failure.
  */
-int  asn_set_add(void *asn_set_of_x, void *ptr);
+int asn_set_add(void *asn_set_of_x, void *ptr);
 
 /*
  * Delete the element from the set by its number (base 0).
@@ -62,11 +61,11 @@ void asn_set_empty(void *asn_set_of_x);
  * This is mostly useful for support library.
  */
 typedef A_SET_OF(void) asn_anonymous_set_;
-#define _A_SET_FROM_VOID(ptr)		((asn_anonymous_set_ *)(ptr))
-#define _A_CSET_FROM_VOID(ptr)		((const asn_anonymous_set_ *)(ptr))
+#define _A_SET_FROM_VOID(ptr) ((asn_anonymous_set_ *)(ptr))
+#define _A_CSET_FROM_VOID(ptr) ((const asn_anonymous_set_ *)(ptr))
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif	/* ASN_SET_OF_H */
+#endif /* ASN_SET_OF_H */

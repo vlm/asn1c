@@ -5,8 +5,8 @@
  */
 #ifndef ASN_DISABLE_OER_SUPPORT
 
-#include <asn_internal.h>
 #include <NativeInteger.h>
+#include <asn_internal.h>
 #include <errno.h>
 
 asn_dec_rval_t
@@ -96,4 +96,4 @@ NativeInteger_encode_oer(const asn_TYPE_descriptor_t *td,
     }
 }
 
-#endif  /* ASN_DISABLE_OER_SUPPORT */
+#endif /* ASN_DISABLE_OER_SUPPORT */

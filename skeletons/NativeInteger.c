@@ -10,51 +10,51 @@
  * implementation deals with the standard (machine-specific) representation
  * of them instead of using the platform-independent buffer.
  */
-#include <asn_internal.h>
 #include <NativeInteger.h>
+#include <asn_internal.h>
 
 /*
  * NativeInteger basic type description.
  */
 static const ber_tlv_tag_t asn_DEF_NativeInteger_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (2 << 2))
-};
+    (ASN_TAG_CLASS_UNIVERSAL | (2 << 2))};
 asn_TYPE_operation_t asn_OP_NativeInteger = {
-	NativeInteger_free,
-	NativeInteger_print,
-	NativeInteger_compare,
-	NativeInteger_decode_ber,
-	NativeInteger_encode_der,
-	NativeInteger_decode_xer,
-	NativeInteger_encode_xer,
-#ifdef	ASN_DISABLE_OER_SUPPORT
-	0,
-	0,
+    NativeInteger_free,
+    NativeInteger_print,
+    NativeInteger_compare,
+    NativeInteger_decode_ber,
+    NativeInteger_encode_der,
+    NativeInteger_decode_xer,
+    NativeInteger_encode_xer,
+#ifdef ASN_DISABLE_OER_SUPPORT
+    0,
+    0,
 #else
-	NativeInteger_decode_oer,	/* OER decoder */
-	NativeInteger_encode_oer,	/* Canonical OER encoder */
-#endif  /* ASN_DISABLE_OER_SUPPORT */
-#ifdef	ASN_DISABLE_PER_SUPPORT
-	0,
-	0,
+    NativeInteger_decode_oer,  /* OER decoder */
+    NativeInteger_encode_oer,  /* Canonical OER encoder */
+#endif /* ASN_DISABLE_OER_SUPPORT */
+#ifdef ASN_DISABLE_PER_SUPPORT
+    0,
+    0,
 #else
-	NativeInteger_decode_uper,	/* Unaligned PER decoder */
-	NativeInteger_encode_uper,	/* Unaligned PER encoder */
-#endif	/* ASN_DISABLE_PER_SUPPORT */
-	NativeInteger_random_fill,
-	0	/* Use generic outmost tag fetcher */
+    NativeInteger_decode_uper, /* Unaligned PER decoder */
+    NativeInteger_encode_uper, /* Unaligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+    NativeInteger_random_fill,
+    0 /* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_NativeInteger = {
-	"INTEGER",			/* The ASN.1 type is still INTEGER */
-	"INTEGER",
-	&asn_OP_NativeInteger,
-	asn_DEF_NativeInteger_tags,
-	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
-	asn_DEF_NativeInteger_tags,	/* Same as above */
-	sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
-	{ 0, 0, asn_generic_no_constraint },
-	0, 0,	/* No members */
-	0	/* No specifics */
+    "INTEGER", /* The ASN.1 type is still INTEGER */
+    "INTEGER",
+    &asn_OP_NativeInteger,
+    asn_DEF_NativeInteger_tags,
+    sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
+    asn_DEF_NativeInteger_tags, /* Same as above */
+    sizeof(asn_DEF_NativeInteger_tags) / sizeof(asn_DEF_NativeInteger_tags[0]),
+    {0, 0, asn_generic_no_constraint},
+    0,
+    0, /* No members */
+    0  /* No specifics */
 };
 
 /*
@@ -67,80 +67,78 @@ NativeInteger_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     long *native = (long *)*nint_ptr;
-	asn_dec_rval_t rval;
-	ber_tlv_len_t length;
+    asn_dec_rval_t rval;
+    ber_tlv_len_t length;
 
-	/*
-	 * If the structure is not there, allocate it.
-	 */
-	if(native == NULL) {
-		native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
-		if(native == NULL) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
-	}
+    /*
+     * If the structure is not there, allocate it.
+     */
+    if(native == NULL) {
+        native = (long *)(*nint_ptr = CALLOC(1, sizeof(*native)));
+        if(native == NULL) {
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+            return rval;
+        }
+    }
 
-	ASN_DEBUG("Decoding %s as INTEGER (tm=%d)",
-		td->name, tag_mode);
+    ASN_DEBUG("Decoding %s as INTEGER (tm=%d)", td->name, tag_mode);
 
-	/*
-	 * Check tags.
-	 */
-	rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size,
-			tag_mode, 0, &length, 0);
-	if(rval.code != RC_OK)
-		return rval;
+    /*
+     * Check tags.
+     */
+    rval = ber_check_tags(opt_codec_ctx, td, 0, buf_ptr, size, tag_mode, 0,
+                          &length, 0);
+    if(rval.code != RC_OK) return rval;
 
-	ASN_DEBUG("%s length is %d bytes", td->name, (int)length);
+    ASN_DEBUG("%s length is %d bytes", td->name, (int)length);
 
-	/*
-	 * Make sure we have this length.
-	 */
-	buf_ptr = ((const char *)buf_ptr) + rval.consumed;
-	size -= rval.consumed;
-	if(length > (ber_tlv_len_t)size) {
-		rval.code = RC_WMORE;
-		rval.consumed = 0;
-		return rval;
-	}
+    /*
+     * Make sure we have this length.
+     */
+    buf_ptr = ((const char *)buf_ptr) + rval.consumed;
+    size -= rval.consumed;
+    if(length > (ber_tlv_len_t)size) {
+        rval.code = RC_WMORE;
+        rval.consumed = 0;
+        return rval;
+    }
 
-	/*
-	 * ASN.1 encoded INTEGER: buf_ptr, length
-	 * Fill the native, at the same time checking for overflow.
-	 * If overflow occurred, return with RC_FAIL.
-	 */
-	{
-		INTEGER_t tmp;
-		union {
-			const void *constbuf;
-			void *nonconstbuf;
-		} unconst_buf;
-		long l;
+    /*
+     * ASN.1 encoded INTEGER: buf_ptr, length
+     * Fill the native, at the same time checking for overflow.
+     * If overflow occurred, return with RC_FAIL.
+     */
+    {
+        INTEGER_t tmp;
+        union {
+            const void *constbuf;
+            void *nonconstbuf;
+        } unconst_buf;
+        long l;
 
-		unconst_buf.constbuf = buf_ptr;
-		tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
-		tmp.size = length;
+        unconst_buf.constbuf = buf_ptr;
+        tmp.buf = (uint8_t *)unconst_buf.nonconstbuf;
+        tmp.size = length;
 
-		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&tmp, (unsigned long *)&l) /* sic */
-			: asn_INTEGER2long(&tmp, &l)) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-			return rval;
-		}
+        if((specs && specs->field_unsigned)
+               ? asn_INTEGER2ulong(&tmp, (unsigned long *)&l) /* sic */
+               : asn_INTEGER2long(&tmp, &l)) {
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+            return rval;
+        }
 
-		*native = l;
-	}
+        *native = l;
+    }
 
-	rval.code = RC_OK;
-	rval.consumed += length;
+    rval.code = RC_OK;
+    rval.consumed += length;
 
-	ASN_DEBUG("Took %ld/%ld bytes to encode %s (%ld)",
-		(long)rval.consumed, (long)length, td->name, (long)*native);
+    ASN_DEBUG("Took %ld/%ld bytes to encode %s (%ld)", (long)rval.consumed,
+              (long)length, td->name, (long)*native);
 
-	return rval;
+    return rval;
 }
 
 /*
@@ -152,31 +150,31 @@ NativeInteger_encode_der(const asn_TYPE_descriptor_t *sd, const void *ptr,
                          asn_app_consume_bytes_f *cb, void *app_key) {
     unsigned long native = *(const unsigned long *)ptr; /* Disable sign ext. */
     asn_enc_rval_t erval;
-	INTEGER_t tmp;
+    INTEGER_t tmp;
 
-#ifdef	WORDS_BIGENDIAN		/* Opportunistic optimization */
+#ifdef WORDS_BIGENDIAN /* Opportunistic optimization */
 
-	tmp.buf = (uint8_t *)&native;
-	tmp.size = sizeof(native);
+    tmp.buf = (uint8_t *)&native;
+    tmp.size = sizeof(native);
 
-#else	/* Works even if WORDS_BIGENDIAN is not set where should've been */
-	uint8_t buf[sizeof(native)];
-	uint8_t *p;
+#else  /* Works even if WORDS_BIGENDIAN is not set where should've been */
+    uint8_t buf[sizeof(native)];
+    uint8_t *p;
 
-	/* Prepare a fake INTEGER */
-	for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)
-		*p = (uint8_t)native;
+    /* Prepare a fake INTEGER */
+    for(p = buf + sizeof(buf) - 1; p >= buf; p--, native >>= 8)
+        *p = (uint8_t)native;
 
-	tmp.buf = buf;
-	tmp.size = sizeof(buf);
-#endif	/* WORDS_BIGENDIAN */
-	
-	/* Encode fake INTEGER */
-	erval = INTEGER_encode_der(sd, &tmp, tag_mode, tag, cb, app_key);
+    tmp.buf = buf;
+    tmp.size = sizeof(buf);
+#endif /* WORDS_BIGENDIAN */
+
+    /* Encode fake INTEGER */
+    erval = INTEGER_encode_der(sd, &tmp, tag_mode, tag, cb, app_key);
     if(erval.structure_ptr == &tmp) {
         erval.structure_ptr = ptr;
     }
-	return erval;
+    return erval;
 }
 
 /*
@@ -190,38 +188,38 @@ NativeInteger_decode_xer(const asn_codec_ctx_t *opt_codec_ctx,
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval;
-	INTEGER_t st;
-	void *st_ptr = (void *)&st;
-	long *native = (long *)*sptr;
+    INTEGER_t st;
+    void *st_ptr = (void *)&st;
+    long *native = (long *)*sptr;
 
-	if(!native) {
-		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
-		if(!native) ASN__DECODE_FAILED;
-	}
+    if(!native) {
+        native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
+        if(!native) ASN__DECODE_FAILED;
+    }
 
-	memset(&st, 0, sizeof(st));
-	rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr, 
-		opt_mname, buf_ptr, size);
-	if(rval.code == RC_OK) {
-		long l;
-		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&st, (unsigned long *)&l) /* sic */
-			: asn_INTEGER2long(&st, &l)) {
-			rval.code = RC_FAIL;
-			rval.consumed = 0;
-		} else {
-			*native = l;
-		}
-	} else {
-		/*
-		 * Cannot restart from the middle;
-		 * there is no place to save state in the native type.
-		 * Request a continuation from the very beginning.
-		 */
-		rval.consumed = 0;
-	}
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &st);
-	return rval;
+    memset(&st, 0, sizeof(st));
+    rval = INTEGER_decode_xer(opt_codec_ctx, td, &st_ptr, opt_mname, buf_ptr,
+                              size);
+    if(rval.code == RC_OK) {
+        long l;
+        if((specs && specs->field_unsigned)
+               ? asn_INTEGER2ulong(&st, (unsigned long *)&l) /* sic */
+               : asn_INTEGER2long(&st, &l)) {
+            rval.code = RC_FAIL;
+            rval.consumed = 0;
+        } else {
+            *native = l;
+        }
+    } else {
+        /*
+         * Cannot restart from the middle;
+         * there is no place to save state in the native type.
+         * Request a continuation from the very beginning.
+         */
+        rval.consumed = 0;
+    }
+    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &st);
+    return rval;
 }
 
 
@@ -231,26 +229,26 @@ NativeInteger_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
                          asn_app_consume_bytes_f *cb, void *app_key) {
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
-    char scratch[32];	/* Enough for 64-bit int */
-	asn_enc_rval_t er;
-	const long *native = (const long *)sptr;
+    char scratch[32]; /* Enough for 64-bit int */
+    asn_enc_rval_t er;
+    const long *native = (const long *)sptr;
 
-	(void)ilevel;
-	(void)flags;
+    (void)ilevel;
+    (void)flags;
 
-	if(!native) ASN__ENCODE_FAILED;
+    if(!native) ASN__ENCODE_FAILED;
 
-	er.encoded = snprintf(scratch, sizeof(scratch),
-			(specs && specs->field_unsigned)
-			? "%lu" : "%ld", *native);
-	if(er.encoded <= 0 || (size_t)er.encoded >= sizeof(scratch)
-		|| cb(scratch, er.encoded, app_key) < 0)
-		ASN__ENCODE_FAILED;
+    er.encoded =
+        snprintf(scratch, sizeof(scratch),
+                 (specs && specs->field_unsigned) ? "%lu" : "%ld", *native);
+    if(er.encoded <= 0 || (size_t)er.encoded >= sizeof(scratch)
+       || cb(scratch, er.encoded, app_key) < 0)
+        ASN__ENCODE_FAILED;
 
-	ASN__ENCODED_OK(er);
+    ASN__ENCODED_OK(er);
 }
 
-#ifndef  ASN_DISABLE_PER_SUPPORT
+#ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
 NativeInteger_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
@@ -260,33 +258,31 @@ NativeInteger_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     asn_dec_rval_t rval;
-	long *native = (long *)*sptr;
-	INTEGER_t tmpint;
-	void *tmpintptr = &tmpint;
+    long *native = (long *)*sptr;
+    INTEGER_t tmpint;
+    void *tmpintptr = &tmpint;
 
-	(void)opt_codec_ctx;
-	ASN_DEBUG("Decoding NativeInteger %s (UPER)", td->name);
+    (void)opt_codec_ctx;
+    ASN_DEBUG("Decoding NativeInteger %s (UPER)", td->name);
 
-	if(!native) {
-		native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
-		if(!native) ASN__DECODE_FAILED;
-	}
+    if(!native) {
+        native = (long *)(*sptr = CALLOC(1, sizeof(*native)));
+        if(!native) ASN__DECODE_FAILED;
+    }
 
-	memset(&tmpint, 0, sizeof tmpint);
-	rval = INTEGER_decode_uper(opt_codec_ctx, td, constraints,
-				   &tmpintptr, pd);
-	if(rval.code == RC_OK) {
-		if((specs&&specs->field_unsigned)
-			? asn_INTEGER2ulong(&tmpint, (unsigned long *)native)
-			: asn_INTEGER2long(&tmpint, native))
-			rval.code = RC_FAIL;
-		else
-			ASN_DEBUG("NativeInteger %s got value %ld",
-				td->name, *native);
-	}
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+    memset(&tmpint, 0, sizeof tmpint);
+    rval = INTEGER_decode_uper(opt_codec_ctx, td, constraints, &tmpintptr, pd);
+    if(rval.code == RC_OK) {
+        if((specs && specs->field_unsigned)
+               ? asn_INTEGER2ulong(&tmpint, (unsigned long *)native)
+               : asn_INTEGER2long(&tmpint, native))
+            rval.code = RC_FAIL;
+        else
+            ASN_DEBUG("NativeInteger %s got value %ld", td->name, *native);
+    }
+    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
 
-	return rval;
+    return rval;
 }
 
 asn_enc_rval_t
@@ -296,26 +292,25 @@ NativeInteger_encode_uper(const asn_TYPE_descriptor_t *td,
     const asn_INTEGER_specifics_t *specs =
         (const asn_INTEGER_specifics_t *)td->specifics;
     asn_enc_rval_t er;
-	long native;
-	INTEGER_t tmpint;
+    long native;
+    INTEGER_t tmpint;
 
-	if(!sptr) ASN__ENCODE_FAILED;
+    if(!sptr) ASN__ENCODE_FAILED;
 
     native = *(const long *)sptr;
 
     ASN_DEBUG("Encoding NativeInteger %s %ld (UPER)", td->name, native);
 
-	memset(&tmpint, 0, sizeof(tmpint));
-	if((specs&&specs->field_unsigned)
-		? asn_ulong2INTEGER(&tmpint, native)
-		: asn_long2INTEGER(&tmpint, native))
-		ASN__ENCODE_FAILED;
-	er = INTEGER_encode_uper(td, constraints, &tmpint, po);
-	ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
-	return er;
+    memset(&tmpint, 0, sizeof(tmpint));
+    if((specs && specs->field_unsigned) ? asn_ulong2INTEGER(&tmpint, native)
+                                        : asn_long2INTEGER(&tmpint, native))
+        ASN__ENCODE_FAILED;
+    er = INTEGER_encode_uper(td, constraints, &tmpint, po);
+    ASN_STRUCT_FREE_CONTENTS_ONLY(asn_DEF_INTEGER, &tmpint);
+    return er;
 }
 
-#endif  /* ASN_DISABLE_PER_SUPPORT */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 /*
  * INTEGER specific human-readable output.
@@ -329,8 +324,8 @@ NativeInteger_print(const asn_TYPE_descriptor_t *td, const void *sptr,
     char scratch[32]; /* Enough for 64-bit int */
     int ret;
 
-    (void)td;       /* Unused argument */
-    (void)ilevel;   /* Unused argument */
+    (void)td;     /* Unused argument */
+    (void)ilevel; /* Unused argument */
 
     if(native) {
         long value = *native;
@@ -348,19 +343,17 @@ NativeInteger_print(const asn_TYPE_descriptor_t *td, const void *sptr,
             }
         }
         return 0;
-	} else {
-		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
-	}
+    } else {
+        return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
+    }
 }
 
 void
 NativeInteger_free(const asn_TYPE_descriptor_t *td, void *ptr,
                    enum asn_struct_free_method method) {
-    if(!td || !ptr)
-		return;
+    if(!td || !ptr) return;
 
-	ASN_DEBUG("Freeing %s as INTEGER (%d, %p, Native)",
-		td->name, method, ptr);
+    ASN_DEBUG("Freeing %s as INTEGER (%d, %p, Native)", td->name, method, ptr);
 
     switch(method) {
     case ASFM_FREE_EVERYTHING:
@@ -375,7 +368,8 @@ NativeInteger_free(const asn_TYPE_descriptor_t *td, void *ptr,
 }
 
 int
-NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr, const void *bptr) {
+NativeInteger_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
+                      const void *bptr) {
     (void)td;
 
     if(aptr && bptr) {

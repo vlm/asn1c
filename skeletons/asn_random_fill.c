@@ -10,7 +10,6 @@
 int
 asn_random_fill(const struct asn_TYPE_descriptor_s *td, void **struct_ptr,
                 size_t length) {
-
     if(td && td->op->random_fill) {
         asn_random_fill_result_t res =
             td->op->random_fill(td, struct_ptr, 0, length);
@@ -26,7 +25,7 @@ asn__intmax_range(intmax_t lb, intmax_t ub) {
     if((ub < 0) == (lb < 0)) {
         return ub - lb;
     } else if(lb < 0) {
-        return 1 + ((uintmax_t)ub + (uintmax_t)-(lb + 1));
+        return 1 + ((uintmax_t)ub + (uintmax_t) - (lb + 1));
     } else {
         assert(!"Unreachable");
         return 0;
@@ -43,7 +42,7 @@ asn_random_between(intmax_t lb, intmax_t rb) {
         uintmax_t value = 0;
         uintmax_t got_entropy = 0;
 
-        assert(RAND_MAX > 0xffffff);    /* Seen 7ffffffd! */
+        assert(RAND_MAX > 0xffffff); /* Seen 7ffffffd! */
         assert(range < intmax_max);
 
         for(; got_entropy < range;) {

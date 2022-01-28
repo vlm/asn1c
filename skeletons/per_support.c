@@ -2,8 +2,8 @@
  * Copyright (c) 2005-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#include <asn_system.h>
 #include <asn_internal.h>
+#include <asn_system.h>
 #include <per_support.h>
 
 /*
@@ -24,7 +24,7 @@ uper_get_length(asn_per_data_t *pd, int ebits, size_t lower_bound,
         return value;
     }
 
-	value = per_get_few_bits(pd, 8);
+    value = per_get_few_bits(pd, 8);
     if((value & 0x80) == 0) { /* #11.9.3.6 */
         return (value & 0x7F);
     } else if((value & 0x40) == 0) { /* #11.9.3.7 */
@@ -50,21 +50,21 @@ uper_get_length(asn_per_data_t *pd, int ebits, size_t lower_bound,
  */
 ssize_t
 uper_get_nslength(asn_per_data_t *pd) {
-	ssize_t length;
+    ssize_t length;
 
-	ASN_DEBUG("Getting normally small length");
+    ASN_DEBUG("Getting normally small length");
 
-	if(per_get_few_bits(pd, 1) == 0) {
-		length = per_get_few_bits(pd, 6) + 1;
-		if(length <= 0) return -1;
-		ASN_DEBUG("l=%d", (int)length);
-		return length;
-	} else {
-		int repeat;
-		length = uper_get_length(pd, -1, 0, &repeat);
-		if(length >= 0 && !repeat) return length;
-		return -1; /* Error, or do not support >16K extensions */
-	}
+    if(per_get_few_bits(pd, 1) == 0) {
+        length = per_get_few_bits(pd, 6) + 1;
+        if(length <= 0) return -1;
+        ASN_DEBUG("l=%d", (int)length);
+        return length;
+    } else {
+        int repeat;
+        length = uper_get_length(pd, -1, 0, &repeat);
+        if(length >= 0 && !repeat) return length;
+        return -1; /* Error, or do not support >16K extensions */
+    }
 }
 
 /*
@@ -73,24 +73,22 @@ uper_get_nslength(asn_per_data_t *pd) {
  */
 ssize_t
 uper_get_nsnnwn(asn_per_data_t *pd) {
-	ssize_t value;
+    ssize_t value;
 
-	value = per_get_few_bits(pd, 7);
-	if(value & 64) {	/* implicit (value < 0) */
-		value &= 63;
-		value <<= 2;
-		value |= per_get_few_bits(pd, 2);
-		if(value & 128)	/* implicit (value < 0) */
-			return -1;
-		if(value == 0)
-			return 0;
-		if(value >= 3)
-			return -1;
-		value = per_get_few_bits(pd, 8 * value);
-		return value;
-	}
+    value = per_get_few_bits(pd, 7);
+    if(value & 64) { /* implicit (value < 0) */
+        value &= 63;
+        value <<= 2;
+        value |= per_get_few_bits(pd, 2);
+        if(value & 128) /* implicit (value < 0) */
+            return -1;
+        if(value == 0) return 0;
+        if(value >= 3) return -1;
+        value = per_get_few_bits(pd, 8 * value);
+        return value;
+    }
 
-	return value;
+    return value;
 }
 
 /*
@@ -99,50 +97,49 @@ uper_get_nsnnwn(asn_per_data_t *pd) {
  */
 int
 uper_put_nsnnwn(asn_per_outp_t *po, int n) {
-	int bytes;
+    int bytes;
 
-	if(n <= 63) {
-		if(n < 0) return -1;
-		return per_put_few_bits(po, n, 7);
-	}
-	if(n < 256)
-		bytes = 1;
-	else if(n < 65536)
-		bytes = 2;
-	else if(n < 256 * 65536)
-		bytes = 3;
-	else
-		return -1;	/* This is not a "normally small" value */
-	if(per_put_few_bits(po, bytes, 8))
-		return -1;
+    if(n <= 63) {
+        if(n < 0) return -1;
+        return per_put_few_bits(po, n, 7);
+    }
+    if(n < 256)
+        bytes = 1;
+    else if(n < 65536)
+        bytes = 2;
+    else if(n < 256 * 65536)
+        bytes = 3;
+    else
+        return -1; /* This is not a "normally small" value */
+    if(per_put_few_bits(po, bytes, 8)) return -1;
 
-	return per_put_few_bits(po, n, 8 * bytes);
+    return per_put_few_bits(po, n, 8 * bytes);
 }
 
 
 /* X.691-2008/11, #11.5.6 -> #11.3 */
-int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value, int nbits) {
-	unsigned long lhalf;    /* Lower half of the number*/
-	long half;
+int
+uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *out_value,
+                                  int nbits) {
+    unsigned long lhalf; /* Lower half of the number*/
+    long half;
 
-	if(nbits <= 31) {
-		half = per_get_few_bits(pd, nbits);
-		if(half < 0) return -1;
-		*out_value = half;
-		return 0;
-	}
+    if(nbits <= 31) {
+        half = per_get_few_bits(pd, nbits);
+        if(half < 0) return -1;
+        *out_value = half;
+        return 0;
+    }
 
-	if((size_t)nbits > 8 * sizeof(*out_value))
-		return -1;  /* RANGE */
+    if((size_t)nbits > 8 * sizeof(*out_value)) return -1; /* RANGE */
 
-	half = per_get_few_bits(pd, 31);
-	if(half < 0) return -1;
+    half = per_get_few_bits(pd, 31);
+    if(half < 0) return -1;
 
-	if(uper_get_constrained_whole_number(pd, &lhalf, nbits - 31))
-		return -1;
+    if(uper_get_constrained_whole_number(pd, &lhalf, nbits - 31)) return -1;
 
-	*out_value = ((unsigned long)half << (nbits - 31)) | lhalf;
-	return 0;
+    *out_value = ((unsigned long)half << (nbits - 31)) | lhalf;
+    return 0;
 }
 
 
@@ -169,14 +166,12 @@ uper_put_length(asn_per_outp_t *po, size_t length, int *need_eom) {
     int dummy = 0;
     if(!need_eom) need_eom = &dummy;
 
-    if(length <= 127) {	/* #11.9.3.6 */
+    if(length <= 127) { /* #11.9.3.6 */
         *need_eom = 0;
-        return per_put_few_bits(po, length, 8)
-            ? -1 : (ssize_t)length;
+        return per_put_few_bits(po, length, 8) ? -1 : (ssize_t)length;
     } else if(length < 16384) { /* #10.9.3.7 */
         *need_eom = 0;
-        return per_put_few_bits(po, length|0x8000, 16)
-            ? -1 : (ssize_t)length;
+        return per_put_few_bits(po, length | 0x8000, 16) ? -1 : (ssize_t)length;
     }
 
     *need_eom = 0 == (length & 16383);
@@ -186,9 +181,8 @@ uper_put_length(asn_per_outp_t *po, size_t length, int *need_eom) {
         length = 4;
     }
 
-    return per_put_few_bits(po, 0xC0 | length, 8)
-            ? -1 : (ssize_t)(length << 14);
-
+    return per_put_few_bits(po, 0xC0 | length, 8) ? -1
+                                                  : (ssize_t)(length << 14);
 }
 
 
@@ -250,16 +244,16 @@ per_long_range_rebase(long v, long lb, long ub, unsigned long *output) {
      * compute the ranges accurately to avoid C's undefined behavior.
      */
     if((v < 0) == (lb < 0)) {
-        *output = v-lb;
+        *output = v - lb;
         return 0;
     } else if(v < 0) {
-        unsigned long rebased = 1 + (unsigned long)-(v+1) + (unsigned long)lb;
-        assert(rebased <= range);   /* By construction */
+        unsigned long rebased = 1 + (unsigned long)-(v + 1) + (unsigned long)lb;
+        assert(rebased <= range); /* By construction */
         *output = rebased;
         return 0;
     } else if(lb < 0) {
-        unsigned long rebased = 1 + (unsigned long)-(lb+1) + (unsigned long)v;
-        assert(rebased <= range);   /* By construction */
+        unsigned long rebased = 1 + (unsigned long)-(lb + 1) + (unsigned long)v;
+        assert(rebased <= range); /* By construction */
         *output = rebased;
         return 0;
     } else {

@@ -2,8 +2,8 @@
  * Copyright (c) 2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#include <asn_internal.h>
 #include <asn_codecs_prim.h>
+#include <asn_internal.h>
 
 /*
  * The OER encoder of any type.
@@ -26,8 +26,8 @@ oer_encode(const asn_TYPE_descriptor_t *type_descriptor, const void *struct_ptr,
  * Argument type and callback necessary for oer_encode_to_buffer().
  */
 typedef struct enc_to_buf_arg {
-        void *buffer;
-        size_t left;
+    void *buffer;
+    size_t left;
 } enc_to_buf_arg;
 static int
 encode_to_buffer_cb(const void *buffer, size_t size, void *key) {
@@ -62,8 +62,7 @@ oer_encode_to_buffer(const asn_TYPE_descriptor_t *type_descriptor,
         ec.encoded = -1;
         ec.failed_type = type_descriptor;
         ec.structure_ptr = struct_ptr;
-        ASN_DEBUG("OER encoder is not defined for %s",
-                type_descriptor->name);
+        ASN_DEBUG("OER encoder is not defined for %s", type_descriptor->name);
     } else {
         ec = type_descriptor->op->oer_encoder(
             type_descriptor, constraints,
@@ -89,7 +88,8 @@ oer_encode_primitive(const asn_TYPE_descriptor_t *td,
 
     if(!st) ASN__ENCODE_FAILED;
 
-    ASN_DEBUG("Encoding %s (%" ASN_PRI_SIZE " bytes)", td ? td->name : "", st->size);
+    ASN_DEBUG("Encoding %s (%" ASN_PRI_SIZE " bytes)", td ? td->name : "",
+              st->size);
 
     /*
      * X.696 (08/2015) #27.2
@@ -138,4 +138,3 @@ oer_open_type_put(const asn_TYPE_descriptor_t *td,
 
     return len_len + er.encoded;
 }
-

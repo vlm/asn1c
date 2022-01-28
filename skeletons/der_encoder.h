@@ -2,8 +2,8 @@
  * Copyright (c) 2003-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_DER_ENCODER_H_
-#define	_DER_ENCODER_H_
+#ifndef _DER_ENCODER_H_
+#define _DER_ENCODER_H_
 
 #include <asn_application.h>
 
@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-struct asn_TYPE_descriptor_s;	/* Forward declaration */
+struct asn_TYPE_descriptor_s; /* Forward declaration */
 
 /*
  * The DER encoder of any type. May be invoked by the application.
@@ -65,4 +65,4 @@ ssize_t der_write_tags(const struct asn_TYPE_descriptor_s *type_descriptor,
 }
 #endif
 
-#endif	/* _DER_ENCODER_H_ */
+#endif /* _DER_ENCODER_H_ */

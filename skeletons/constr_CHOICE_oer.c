@@ -12,7 +12,7 @@
 /*
  * Return a standardized complex structure.
  */
-#undef  RETURN
+#undef RETURN
 #define RETURN(_code)                    \
     do {                                 \
         asn_dec_rval_t rval;             \
@@ -21,7 +21,7 @@
         return rval;                     \
     } while(0)
 
-#undef  ADVANCE
+#undef ADVANCE
 #define ADVANCE(num_bytes)               \
     do {                                 \
         size_t num = num_bytes;          \
@@ -33,13 +33,13 @@
 /*
  * Switch to the next phase of parsing.
  */
-#undef  NEXT_PHASE
+#undef NEXT_PHASE
 #define NEXT_PHASE(ctx) \
     do {                \
         ctx->phase++;   \
         ctx->step = 0;  \
     } while(0)
-#undef  SET_PHASE
+#undef SET_PHASE
 #define SET_PHASE(ctx, value) \
     do {                      \
         ctx->phase = value;   \
@@ -83,8 +83,7 @@ oer_fetch_tag(const void *ptr, size_t size, ber_tlv_tag_t *tag_r) {
     ber_tlv_tag_t tclass;
     size_t skipped;
 
-    if(size == 0)
-        return 0;
+    if(size == 0) return 0;
 
     val = *(const uint8_t *)ptr;
     tclass = (val >> 6);
@@ -214,8 +213,8 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         /* Fall through */
     case 1: {
         asn_TYPE_member_t *elm = &elements[ctx->step]; /* CHOICE's element */
-        void *memb_ptr;         /* Pointer to the member */
-        void **memb_ptr2;       /* Pointer to that pointer */
+        void *memb_ptr;   /* Pointer to the member */
+        void **memb_ptr2; /* Pointer to that pointer */
         asn_dec_rval_t rval;
 
         /*
@@ -260,7 +259,7 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         case RC_WMORE:
             break;
         case RC_FAIL:
-            SET_PHASE(ctx, 3);  /* => 3 */
+            SET_PHASE(ctx, 3); /* => 3 */
         }
         return rval;
     }
@@ -291,9 +290,9 @@ oer_put_tag(ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
         return 1;
     } else {
         uint8_t buf[1 + 2 * sizeof(tval)];
-        uint8_t *b = &buf[sizeof(buf)-1]; /* Last addressable */
+        uint8_t *b = &buf[sizeof(buf) - 1]; /* Last addressable */
         size_t encoded;
-        for(; ; tval >>= 7) {
+        for(;; tval >>= 7) {
             if(tval >> 7) {
                 *b-- = 0x80 | (tval & 0x7f);
             } else {
@@ -308,7 +307,6 @@ oer_put_tag(ber_tlv_tag_t tag, asn_app_consume_bytes_f *cb, void *app_key) {
         }
         return encoded;
     }
-
 }
 
 /*
@@ -339,7 +337,7 @@ CHOICE_encode_oer(const asn_TYPE_descriptor_t *td,
         ASN__ENCODE_FAILED;
     }
 
-    elm = &td->elements[present-1];
+    elm = &td->elements[present - 1];
     if(elm->flags & ATF_POINTER) {
         memb_ptr =
             *(const void *const *)((const char *)sptr + elm->memb_offset);
@@ -361,10 +359,10 @@ CHOICE_encode_oer(const asn_TYPE_descriptor_t *td,
         ASN__ENCODE_FAILED;
     }
 
-    if(specs->ext_start >= 0 && (unsigned)specs->ext_start <= (present-1)) {
-        ssize_t encoded = oer_open_type_put(elm->type,
-                               elm->encoding_constraints.oer_constraints,
-                               memb_ptr, cb, app_key);
+    if(specs->ext_start >= 0 && (unsigned)specs->ext_start <= (present - 1)) {
+        ssize_t encoded = oer_open_type_put(
+            elm->type, elm->encoding_constraints.oer_constraints, memb_ptr, cb,
+            app_key);
         if(encoded < 0) ASN__ENCODE_FAILED;
         er.encoded = tag_len + encoded;
     } else {
@@ -377,4 +375,4 @@ CHOICE_encode_oer(const asn_TYPE_descriptor_t *td,
     return er;
 }
 
-#endif  /* ASN_DISABLE_OER_SUPPORT */
+#endif /* ASN_DISABLE_OER_SUPPORT */

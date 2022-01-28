@@ -2,8 +2,8 @@
  * Copyright (c) 2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	OER_ENCODER_H
-#define	OER_ENCODER_H
+#ifndef OER_ENCODER_H
+#define OER_ENCODER_H
 
 #include <asn_application.h>
 
@@ -11,7 +11,7 @@
 extern "C" {
 #endif
 
-struct asn_TYPE_descriptor_s;	/* Forward declaration */
+struct asn_TYPE_descriptor_s; /* Forward declaration */
 
 /*
  * The Octet Encoding Rules (OER, X.696 08/2015) encoder for any type.
@@ -67,4 +67,4 @@ oer_type_encoder_f oer_encode_primitive;
 }
 #endif
 
-#endif	/* OER_ENCODER_H */
+#endif /* OER_ENCODER_H */

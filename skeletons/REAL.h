@@ -2,8 +2,8 @@
  * Copyright (c) 2004-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	ASN_TYPE_REAL_H
-#define	ASN_TYPE_REAL_H
+#ifndef ASN_TYPE_REAL_H
+#define ASN_TYPE_REAL_H
 
 #include <asn_application.h>
 #include <asn_codecs_prim.h>
@@ -25,18 +25,19 @@ per_type_decoder_f REAL_decode_uper;
 per_type_encoder_f REAL_encode_uper;
 xer_type_decoder_f REAL_decode_xer;
 xer_type_encoder_f REAL_encode_xer;
-asn_random_fill_f  REAL_random_fill;
+asn_random_fill_f REAL_random_fill;
 
-#define REAL_free          ASN__PRIMITIVE_TYPE_free,
-#define REAL_constraint    asn_generic_no_constraint
-#define REAL_decode_ber    ber_decode_primitive
-#define REAL_encode_der    der_encode_primitive
+#define REAL_free ASN__PRIMITIVE_TYPE_free,
+#define REAL_constraint asn_generic_no_constraint
+#define REAL_decode_ber ber_decode_primitive
+#define REAL_encode_der der_encode_primitive
 
 /***********************************
  * Some handy conversion routines. *
  ***********************************/
 
-ssize_t REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb, void *app_key);
+ssize_t REAL__dump(double d, int canonical, asn_app_consume_bytes_f *cb,
+                   void *app_key);
 
 /*
  * Convert between native double type and REAL representation (DER).
@@ -62,4 +63,4 @@ int asn_double2float(double d, float *outcome);
 }
 #endif
 
-#endif	/* ASN_TYPE_REAL_H */
+#endif /* ASN_TYPE_REAL_H */

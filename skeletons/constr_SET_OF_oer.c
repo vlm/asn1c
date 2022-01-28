@@ -5,34 +5,34 @@
  */
 #ifndef ASN_DISABLE_OER_SUPPORT
 
+#include <asn_SET_OF.h>
 #include <asn_internal.h>
 #include <constr_SET_OF.h>
-#include <asn_SET_OF.h>
 #include <errno.h>
 
 /*
  * This macro "eats" the part of the buffer which is definitely "consumed",
  * i.e. was correctly converted into local representation or rightfully skipped.
  */
-#undef  ADVANCE
-#define ADVANCE(num_bytes)                   \
-    do {                                     \
-        size_t num = num_bytes;              \
-        ptr = ((const char *)ptr) + num;     \
-        size -= num;                         \
-        consumed_myself += num;              \
+#undef ADVANCE
+#define ADVANCE(num_bytes)               \
+    do {                                 \
+        size_t num = num_bytes;          \
+        ptr = ((const char *)ptr) + num; \
+        size -= num;                     \
+        consumed_myself += num;          \
     } while(0)
 
 /*
  * Switch to the next phase of parsing.
  */
-#undef  NEXT_PHASE
+#undef NEXT_PHASE
 #define NEXT_PHASE(ctx) \
     do {                \
         ctx->phase++;   \
         ctx->step = 0;  \
     } while(0)
-#undef  SET_PHASE
+#undef SET_PHASE
 #define SET_PHASE(ctx, value) \
     do {                      \
         ctx->phase = value;   \
@@ -42,7 +42,7 @@
 /*
  * Return a standardized complex structure.
  */
-#undef  RETURN
+#undef RETURN
 #define RETURN(_code)                    \
     do {                                 \
         asn_dec_rval_t rval;             \
@@ -111,16 +111,16 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
                   const asn_TYPE_descriptor_t *td,
                   const asn_oer_constraints_t *constraints, void **struct_ptr,
                   const void *ptr, size_t size) {
-    const asn_SET_OF_specifics_t *specs = (const asn_SET_OF_specifics_t *)td->specifics;
+    const asn_SET_OF_specifics_t *specs =
+        (const asn_SET_OF_specifics_t *)td->specifics;
     asn_dec_rval_t rval = {RC_OK, 0};
-    void *st = *struct_ptr; /* Target structure */
-    asn_struct_ctx_t *ctx; /* Decoder context */
+    void *st = *struct_ptr;     /* Target structure */
+    asn_struct_ctx_t *ctx;      /* Decoder context */
     size_t consumed_myself = 0; /* Consumed bytes from ptr. */
 
     (void)constraints;
 
-    if(ASN__STACK_OVERFLOW_CHECK(opt_codec_ctx))
-        ASN__DECODE_FAILED;
+    if(ASN__STACK_OVERFLOW_CHECK(opt_codec_ctx)) ASN__DECODE_FAILED;
 
     /*
      * Create the target structure if it is not present already.
@@ -229,10 +229,9 @@ oer_put_quantity(size_t qty, asn_app_consume_bytes_f *cb, void *app_key) {
         qty >>= 8;
     } while(qty);
 
-    *b = sizeof(buf) - (b-buf) - 1;
-    encoded = sizeof(buf) - (b-buf);
-    if(cb(b, encoded, app_key) < 0)
-        return -1;
+    *b = sizeof(buf) - (b - buf) - 1;
+    encoded = sizeof(buf) - (b - buf);
+    if(cb(b, encoded, app_key) < 0) return -1;
     return encoded;
 }
 
@@ -282,4 +281,4 @@ SET_OF_encode_oer(const asn_TYPE_descriptor_t *td,
     }
 }
 
-#endif  /* ASN_DISABLE_OER_SUPPORT */
+#endif /* ASN_DISABLE_OER_SUPPORT */

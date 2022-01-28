@@ -5,8 +5,8 @@
  */
 #ifndef ASN_DISABLE_OER_SUPPORT
 
-#include <asn_internal.h>
 #include <BIT_STRING.h>
+#include <asn_internal.h>
 #include <errno.h>
 
 asn_dec_rval_t
@@ -118,11 +118,12 @@ BIT_STRING_encode_oer(const asn_TYPE_descriptor_t *td,
     if(ct_size >= 0) {
         size_t ct_bytes = (ct_size + 7) >> 3;
         if(st->size > ct_bytes) {
-            ASN_DEBUG("More bits in BIT STRING %s (%" ASN_PRI_SSIZE ") than constrained %" ASN_PRI_SSIZE "",
+            ASN_DEBUG("More bits in BIT STRING %s (%" ASN_PRI_SSIZE
+                      ") than constrained %" ASN_PRI_SSIZE "",
                       td->name, 8 * st->size - st->bits_unused, ct_size);
             ASN__ENCODE_FAILED;
         }
-        trailing_zeros = ct_bytes - st->size;   /* Allow larger constraint */
+        trailing_zeros = ct_bytes - st->size; /* Allow larger constraint */
     } else {
         uint8_t ub = st->bits_unused & 7;
         ssize_t len_len = oer_serialize_length(1 + st->size, cb, app_key);
@@ -171,4 +172,4 @@ BIT_STRING_encode_oer(const asn_TYPE_descriptor_t *td,
 }
 
 
-#endif  /* ASN_DISABLE_OER_SUPPORT */
+#endif /* ASN_DISABLE_OER_SUPPORT */

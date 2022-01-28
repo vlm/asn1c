@@ -2,11 +2,11 @@
  * Copyright (c) 2005-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	_PER_SUPPORT_H_
-#define	_PER_SUPPORT_H_
+#ifndef _PER_SUPPORT_H_
+#define _PER_SUPPORT_H_
 
-#include <asn_system.h>		/* Platform-specific types */
 #include <asn_bit_data.h>
+#include <asn_system.h> /* Platform-specific types */
 
 #ifdef __cplusplus
 extern "C" {
@@ -16,28 +16,28 @@ extern "C" {
  * Pre-computed PER constraints.
  */
 typedef struct asn_per_constraint_s {
-	enum asn_per_constraint_flags {
-		APC_UNCONSTRAINED	= 0x0,	/* No PER visible constraints */
-		APC_SEMI_CONSTRAINED	= 0x1,	/* Constrained at "lb" */
-		APC_CONSTRAINED		= 0x2,	/* Fully constrained */
-		APC_EXTENSIBLE		= 0x4	/* May have extension */
-	} flags;
-	int  range_bits;		/* Full number of bits in the range */
-	int  effective_bits;		/* Effective bits */
-	long lower_bound;		/* "lb" value */
-	long upper_bound;		/* "ub" value */
+    enum asn_per_constraint_flags {
+        APC_UNCONSTRAINED = 0x0,    /* No PER visible constraints */
+        APC_SEMI_CONSTRAINED = 0x1, /* Constrained at "lb" */
+        APC_CONSTRAINED = 0x2,      /* Fully constrained */
+        APC_EXTENSIBLE = 0x4        /* May have extension */
+    } flags;
+    int range_bits;     /* Full number of bits in the range */
+    int effective_bits; /* Effective bits */
+    long lower_bound;   /* "lb" value */
+    long upper_bound;   /* "ub" value */
 } asn_per_constraint_t;
 typedef struct asn_per_constraints_s {
-	asn_per_constraint_t value;
-	asn_per_constraint_t size;
-	int (*value2code)(unsigned int value);
-	int (*code2value)(unsigned int code);
+    asn_per_constraint_t value;
+    asn_per_constraint_t size;
+    int (*value2code)(unsigned int value);
+    int (*code2value)(unsigned int code);
 } asn_per_constraints_t;
 
 /* Temporary compatibility layer. Will get removed. */
 typedef struct asn_bit_data_s asn_per_data_t;
-#define per_get_few_bits(data, bits)   asn_get_few_bits(data, bits)
-#define per_get_undo(data, bits)   asn_get_undo(data, bits)
+#define per_get_few_bits(data, bits) asn_get_few_bits(data, bits)
+#define per_get_undo(data, bits) asn_get_undo(data, bits)
 #define per_get_many_bits(data, dst, align, bits) \
     asn_get_many_bits(data, dst, align, bits)
 
@@ -59,7 +59,8 @@ ssize_t uper_get_nslength(asn_per_data_t *pd);
 ssize_t uper_get_nsnnwn(asn_per_data_t *pd);
 
 /* X.691-2008/11, #11.5.6 */
-int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *v, int nbits);
+int uper_get_constrained_whole_number(asn_per_data_t *pd, unsigned long *v,
+                                      int nbits);
 
 
 /* Temporary compatibility layer. Will get removed. */
@@ -81,7 +82,8 @@ int per_long_range_rebase(long v, long lb, long ub, unsigned long *output);
 int per_long_range_unrebase(unsigned long inp, long lb, long ub, long *outp);
 
 /* X.691-2008/11, #11.5 */
-int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v, int nbits);
+int uper_put_constrained_whole_number_u(asn_per_outp_t *po, unsigned long v,
+                                        int nbits);
 
 /*
  * X.691 (08/2015) #11.9 "General rules for encoding a length determinant"
@@ -109,4 +111,4 @@ int uper_put_nsnnwn(asn_per_outp_t *po, int n);
 }
 #endif
 
-#endif	/* _PER_SUPPORT_H_ */
+#endif /* _PER_SUPPORT_H_ */

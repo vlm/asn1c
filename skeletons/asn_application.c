@@ -2,8 +2,8 @@
  * Copyright (c) 2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#include <asn_internal.h>
 #include <asn_application.h>
+#include <asn_internal.h>
 #include <errno.h>
 
 static asn_enc_rval_t asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
@@ -132,7 +132,8 @@ callback_failure_catch_cb(const void *data, size_t size, void *keyp) {
 asn_enc_rval_t
 asn_encode(const asn_codec_ctx_t *opt_codec_ctx,
            enum asn_transfer_syntax syntax, const asn_TYPE_descriptor_t *td,
-           const void *sptr, asn_app_consume_bytes_f *callback, void *callback_key) {
+           const void *sptr, asn_app_consume_bytes_f *callback,
+           void *callback_key) {
     struct callback_failure_catch_key cb_key;
     asn_enc_rval_t er;
 
@@ -273,7 +274,7 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
             er = der_encode(td, sptr, callback, callback_key);
             if(er.encoded == -1) {
                 if(er.failed_type && er.failed_type->op->der_encoder) {
-                    errno = EBADF;  /* Structure has incorrect form. */
+                    errno = EBADF; /* Structure has incorrect form. */
                 } else {
                     errno = ENOENT; /* DER is not defined for this type. */
                 }
@@ -287,13 +288,13 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
         errno = ENOENT; /* Transfer syntax is not defined for any type. */
         ASN__ENCODE_FAILED;
 
-#ifdef  ASN_DISABLE_OER_SUPPORT
+#ifdef ASN_DISABLE_OER_SUPPORT
     case ATS_BASIC_OER:
     case ATS_CANONICAL_OER:
         errno = ENOENT; /* PER is not defined. */
         ASN__ENCODE_FAILED;
         break;
-#else /* ASN_DISABLE_OER_SUPPORT */
+#else  /* ASN_DISABLE_OER_SUPPORT */
     case ATS_BASIC_OER:
         /* CANONICAL-OER is a superset of BASIC-OER. */
         /* Fall through. */
@@ -302,7 +303,7 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
             er = oer_encode(td, sptr, callback, callback_key);
             if(er.encoded == -1) {
                 if(er.failed_type && er.failed_type->op->oer_encoder) {
-                    errno = EBADF;  /* Structure has incorrect form. */
+                    errno = EBADF; /* Structure has incorrect form. */
                 } else {
                     errno = ENOENT; /* OER is not defined for this type. */
                 }
@@ -314,13 +315,13 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
         break;
 #endif /* ASN_DISABLE_OER_SUPPORT */
 
-#ifdef  ASN_DISABLE_PER_SUPPORT
+#ifdef ASN_DISABLE_PER_SUPPORT
     case ATS_UNALIGNED_BASIC_PER:
     case ATS_UNALIGNED_CANONICAL_PER:
         errno = ENOENT; /* PER is not defined. */
         ASN__ENCODE_FAILED;
         break;
-#else /* ASN_DISABLE_PER_SUPPORT */
+#else  /* ASN_DISABLE_PER_SUPPORT */
     case ATS_UNALIGNED_BASIC_PER:
         /* CANONICAL-UPER is a superset of BASIC-UPER. */
         /* Fall through. */
@@ -329,7 +330,7 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
             er = uper_encode(td, 0, sptr, callback, callback_key);
             if(er.encoded == -1) {
                 if(er.failed_type && er.failed_type->op->uper_encoder) {
-                    errno = EBADF;  /* Structure has incorrect form. */
+                    errno = EBADF; /* Structure has incorrect form. */
                 } else {
                     errno = ENOENT; /* UPER is not defined for this type. */
                 }
@@ -351,7 +352,7 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
             ASN__ENCODE_FAILED;
         }
         break;
-#endif  /* ASN_DISABLE_PER_SUPPORT */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
     case ATS_BASIC_XER:
         /* CANONICAL-XER is a superset of BASIC-XER. */
@@ -363,7 +364,7 @@ asn_encode_internal(const asn_codec_ctx_t *opt_codec_ctx,
             er = xer_encode(td, sptr, xer_flags, callback, callback_key);
             if(er.encoded == -1) {
                 if(er.failed_type && er.failed_type->op->xer_encoder) {
-                    errno = EBADF;  /* Structure has incorrect form. */
+                    errno = EBADF; /* Structure has incorrect form. */
                 } else {
                     errno = ENOENT; /* XER is not defined for this type. */
                 }
@@ -416,7 +417,7 @@ asn_decode(const asn_codec_ctx_t *opt_codec_ctx,
 
     case ATS_BASIC_OER:
     case ATS_CANONICAL_OER:
-#ifdef  ASN_DISABLE_OER_SUPPORT
+#ifdef ASN_DISABLE_OER_SUPPORT
         errno = ENOENT;
         ASN__DECODE_FAILED;
 #else
@@ -425,7 +426,7 @@ asn_decode(const asn_codec_ctx_t *opt_codec_ctx,
 
     case ATS_UNALIGNED_BASIC_PER:
     case ATS_UNALIGNED_CANONICAL_PER:
-#ifdef  ASN_DISABLE_PER_SUPPORT
+#ifdef ASN_DISABLE_PER_SUPPORT
         errno = ENOENT;
         ASN__DECODE_FAILED;
 #else
@@ -437,4 +438,3 @@ asn_decode(const asn_codec_ctx_t *opt_codec_ctx,
         return xer_decode(opt_codec_ctx, td, sptr, buffer, size);
     }
 }
-

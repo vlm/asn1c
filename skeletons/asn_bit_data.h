@@ -2,10 +2,10 @@
  * Copyright (c) 2005-2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#ifndef	ASN_BIT_DATA
-#define	ASN_BIT_DATA
+#ifndef ASN_BIT_DATA
+#define ASN_BIT_DATA
 
-#include <asn_system.h>		/* Platform-specific types */
+#include <asn_system.h> /* Platform-specific types */
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,12 +15,12 @@ extern "C" {
  * This structure describes a position inside an incoming PER bit stream.
  */
 typedef struct asn_bit_data_s {
-  const uint8_t *buffer;  /* Pointer to the octet stream */
-         size_t  nboff;   /* Bit offset to the meaningful bit */
-         size_t  nbits;   /* Number of bits in the stream */
-         size_t  moved;   /* Number of bits moved through this bit stream */
-  int (*refill)(struct asn_bit_data_s *);
-  void *refill_key;
+    const uint8_t *buffer; /* Pointer to the octet stream */
+    size_t nboff;          /* Bit offset to the meaningful bit */
+    size_t nbits;          /* Number of bits in the stream */
+    size_t moved;          /* Number of bits moved through this bit stream */
+    int (*refill)(struct asn_bit_data_s *);
+    void *refill_key;
 } asn_bit_data_t;
 
 /*
@@ -45,7 +45,7 @@ void asn_get_undo(asn_bit_data_t *, int get_nbits);
  * extracted due to EOD or other conditions.
  */
 int asn_get_many_bits(asn_bit_data_t *, uint8_t *dst, int right_align,
-			int get_nbits);
+                      int get_nbits);
 
 /* Non-thread-safe debugging function, don't use it */
 char *asn_bit_data_string(asn_bit_data_t *);
@@ -54,13 +54,13 @@ char *asn_bit_data_string(asn_bit_data_t *);
  * This structure supports forming bit output.
  */
 typedef struct asn_bit_outp_s {
-	uint8_t *buffer;	/* Pointer into the (tmpspace) */
-	size_t nboff;		/* Bit offset to the meaningful bit */
-	size_t nbits;		/* Number of bits left in (tmpspace) */
-	uint8_t tmpspace[32];	/* Preliminary storage to hold data */
-	int (*output)(const void *data, size_t size, void *op_key);
-	void *op_key;		/* Key for (output) data callback */
-	size_t flushed_bytes;	/* Bytes already flushed through (output) */
+    uint8_t *buffer;      /* Pointer into the (tmpspace) */
+    size_t nboff;         /* Bit offset to the meaningful bit */
+    size_t nbits;         /* Number of bits left in (tmpspace) */
+    uint8_t tmpspace[32]; /* Preliminary storage to hold data */
+    int (*output)(const void *data, size_t size, void *op_key);
+    void *op_key;         /* Key for (output) data callback */
+    size_t flushed_bytes; /* Bytes already flushed through (output) */
 } asn_bit_outp_t;
 
 /* Output a small number of bits (<= 31) */
@@ -80,4 +80,4 @@ int asn_put_aligned_flush(asn_bit_outp_t *);
 }
 #endif
 
-#endif	/* ASN_BIT_DATA */
+#endif /* ASN_BIT_DATA */

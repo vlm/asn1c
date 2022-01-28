@@ -2,32 +2,34 @@
  * Copyright (c) 2017 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#include <asn_internal.h>
 #include <OPEN_TYPE.h>
+#include <asn_internal.h>
 #include <constr_CHOICE.h>
-#include <per_opentype.h>
 #include <errno.h>
+#include <per_opentype.h>
 
 asn_TYPE_operation_t asn_OP_OPEN_TYPE = {
-	OPEN_TYPE_free,
-	OPEN_TYPE_print,
-	OPEN_TYPE_compare,
-	OPEN_TYPE_decode_ber,
-	OPEN_TYPE_encode_der,
-	OPEN_TYPE_decode_xer,
-	OPEN_TYPE_encode_xer,
-	0, 0,	/* No OER support, use "-gen-OER" to enable */
+    OPEN_TYPE_free,
+    OPEN_TYPE_print,
+    OPEN_TYPE_compare,
+    OPEN_TYPE_decode_ber,
+    OPEN_TYPE_encode_der,
+    OPEN_TYPE_decode_xer,
+    OPEN_TYPE_encode_xer,
+    0,
+    0, /* No OER support, use "-gen-OER" to enable */
 #ifdef ASN_DISABLE_PER_SUPPORT
-	0, 0,
+    0,
+    0,
 #else
-	OPEN_TYPE_decode_uper,
-	OPEN_TYPE_encode_uper,
+    OPEN_TYPE_decode_uper,
+    OPEN_TYPE_encode_uper,
 #endif
-	0,  /* Random fill is not supported for open type */
-	0,	/* Use generic outmost tag fetcher */
+    0, /* Random fill is not supported for open type */
+    0, /* Use generic outmost tag fetcher */
 };
 
-#undef  ADVANCE
+#undef ADVANCE
 #define ADVANCE(num_bytes)               \
     do {                                 \
         size_t num = num_bytes;          \
@@ -161,8 +163,7 @@ OPEN_TYPE_xer_get(const asn_codec_ctx_t *opt_codec_ctx,
     }
     if(*memb_ptr2 != NULL) {
         /* Make sure we reset the structure first before encoding */
-        if(CHOICE_variant_set_presence(elm->type, *memb_ptr2, 0)
-           != 0) {
+        if(CHOICE_variant_set_presence(elm->type, *memb_ptr2, 0) != 0) {
             ASN__DECODE_FAILED;
         }
     }
@@ -283,7 +284,7 @@ OPEN_TYPE_xer_get(const asn_codec_ctx_t *opt_codec_ctx,
 }
 
 
-#ifndef  ASN_DISABLE_PER_SUPPORT
+#ifndef ASN_DISABLE_PER_SUPPORT
 
 asn_dec_rval_t
 OPEN_TYPE_uper_get(const asn_codec_ctx_t *opt_codec_ctx,
@@ -320,8 +321,7 @@ OPEN_TYPE_uper_get(const asn_codec_ctx_t *opt_codec_ctx,
     }
     if(*memb_ptr2 != NULL) {
         /* Make sure we reset the structure first before encoding */
-        if(CHOICE_variant_set_presence(elm->type, *memb_ptr2, 0)
-           != 0) {
+        if(CHOICE_variant_set_presence(elm->type, *memb_ptr2, 0) != 0) {
             ASN__DECODE_FAILED;
         }
     }
@@ -399,4 +399,4 @@ OPEN_TYPE_encode_uper(const asn_TYPE_descriptor_t *td,
 }
 
 
-#endif  /* ASN_DISABLE_PER_SUPPORT */
+#endif /* ASN_DISABLE_PER_SUPPORT */
