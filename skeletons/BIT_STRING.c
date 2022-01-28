@@ -2,7 +2,6 @@
  * Copyright (c) 2003, 2004 Lev Walkin <vlm@lionet.info>. All rights reserved.
  * Redistribution and modifications are permitted subject to BSD license.
  */
-#include <asn_internal.h>
 #include <BIT_STRING.h>
 #include <asn_internal.h>
 
@@ -10,52 +9,46 @@
  * BIT STRING basic type description.
  */
 static const ber_tlv_tag_t asn_DEF_BIT_STRING_tags[] = {
-	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
-};
+    (ASN_TAG_CLASS_UNIVERSAL | (3 << 2))};
 asn_OCTET_STRING_specifics_t asn_SPC_BIT_STRING_specs = {
-	sizeof(BIT_STRING_t),
-	offsetof(BIT_STRING_t, _asn_ctx),
-	ASN_OSUBV_BIT
-};
+    sizeof(BIT_STRING_t), offsetof(BIT_STRING_t, _asn_ctx), ASN_OSUBV_BIT};
 asn_TYPE_operation_t asn_OP_BIT_STRING = {
-	OCTET_STRING_free,         /* Implemented in terms of OCTET STRING */
-	BIT_STRING_print,
-	BIT_STRING_compare,
-	OCTET_STRING_decode_ber,   /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_encode_der,   /* Implemented in terms of OCTET STRING */
-	OCTET_STRING_decode_xer_binary,
-	BIT_STRING_encode_xer,
-#ifdef	ASN_DISABLE_OER_SUPPORT
-	0,
-	0,
+    OCTET_STRING_free, /* Implemented in terms of OCTET STRING */
+    BIT_STRING_print,
+    BIT_STRING_compare,
+    OCTET_STRING_decode_ber, /* Implemented in terms of OCTET STRING */
+    OCTET_STRING_encode_der, /* Implemented in terms of OCTET STRING */
+    OCTET_STRING_decode_xer_binary,
+    BIT_STRING_encode_xer,
+#ifdef ASN_DISABLE_OER_SUPPORT
+    0,
+    0,
 #else
-	BIT_STRING_decode_oer,
-	BIT_STRING_encode_oer,
-#endif  /* ASN_DISABLE_OER_SUPPORT */
-#ifdef	ASN_DISABLE_PER_SUPPORT
-	0,
-	0,
+    BIT_STRING_decode_oer,
+    BIT_STRING_encode_oer,
+#endif /* ASN_DISABLE_OER_SUPPORT */
+#ifdef ASN_DISABLE_PER_SUPPORT
+    0,
+    0,
 #else
-	BIT_STRING_decode_uper,	/* Unaligned PER decoder */
-	BIT_STRING_encode_uper,	/* Unaligned PER encoder */
-#endif  /* ASN_DISABLE_PER_SUPPORT */
-	BIT_STRING_random_fill,
-	0	/* Use generic outmost tag fetcher */
+    BIT_STRING_decode_uper, /* Unaligned PER decoder */
+    BIT_STRING_encode_uper, /* Unaligned PER encoder */
+#endif /* ASN_DISABLE_PER_SUPPORT */
+    BIT_STRING_random_fill,
+    0 /* Use generic outmost tag fetcher */
 };
 asn_TYPE_descriptor_t asn_DEF_BIT_STRING = {
-	"BIT STRING",
-	"BIT_STRING",
-	&asn_OP_BIT_STRING,
-	asn_DEF_BIT_STRING_tags,
-	sizeof(asn_DEF_BIT_STRING_tags)
-	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
-	asn_DEF_BIT_STRING_tags,	/* Same as above */
-	sizeof(asn_DEF_BIT_STRING_tags)
-	  / sizeof(asn_DEF_BIT_STRING_tags[0]),
-	{ 0, 0, BIT_STRING_constraint },
-	0, 0,	/* No members */
-	&asn_SPC_BIT_STRING_specs
-};
+    "BIT STRING",
+    "BIT_STRING",
+    &asn_OP_BIT_STRING,
+    asn_DEF_BIT_STRING_tags,
+    sizeof(asn_DEF_BIT_STRING_tags) / sizeof(asn_DEF_BIT_STRING_tags[0]),
+    asn_DEF_BIT_STRING_tags, /* Same as above */
+    sizeof(asn_DEF_BIT_STRING_tags) / sizeof(asn_DEF_BIT_STRING_tags[0]),
+    {0, 0, BIT_STRING_constraint},
+    0,
+    0, /* No members */
+    &asn_SPC_BIT_STRING_specs};
 
 /*
  * BIT STRING generic constraint.
@@ -65,85 +58,79 @@ BIT_STRING_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
                       asn_app_constraint_failed_f *ctfailcb, void *app_key) {
     const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
 
-	if(st && st->buf) {
-		if((st->size == 0 && st->bits_unused)
-		|| st->bits_unused < 0 || st->bits_unused > 7) {
-			ASN__CTFAIL(app_key, td, sptr,
-				"%s: invalid padding byte (%s:%d)",
-				td->name, __FILE__, __LINE__);
-			return -1;
-		}
-	} else {
-		ASN__CTFAIL(app_key, td, sptr,
-			"%s: value not given (%s:%d)",
-			td->name, __FILE__, __LINE__);
-		return -1;
-	}
+    if(st && st->buf) {
+        if((st->size == 0 && st->bits_unused) || st->bits_unused < 0
+           || st->bits_unused > 7) {
+            ASN__CTFAIL(app_key, td, sptr, "%s: invalid padding byte (%s:%d)",
+                        td->name, __FILE__, __LINE__);
+            return -1;
+        }
+    } else {
+        ASN__CTFAIL(app_key, td, sptr, "%s: value not given (%s:%d)", td->name,
+                    __FILE__, __LINE__);
+        return -1;
+    }
 
-	return 0;
+    return 0;
 }
 
 static const char *_bit_pattern[16] = {
-	"0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
-	"1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"
-};
+    "0000", "0001", "0010", "0011", "0100", "0101", "0110", "0111",
+    "1000", "1001", "1010", "1011", "1100", "1101", "1110", "1111"};
 
 asn_enc_rval_t
 BIT_STRING_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
                       int ilevel, enum xer_encoder_flags_e flags,
                       asn_app_consume_bytes_f *cb, void *app_key) {
     asn_enc_rval_t er;
-	char scratch[128];
-	char *p = scratch;
-	char *scend = scratch + (sizeof(scratch) - 10);
-	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
-	int xcan = (flags & XER_F_CANONICAL);
-	uint8_t *buf;
-	uint8_t *end;
+    char scratch[128];
+    char *p = scratch;
+    char *scend = scratch + (sizeof(scratch) - 10);
+    const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+    int xcan = (flags & XER_F_CANONICAL);
+    uint8_t *buf;
+    uint8_t *end;
 
-	if(!st || !st->buf)
-		ASN__ENCODE_FAILED;
+    if(!st || !st->buf) ASN__ENCODE_FAILED;
 
-	er.encoded = 0;
+    er.encoded = 0;
 
-	buf = st->buf;
-	end = buf + st->size - 1;	/* Last byte is special */
+    buf = st->buf;
+    end = buf + st->size - 1; /* Last byte is special */
 
-	/*
-	 * Binary dump
-	 */
-	for(; buf < end; buf++) {
-		int v = *buf;
-		int nline = xcan?0:(((buf - st->buf) % 8) == 0);
-		if(p >= scend || nline) {
-			ASN__CALLBACK(scratch, p - scratch);
-			p = scratch;
-			if(nline) ASN__TEXT_INDENT(1, ilevel);
-		}
-		memcpy(p + 0, _bit_pattern[v >> 4], 4);
-		memcpy(p + 4, _bit_pattern[v & 0x0f], 4);
-		p += 8;
-	}
+    /*
+     * Binary dump
+     */
+    for(; buf < end; buf++) {
+        int v = *buf;
+        int nline = xcan ? 0 : (((buf - st->buf) % 8) == 0);
+        if(p >= scend || nline) {
+            ASN__CALLBACK(scratch, p - scratch);
+            p = scratch;
+            if(nline) ASN__TEXT_INDENT(1, ilevel);
+        }
+        memcpy(p + 0, _bit_pattern[v >> 4], 4);
+        memcpy(p + 4, _bit_pattern[v & 0x0f], 4);
+        p += 8;
+    }
 
-	if(!xcan && ((buf - st->buf) % 8) == 0)
-		ASN__TEXT_INDENT(1, ilevel);
-	ASN__CALLBACK(scratch, p - scratch);
-	p = scratch;
+    if(!xcan && ((buf - st->buf) % 8) == 0) ASN__TEXT_INDENT(1, ilevel);
+    ASN__CALLBACK(scratch, p - scratch);
+    p = scratch;
 
-	if(buf == end) {
-		int v = *buf;
-		int ubits = st->bits_unused;
-		int i;
-		for(i = 7; i >= ubits; i--)
-			*p++ = (v & (1 << i)) ? 0x31 : 0x30;
-		ASN__CALLBACK(scratch, p - scratch);
-	}
+    if(buf == end) {
+        int v = *buf;
+        int ubits = st->bits_unused;
+        int i;
+        for(i = 7; i >= ubits; i--) *p++ = (v & (1 << i)) ? 0x31 : 0x30;
+        ASN__CALLBACK(scratch, p - scratch);
+    }
 
-	if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
+    if(!xcan) ASN__TEXT_INDENT(1, ilevel - 1);
 
-	ASN__ENCODED_OK(er);
+    ASN__ENCODED_OK(er);
 cb_failed:
-	ASN__ENCODE_FAILED;
+    ASN__ENCODE_FAILED;
 }
 
 
@@ -153,49 +140,46 @@ cb_failed:
 int
 BIT_STRING_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
                  asn_app_consume_bytes_f *cb, void *app_key) {
-    const char * const h2c = "0123456789ABCDEF";
-	char scratch[64];
-	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
-	uint8_t *buf;
-	uint8_t *end;
-	char *p = scratch;
+    const char *const h2c = "0123456789ABCDEF";
+    char scratch[64];
+    const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+    uint8_t *buf;
+    uint8_t *end;
+    char *p = scratch;
 
-	(void)td;	/* Unused argument */
+    (void)td; /* Unused argument */
 
-	if(!st || !st->buf)
-		return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
+    if(!st || !st->buf) return (cb("<absent>", 8, app_key) < 0) ? -1 : 0;
 
-	ilevel++;
-	buf = st->buf;
-	end = buf + st->size;
+    ilevel++;
+    buf = st->buf;
+    end = buf + st->size;
 
-	/*
-	 * Hexadecimal dump.
-	 */
-	for(; buf < end; buf++) {
-		if((buf - st->buf) % 16 == 0 && (st->size > 16)
-				&& buf != st->buf) {
-			_i_INDENT(1);
-			/* Dump the string */
-			if(cb(scratch, p - scratch, app_key) < 0) return -1;
-			p = scratch;
-		}
-		*p++ = h2c[*buf >> 4];
-		*p++ = h2c[*buf & 0x0F];
-		*p++ = 0x20;
-	}
+    /*
+     * Hexadecimal dump.
+     */
+    for(; buf < end; buf++) {
+        if((buf - st->buf) % 16 == 0 && (st->size > 16) && buf != st->buf) {
+            _i_INDENT(1);
+            /* Dump the string */
+            if(cb(scratch, p - scratch, app_key) < 0) return -1;
+            p = scratch;
+        }
+        *p++ = h2c[*buf >> 4];
+        *p++ = h2c[*buf & 0x0F];
+        *p++ = 0x20;
+    }
 
-	if(p > scratch) {
-		p--;	/* Eat the tailing space */
+    if(p > scratch) {
+        p--; /* Eat the tailing space */
 
-		if((st->size > 16)) {
-			_i_INDENT(1);
-		}
+        if((st->size > 16)) {
+            _i_INDENT(1);
+        }
 
-		/* Dump the incomplete 16-bytes row */
-		if(cb(scratch, p - scratch, app_key) < 0)
-			return -1;
-	}
+        /* Dump the incomplete 16-bytes row */
+        if(cb(scratch, p - scratch, app_key) < 0) return -1;
+    }
 
     if(st->bits_unused) {
         int ret = snprintf(scratch, sizeof(scratch), " (%d bit%s unused)",
@@ -206,7 +190,7 @@ BIT_STRING_print(const asn_TYPE_descriptor_t *td, const void *sptr, int ilevel,
             return -1;
     }
 
-	return 0;
+    return 0;
 }
 
 /*
@@ -235,10 +219,10 @@ BIT_STRING__compactify(const BIT_STRING_t *st, BIT_STRING_t *tmp) {
             if(v & 0x0F) unused -= 4;
             if(v & 0x33) unused -= 2;
             if(v & 0x55) unused -= 1;
-            tmp->size = b-st->buf + 1;
+            tmp->size = b - st->buf + 1;
             tmp->bits_unused = unused;
         } else {
-            tmp->size = b-st->buf;
+            tmp->size = b - st->buf;
             tmp->bits_unused = 0;
         }
 
@@ -300,9 +284,9 @@ BIT_STRING_compare(const asn_TYPE_descriptor_t *td, const void *aptr,
     }
 }
 
-#ifndef  ASN_DISABLE_PER_SUPPORT
+#ifndef ASN_DISABLE_PER_SUPPORT
 
-#undef  RETURN
+#undef RETURN
 #define RETURN(_code)                       \
     do {                                    \
         asn_dec_rval_t tmprval;             \
@@ -319,103 +303,106 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                        const asn_TYPE_descriptor_t *td,
                        const asn_per_constraints_t *constraints, void **sptr,
                        asn_per_data_t *pd) {
-    const asn_OCTET_STRING_specifics_t *specs = td->specifics
-		? (const asn_OCTET_STRING_specifics_t *)td->specifics
-		: &asn_SPC_BIT_STRING_specs;
+    const asn_OCTET_STRING_specifics_t *specs =
+        td->specifics ? (const asn_OCTET_STRING_specifics_t *)td->specifics
+                      : &asn_SPC_BIT_STRING_specs;
     const asn_per_constraints_t *pc =
         constraints ? constraints : td->encoding_constraints.per_constraints;
-	const asn_per_constraint_t *csiz;
-	asn_dec_rval_t rval = { RC_OK, 0 };
-	BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
-	ssize_t consumed_myself = 0;
-	int repeat;
+    const asn_per_constraint_t *csiz;
+    asn_dec_rval_t rval = {RC_OK, 0};
+    BIT_STRING_t *st = (BIT_STRING_t *)*sptr;
+    ssize_t consumed_myself = 0;
+    int repeat;
 
-	(void)opt_codec_ctx;
+    (void)opt_codec_ctx;
 
-	if(pc) {
-		csiz = &pc->size;
-	} else {
-		csiz = &asn_DEF_BIT_STRING_constraint_size;
-	}
-
-	if(specs->subvariant != ASN_OSUBV_BIT) {
-		ASN_DEBUG("Subvariant %d is not BIT OSUBV_BIT", specs->subvariant);
-		RETURN(RC_FAIL);
+    if(pc) {
+        csiz = &pc->size;
+    } else {
+        csiz = &asn_DEF_BIT_STRING_constraint_size;
     }
 
-	/*
-	 * Allocate the string.
-	 */
-	if(!st) {
-		st = (BIT_STRING_t *)(*sptr = CALLOC(1, specs->struct_size));
-		if(!st) RETURN(RC_FAIL);
-	}
+    if(specs->subvariant != ASN_OSUBV_BIT) {
+        ASN_DEBUG("Subvariant %d is not BIT OSUBV_BIT", specs->subvariant);
+        RETURN(RC_FAIL);
+    }
 
-	ASN_DEBUG("PER Decoding %s size %ld .. %ld bits %d",
-		csiz->flags & APC_EXTENSIBLE ? "extensible" : "non-extensible",
-		csiz->lower_bound, csiz->upper_bound, csiz->effective_bits);
+    /*
+     * Allocate the string.
+     */
+    if(!st) {
+        st = (BIT_STRING_t *)(*sptr = CALLOC(1, specs->struct_size));
+        if(!st) RETURN(RC_FAIL);
+    }
 
-	if(csiz->flags & APC_EXTENSIBLE) {
-		int inext = per_get_few_bits(pd, 1);
-		if(inext < 0) RETURN(RC_WMORE);
-		if(inext) {
-			csiz = &asn_DEF_BIT_STRING_constraint_size;
-		}
-	}
+    ASN_DEBUG("PER Decoding %s size %ld .. %ld bits %d",
+              csiz->flags & APC_EXTENSIBLE ? "extensible" : "non-extensible",
+              csiz->lower_bound, csiz->upper_bound, csiz->effective_bits);
 
-	if(csiz->effective_bits >= 0) {
-		FREEMEM(st->buf);
+    if(csiz->flags & APC_EXTENSIBLE) {
+        int inext = per_get_few_bits(pd, 1);
+        if(inext < 0) RETURN(RC_WMORE);
+        if(inext) {
+            csiz = &asn_DEF_BIT_STRING_constraint_size;
+        }
+    }
+
+    if(csiz->effective_bits >= 0) {
+        FREEMEM(st->buf);
         st->size = (csiz->upper_bound + 7) >> 3;
         st->buf = (uint8_t *)MALLOC(st->size + 1);
-		if(!st->buf) { st->size = 0; RETURN(RC_FAIL); }
-	}
+        if(!st->buf) {
+            st->size = 0;
+            RETURN(RC_FAIL);
+        }
+    }
 
-	/* X.691, #16.5: zero-length encoding */
-	/* X.691, #16.6: short fixed length encoding (up to 2 octets) */
-	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
-	if(csiz->effective_bits == 0) {
-		int ret;
+    /* X.691, #16.5: zero-length encoding */
+    /* X.691, #16.6: short fixed length encoding (up to 2 octets) */
+    /* X.691, #16.7: long fixed length encoding (up to 64K octets) */
+    if(csiz->effective_bits == 0) {
+        int ret;
         ASN_DEBUG("Encoding BIT STRING size %ld", csiz->upper_bound);
         ret = per_get_many_bits(pd, st->buf, 0, csiz->upper_bound);
-		if(ret < 0) RETURN(RC_WMORE);
-		consumed_myself += csiz->upper_bound;
-		st->buf[st->size] = 0;
+        if(ret < 0) RETURN(RC_WMORE);
+        consumed_myself += csiz->upper_bound;
+        st->buf[st->size] = 0;
         st->bits_unused = (8 - (csiz->upper_bound & 0x7)) & 0x7;
         RETURN(RC_OK);
-	}
+    }
 
-	st->size = 0;
-	do {
-		ssize_t raw_len;
-		ssize_t len_bytes;
-		ssize_t len_bits;
-		void *p;
-		int ret;
+    st->size = 0;
+    do {
+        ssize_t raw_len;
+        ssize_t len_bytes;
+        ssize_t len_bits;
+        void *p;
+        int ret;
 
-		/* Get the PER length */
-		raw_len = uper_get_length(pd, csiz->effective_bits, csiz->lower_bound,
-		                          &repeat);
-		if(raw_len < 0) RETURN(RC_WMORE);
+        /* Get the PER length */
+        raw_len = uper_get_length(pd, csiz->effective_bits, csiz->lower_bound,
+                                  &repeat);
+        if(raw_len < 0) RETURN(RC_WMORE);
         if(raw_len == 0 && st->buf) break;
 
-		ASN_DEBUG("Got PER length eb %ld, len %ld, %s (%s)",
-			(long)csiz->effective_bits, (long)raw_len,
-			repeat ? "repeat" : "once", td->name);
+        ASN_DEBUG("Got PER length eb %ld, len %ld, %s (%s)",
+                  (long)csiz->effective_bits, (long)raw_len,
+                  repeat ? "repeat" : "once", td->name);
         len_bits = raw_len;
         len_bytes = (len_bits + 7) >> 3;
         if(len_bits & 0x7) st->bits_unused = 8 - (len_bits & 0x7);
         /* len_bits be multiple of 16K if repeat is set */
         p = REALLOC(st->buf, st->size + len_bytes + 1);
-		if(!p) RETURN(RC_FAIL);
-		st->buf = (uint8_t *)p;
+        if(!p) RETURN(RC_FAIL);
+        st->buf = (uint8_t *)p;
 
         ret = per_get_many_bits(pd, &st->buf[st->size], 0, len_bits);
         if(ret < 0) RETURN(RC_WMORE);
-		st->size += len_bytes;
-	} while(repeat);
-	st->buf[st->size] = 0;	/* nul-terminate */
+        st->size += len_bytes;
+    } while(repeat);
+    st->buf[st->size] = 0; /* nul-terminate */
 
-	return rval;
+    return rval;
 }
 
 asn_enc_rval_t
@@ -427,42 +414,41 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
                       : &asn_SPC_BIT_STRING_specs;
     const asn_per_constraints_t *pc =
         constraints ? constraints : td->encoding_constraints.per_constraints;
-	const asn_per_constraint_t *csiz;
-	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
-	BIT_STRING_t compact_bstr;  /* Do not modify this directly! */
-	asn_enc_rval_t er = { 0, 0, 0 };
-	int inext = 0;		/* Lies not within extension root */
-	size_t size_in_bits;
-	const uint8_t *buf;
-	int ret;
-	int ct_extensible;
+    const asn_per_constraint_t *csiz;
+    const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+    BIT_STRING_t compact_bstr; /* Do not modify this directly! */
+    asn_enc_rval_t er = {0, 0, 0};
+    int inext = 0; /* Lies not within extension root */
+    size_t size_in_bits;
+    const uint8_t *buf;
+    int ret;
+    int ct_extensible;
 
-	if(!st || (!st->buf && st->size))
-		ASN__ENCODE_FAILED;
+    if(!st || (!st->buf && st->size)) ASN__ENCODE_FAILED;
 
-	if(specs->subvariant == ASN_OSUBV_BIT) {
+    if(specs->subvariant == ASN_OSUBV_BIT) {
         if((st->size == 0 && st->bits_unused) || (st->bits_unused & ~7))
             ASN__ENCODE_FAILED;
     } else {
-		ASN__ENCODE_FAILED;
+        ASN__ENCODE_FAILED;
     }
 
-	if(pc) {
+    if(pc) {
         csiz = &pc->size;
     } else {
-		csiz = &asn_DEF_BIT_STRING_constraint_size;
-	}
-	ct_extensible = csiz->flags & APC_EXTENSIBLE;
+        csiz = &asn_DEF_BIT_STRING_constraint_size;
+    }
+    ct_extensible = csiz->flags & APC_EXTENSIBLE;
 
     /* Figure out the size without the trailing bits */
     st = BIT_STRING__compactify(st, &compact_bstr);
     size_in_bits = 8 * st->size - st->bits_unused;
 
-    ASN_DEBUG(
-        "Encoding %s into %" ASN_PRI_SIZE " bits"
-        " (%ld..%ld, effective %d)%s",
-        td->name, size_in_bits, csiz->lower_bound, csiz->upper_bound,
-        csiz->effective_bits, ct_extensible ? " EXT" : "");
+    ASN_DEBUG("Encoding %s into %" ASN_PRI_SIZE
+              " bits"
+              " (%ld..%ld, effective %d)%s",
+              td->name, size_in_bits, csiz->lower_bound, csiz->upper_bound,
+              csiz->effective_bits, ct_extensible ? " EXT" : "");
 
     /* Figure out whether size lies within PER visible constraint */
 
@@ -480,19 +466,18 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
     }
 
     if(ct_extensible) {
-		/* Declare whether length is [not] within extension root */
-		if(per_put_few_bits(po, inext, 1))
-			ASN__ENCODE_FAILED;
-	}
+        /* Declare whether length is [not] within extension root */
+        if(per_put_few_bits(po, inext, 1)) ASN__ENCODE_FAILED;
+    }
 
     if(csiz->effective_bits >= 0 && !inext) {
         int add_trailer = (ssize_t)size_in_bits < csiz->lower_bound;
-        ASN_DEBUG(
-            "Encoding %" ASN_PRI_SIZE " bytes (%ld), length (in %d bits) trailer %d; actual "
-            "value %" ASN_PRI_SSIZE "",
-            st->size, size_in_bits - csiz->lower_bound, csiz->effective_bits,
-            add_trailer,
-            add_trailer ? 0 : (ssize_t)size_in_bits - csiz->lower_bound);
+        ASN_DEBUG("Encoding %" ASN_PRI_SIZE
+                  " bytes (%ld), length (in %d bits) trailer %d; actual "
+                  "value %" ASN_PRI_SSIZE "",
+                  st->size, size_in_bits - csiz->lower_bound,
+                  csiz->effective_bits, add_trailer,
+                  add_trailer ? 0 : (ssize_t)size_in_bits - csiz->lower_bound);
         ret = per_put_few_bits(
             po, add_trailer ? 0 : (ssize_t)size_in_bits - csiz->lower_bound,
             csiz->effective_bits);
@@ -524,7 +509,8 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
         ssize_t maySave = uper_put_length(po, size_in_bits, &need_eom);
         if(maySave < 0) ASN__ENCODE_FAILED;
 
-        ASN_DEBUG("Encoding %" ASN_PRI_SSIZE " of %" ASN_PRI_SIZE "", maySave, size_in_bits);
+        ASN_DEBUG("Encoding %" ASN_PRI_SSIZE " of %" ASN_PRI_SIZE "", maySave,
+                  size_in_bits);
 
         ret = per_put_many_bits(po, buf, maySave);
         if(ret) ASN__ENCODE_FAILED;
@@ -539,7 +525,7 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
     ASN__ENCODED_OK(er);
 }
 
-#endif  /* ASN_DISABLE_PER_SUPPORT */
+#endif /* ASN_DISABLE_PER_SUPPORT */
 
 asn_random_fill_result_t
 BIT_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
@@ -644,9 +630,32 @@ BIT_STRING_random_fill(const asn_TYPE_descriptor_t *td, void **sptr,
     st->bits_unused = (8 - (rnd_bits & 0x7)) & 0x7;
     if(st->bits_unused) {
         assert(st->size > 0);
-        st->buf[st->size-1] &= 0xff << st->bits_unused;
+        st->buf[st->size - 1] &= 0xff << st->bits_unused;
     }
 
     result_ok.length = st->size;
     return result_ok;
+}
+
+int
+BIT_STRING_add(BIT_STRING_t *sptr, int max_length, int value) {
+    int mask;
+    sptr->size = (max_length + 7) / 8;
+    sptr->buf = CALLOC(1, sizeof(uint8_t) * sptr->size);
+    if(!sptr->buf) return -1;
+
+    mask = 1 << (7 - (value % 8));
+    sptr->bits_unused = (sptr->size * 8) - max_length;
+    sptr->buf[value / 8] |= mask;
+
+    return 0;
+}
+
+int
+BIT_STRING_del(BIT_STRING_t *sptr, int value) {
+    int mask;
+    mask = 1 << (7 - (value % 8));
+    sptr->buf[value / 8] &= ~mask;
+
+    return 0;
 }
