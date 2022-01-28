@@ -1,18 +1,18 @@
 /*
  * CLASS-related stuff.
  */
-#ifndef	ASN1_PARSER_CLASS_H
-#define	ASN1_PARSER_CLASS_H
+#ifndef ASN1_PARSER_CLASS_H
+#define ASN1_PARSER_CLASS_H
 
-struct asn1p_expr_s;	/* Forward declaration */
+struct asn1p_expr_s; /* Forward declaration */
 
 typedef struct asn1p_ioc_row_s {
-	struct asn1p_ioc_cell_s {
-		struct asn1p_expr_s *field;	/* may never be NULL */
-		struct asn1p_expr_s *value;	/* may be left uninitialized */
-		int new_ref;
-	} *column;
-	size_t columns;
+    struct asn1p_ioc_cell_s {
+        struct asn1p_expr_s *field; /* may never be NULL */
+        struct asn1p_expr_s *value; /* may be left uninitialized */
+        int new_ref;
+    } * column;
+    size_t columns;
 } asn1p_ioc_row_t;
 
 asn1p_ioc_row_t *asn1p_ioc_row_new(struct asn1p_expr_s *oclass);
@@ -39,37 +39,31 @@ void asn1p_ioc_table_free(asn1p_ioc_table_t *);
 int asn1p_ioc_row_match(const asn1p_ioc_row_t *, const asn1p_ioc_row_t *);
 
 struct asn1p_ioc_cell_s *asn1p_ioc_row_cell_fetch(asn1p_ioc_row_t *,
-		const char *fieldname);
+                                                  const char *fieldname);
 
 /*
  * WITH SYNTAX free-form chunks.
  */
 typedef struct asn1p_wsyntx_chunk_s {
-	enum {
-		WC_LITERAL,
-		WC_WHITESPACE,
-		WC_FIELD,
-		WC_OPTIONALGROUP
-	} type;
-	/*
-	 * WC_LITERAL -> {token}
-	 * WC_WHITESPACE -> {token}
-	 * WC_FIELD -> {token}
-	 * WC_OPTIONALGROUP -> {syntax}
-	 */
-	union {
-		char *token;
-		struct asn1p_wsyntx_s *syntax;
-	} content;
+    enum { WC_LITERAL, WC_WHITESPACE, WC_FIELD, WC_OPTIONALGROUP } type;
+    /*
+     * WC_LITERAL -> {token}
+     * WC_WHITESPACE -> {token}
+     * WC_FIELD -> {token}
+     * WC_OPTIONALGROUP -> {syntax}
+     */
+    union {
+        char *token;
+        struct asn1p_wsyntx_s *syntax;
+    } content;
 
-	TQ_ENTRY(struct asn1p_wsyntx_chunk_s) next;
+    TQ_ENTRY(struct asn1p_wsyntx_chunk_s) next;
 } asn1p_wsyntx_chunk_t;
 
 typedef struct asn1p_wsyntx_s {
+    struct asn1p_wsyntx_chunk_s *parent;
 
-	struct asn1p_wsyntx_chunk_s *parent;
-
-	TQ_HEAD(struct asn1p_wsyntx_chunk_s) chunks;
+    TQ_HEAD(struct asn1p_wsyntx_chunk_s) chunks;
 
 } asn1p_wsyntx_t;
 
@@ -94,4 +88,4 @@ asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromstring(char *token, int _copy);
 asn1p_wsyntx_chunk_t *asn1p_wsyntx_chunk_fromsyntax(asn1p_wsyntx_t *syntax);
 
 
-#endif	/* ASN1_PARSER_CLASS_H */
+#endif /* ASN1_PARSER_CLASS_H */

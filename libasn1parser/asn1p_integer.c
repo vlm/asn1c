@@ -1,13 +1,13 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <limits.h>
+#include "asn1p_integer.h"
+
 #include <assert.h>
 #include <errno.h>
-
-#include "asn1p_integer.h"
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #define ASN_INTEGER_MAX    \
     (~((asn1c_integer_t)0) \
@@ -31,61 +31,69 @@ enum strtox_result_e {
 
 static enum strtox_result_e
 strtoaint_lim(const char *str, const char **end, asn1c_integer_t *intp) {
-	const asn1c_integer_t upper_boundary = ASN_INTEGER_MAX / 10;
-	int last_digit_max = ASN_INTEGER_MAX % 10;
-	int sign = 1;
-	asn1c_integer_t value;
+    const asn1c_integer_t upper_boundary = ASN_INTEGER_MAX / 10;
+    int last_digit_max = ASN_INTEGER_MAX % 10;
+    int sign = 1;
+    asn1c_integer_t value;
 
-	if(str >= *end) return STRTOX_ERROR_INVAL;
+    if(str >= *end) return STRTOX_ERROR_INVAL;
 
-	switch(*str) {
-	case '-':
-		last_digit_max++;
-		sign = -1;
-		/* FALL THROUGH */
-	case '+':
-		str++;
-		if(str >= *end) {
-			*end = str;
-			return STRTOX_EXPECT_MORE;
-		}
-	}
+    switch(*str) {
+    case '-':
+        last_digit_max++;
+        sign = -1;
+        /* FALL THROUGH */
+    case '+':
+        str++;
+        if(str >= *end) {
+            *end = str;
+            return STRTOX_EXPECT_MORE;
+        }
+    }
 
-	for(value = 0; str < (*end); str++) {
-		switch(*str) {
-		case 0x30: case 0x31: case 0x32: case 0x33: case 0x34:
-		case 0x35: case 0x36: case 0x37: case 0x38: case 0x39: {
-			int d = *str - '0';
-			if(value < upper_boundary) {
-				value = value * 10 + d;
-			} else if(value == upper_boundary) {
-				if(d <= last_digit_max) {
-					if(sign > 0) {
-						value = value * 10 + d;
-					} else {
-						sign = 1;
-						value = -value * 10 - d;
-					}
-				} else {
-					*end = str;
-					return STRTOX_ERROR_RANGE;
-				}
-			} else {
-				*end = str;
-				return STRTOX_ERROR_RANGE;
-			}
-		    }
-		    continue;
-		default:
-		    *end = str;
-		    *intp = sign * value;
-		    return STRTOX_EXTRA_DATA;
-		}
-	}
+    for(value = 0; str < (*end); str++) {
+        switch(*str) {
+        case 0x30:
+        case 0x31:
+        case 0x32:
+        case 0x33:
+        case 0x34:
+        case 0x35:
+        case 0x36:
+        case 0x37:
+        case 0x38:
+        case 0x39: {
+            int d = *str - '0';
+            if(value < upper_boundary) {
+                value = value * 10 + d;
+            } else if(value == upper_boundary) {
+                if(d <= last_digit_max) {
+                    if(sign > 0) {
+                        value = value * 10 + d;
+                    } else {
+                        sign = 1;
+                        value = -value * 10 - d;
+                    }
+                } else {
+                    *end = str;
+                    return STRTOX_ERROR_RANGE;
+                }
+            } else {
+                *end = str;
+                return STRTOX_ERROR_RANGE;
+            }
+        }
+            continue;
+        default:
+            *end = str;
+            *intp = sign * value;
+            return STRTOX_EXTRA_DATA;
+        }
+    }
 
-	*end = str;
-	*intp = sign * value;
-	return STRTOX_OK;
+    *end = str;
+    *intp = sign * value;
+    return STRTOX_OK;
 }
 
 int
@@ -98,7 +106,8 @@ asn1p_atoi(const char *ptr, asn1c_integer_t *value) {
     }
 }
 
-const char *asn1p_itoa(asn1c_integer_t v) {
+const char *
+asn1p_itoa(asn1c_integer_t v) {
     static char static_buf[128];
     int ret = asn1p_itoa_s(static_buf, sizeof(static_buf), v);
     if(ret > 0) {
@@ -109,7 +118,8 @@ const char *asn1p_itoa(asn1c_integer_t v) {
     }
 }
 
-int asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
+int
+asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
     char tmp_buf[128];
 
     if(v >= LONG_MIN && v < LONG_MAX) {
@@ -125,13 +135,11 @@ int asn1p_itoa_s(char *buf, size_t size, asn1c_integer_t v) {
         if(v == ASN_INTEGER_MIN) {
             switch(sizeof(v)) {
             case 16:
-                if(size < 41)
-                    return -1;
+                if(size < 41) return -1;
                 memcpy(buf, "-170141183460469231731687303715884105729", 41);
                 return 41;
             case 8:
-                if(size < 21)
-                    return -1;
+                if(size < 21) return -1;
                 memcpy(buf, "-9223372036854775809", 21);
                 return 21;
             default:
@@ -178,7 +186,7 @@ asn1p_integer_as_INTEGER(asn1c_integer_t value) {
 
     abuf_printf(ab, "{ (uint8_t *)\"");
 
-    for(const uint8_t *p = bp-1; p >= buf; p--) {
+    for(const uint8_t *p = bp - 1; p >= buf; p--) {
         abuf_printf(ab, "\\x%02x", *p);
     }
 
