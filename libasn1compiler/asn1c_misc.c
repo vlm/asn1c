@@ -263,7 +263,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	switch(_format) {
 	case TNF_UNMODIFIED:
 		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES,
-			0, exprid ? exprid->Identifier : typename, 0);
+			0, exprid ? exprid->Identifier : typename, NULL);
 	case TNF_INCLUDE:
 		return asn1c_make_identifier(
 			AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
@@ -271,15 +271,15 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 				? "\"" : "<"),
 			exprid ? exprid->Identifier : typename,
 			((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
-				? ".h\"" : ".h>"), 0);
+				? ".h\"" : ".h>"), NULL);
 	case TNF_SAFE:
-		return asn1c_make_identifier(0, exprid, typename, 0);
+		return asn1c_make_identifier(0, exprid, typename, NULL);
 	case TNF_CTYPE:	/* C type */
 		return asn1c_make_identifier(0, exprid,
-				exprid?"t":typename, exprid?0:"t", 0);
+				exprid?"t":typename, exprid?0:"t", NULL);
 	case TNF_RSAFE:	/* Recursion-safe type */
 		return asn1c_make_identifier(AMI_CHECK_RESERVED, 0,
-			"struct", " ", typename, 0);
+			"struct", " ", typename, NULL);
 	}
 
 	assert(!"unreachable");

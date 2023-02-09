@@ -84,8 +84,8 @@ static int emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode
 } while(0)
 
 /* MKID_safe() without checking for reserved keywords */
-#define	MKID(expr)	(asn1c_make_identifier(0, expr, 0))
-#define	MKID_safe(expr)	(asn1c_make_identifier(AMI_CHECK_RESERVED, expr, 0))
+#define	MKID(expr)	(asn1c_make_identifier(0, expr, NULL))
+#define	MKID_safe(expr)	(asn1c_make_identifier(AMI_CHECK_RESERVED, expr, NULL))
 
 int
 asn1c_lang_C_type_REAL(arg_t *arg) {
@@ -741,7 +741,7 @@ asn1c_lang_C_type_SEx_OF(arg_t *arg) {
 				if(0)
 				tmp_memb.Identifier = strdup(
 					asn1c_make_identifier(0,
-						expr, "Member", 0));
+						expr, "Member", NULL));
 				assert(tmp_memb.Identifier);
 			}
 			tmp.default_cb(&tmp);
@@ -2426,7 +2426,7 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 			OUT("\"%s\",\n", p?p:"");
 			OUT("\"%s\",\n",
 				p ? asn1c_make_identifier(AMI_CHECK_RESERVED,
-					0, p, 0) : "");
+					0, p, NULL) : "");
 		} else {
 			OUT("\"%s\",\n", expr->Identifier);
 			OUT("\"%s\",\n", expr->Identifier);
