@@ -126,7 +126,31 @@ asn__format_to_callback(
 /*
  * Check stack against overflow, if limit is set.
  */
+
+/* Since GCC 13, AddressSanitizer started defaulting to
+* ASAN_OPTIONS="detect_stack_use_after_return=1", which makes this check
+* fail due to apparently jumping stack pointers.
+* Hence, disable this check if building with ASan, as documented in:
+* GCC: https://gcc.gnu.org/onlinedocs/cpp/Common-Predefined-Macros.html
+* Clang: https://clang.llvm.org/docs/AddressSanitizer.html#conditional-compilation-with-has-feature-address-sanitizer
+*/
+#if defined(__SANITIZE_ADDRESS__)
+	#define ASN__SANITIZE_ENABLED 1
+#elif defined(__has_feature)
+#if __has_feature(address_sanitizer)
+	#define ASN__SANITIZE_ENABLED 1
+#endif
+#endif
+
 #define	ASN__DEFAULT_STACK_MAX	(30000)
+
+#if defined(ASN__SANITIZE_ENABLED)
+static int CC_NOTUSED
+ASN__STACK_OVERFLOW_CHECK(const asn_codec_ctx_t *ctx) {
+	(void)ctx;
+	return 0;
+}
+#else
 static int CC_NOTUSED
 ASN__STACK_OVERFLOW_CHECK(const asn_codec_ctx_t *ctx) {
 	if(ctx && ctx->max_stack_size) {
@@ -144,6 +168,8 @@ ASN__STACK_OVERFLOW_CHECK(const asn_codec_ctx_t *ctx) {
 	}
 	return 0;
 }
+#endif
+
 
 #ifdef	__cplusplus
 }
