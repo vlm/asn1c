@@ -70,7 +70,7 @@ static struct tm *gmtime_r(const time_t *tloc, struct tm *result) {
 #ifdef	HAVE_TM_GMTOFF
 #define	GMTOFF(tm)	((tm).tm_gmtoff)
 #else	/* HAVE_TM_GMTOFF */
-#define	GMTOFF(tm)	(-timezone)
+#define	GMTOFF(tm)	(_timezone)
 #endif	/* HAVE_TM_GMTOFF */
 
 #if	defined(_WIN32)
