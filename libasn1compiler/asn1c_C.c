@@ -1433,12 +1433,14 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 		OUT("xer_type_decoder_f %s_decode_xer;\n", p);
 		OUT("xer_type_encoder_f %s_encode_xer;\n", p);
 		if(arg->flags & A1C_GEN_OER) {
-		OUT("oer_type_decoder_f %s_decode_oer;\n", p);
-		OUT("oer_type_encoder_f %s_encode_oer;\n", p);
+			OUT("oer_type_decoder_f %s_decode_oer;\n", p);
+			OUT("oer_type_encoder_f %s_encode_oer;\n", p);
 		}
 		if(arg->flags & A1C_GEN_PER) {
-		OUT("per_type_decoder_f %s_decode_uper;\n", p);
-		OUT("per_type_encoder_f %s_encode_uper;\n", p);
+			OUT("per_type_decoder_f %s_decode_uper;\n", p);
+			OUT("per_type_encoder_f %s_encode_uper;\n", p);
+			OUT("per_type_decoder_f %s_decode_aper;\n", p);
+			OUT("per_type_encoder_f %s_encode_aper;\n", p);
 		}
 	}
 

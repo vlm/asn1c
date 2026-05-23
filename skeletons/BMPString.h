@@ -29,6 +29,8 @@ xer_type_encoder_f BMPString_encode_xer;
 #define BMPString_encode_der    OCTET_STRING_encode_der
 #define BMPString_decode_uper   OCTET_STRING_decode_uper
 #define BMPString_encode_uper   OCTET_STRING_encode_uper
+#define BMPString_decode_aper   OCTET_STRING_decode_aper
+#define BMPString_encode_aper   OCTET_STRING_encode_aper
 
 #ifdef __cplusplus
 }

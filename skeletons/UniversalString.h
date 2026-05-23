@@ -28,6 +28,8 @@ xer_type_encoder_f UniversalString_encode_xer;
 #define UniversalString_encode_der      OCTET_STRING_encode_der
 #define UniversalString_decode_uper     OCTET_STRING_decode_uper
 #define UniversalString_encode_uper     OCTET_STRING_encode_uper
+#define UniversalString_decode_aper     OCTET_STRING_decode_aper
+#define UniversalString_encode_aper     OCTET_STRING_encode_aper
 
 #ifdef __cplusplus
 }

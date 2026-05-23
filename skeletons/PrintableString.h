@@ -27,6 +27,8 @@ asn_constr_check_f PrintableString_constraint;
 #define PrintableString_encode_xer      OCTET_STRING_encode_xer_utf8
 #define PrintableString_decode_uper     OCTET_STRING_decode_uper
 #define PrintableString_encode_uper     OCTET_STRING_encode_uper
+#define PrintableString_decode_aper     OCTET_STRING_decode_aper
+#define PrintableString_encode_aper     OCTET_STRING_encode_aper
 
 #ifdef __cplusplus
 }

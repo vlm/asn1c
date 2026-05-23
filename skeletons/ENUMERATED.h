@@ -20,6 +20,8 @@ oer_type_decoder_f ENUMERATED_decode_oer;
 oer_type_encoder_f ENUMERATED_encode_oer;
 per_type_decoder_f ENUMERATED_decode_uper;
 per_type_encoder_f ENUMERATED_encode_uper;
+per_type_decoder_f ENUMERATED_decode_aper;
+per_type_encoder_f ENUMERATED_encode_aper;
 
 #define ENUMERATED_free       ASN__PRIMITIVE_TYPE_free
 #define ENUMERATED_print      INTEGER_print
