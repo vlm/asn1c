@@ -417,7 +417,7 @@ static asn_TYPE_member_t asn_MBR_Stuff_1[] = {
 		.name = "anything"
 		},
 	{ ATF_POINTER, 1, offsetof(struct Stuff, other),
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_other_9,
 		.type_selector = 0,

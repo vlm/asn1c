@@ -725,7 +725,7 @@ asn_TYPE_member_t asn_MBR_Packet_51P0_1[] = {
 		.name = "color"
 		},
 	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct Packet_51P0, value),
-		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_value_4,
 		.type_selector = 0,

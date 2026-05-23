@@ -2780,11 +2780,11 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 	if(C99_MODE) OUT(".tag = ");
 	if(outmost_tag) {
 		if(outmost_tag->tag_value == -1)
-			OUT("-1 /* Ambiguous tag (ANY?) */");
+			OUT("ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */");
 		else
 			_print_tag(arg, outmost_tag);
 	} else {
-		OUT("-1 /* Ambiguous tag (CHOICE?) */");
+		OUT("ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */");
 	}
 
 	OUT(",\n");

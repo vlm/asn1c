@@ -244,7 +244,7 @@ asn_TYPE_member_t asn_MBR_SpecializedContent_30P0_1[] = {
 		.name = "id"
 		},
 	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_30P0, value),
-		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_value_3,
 		.type_selector = select_SpecializedContent_30P0_value_type,
