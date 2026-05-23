@@ -47,7 +47,7 @@ asn1f_lookup_module_ex(asn1p_t *asn, const char *module_name,
 
 asn1p_expr_t *
 asn1f_lookup_symbol_ex(asn1p_t *asn, asn1_namespace_t *ns, asn1p_expr_t *expr,
-                       const asn1p_ref_t *ref) {
+                       asn1p_ref_t *ref) {
     arg_t arg;
 
     memset(&arg, 0, sizeof(arg));

@@ -441,8 +441,10 @@ asn1f_lookup_symbol_impl(arg_t *arg, asn1p_expr_t *rhs_pspecs, const asn1p_ref_t
 
 asn1p_expr_t *
 asn1f_lookup_symbol(arg_t *arg, asn1p_expr_t *rhs_pspecs,
-                    const asn1p_ref_t *ref) {
-    return asn1f_lookup_symbol_impl(arg, rhs_pspecs, ref, 0);
+                    asn1p_ref_t *ref) {
+    asn1p_expr_t *expr = asn1f_lookup_symbol_impl(arg, rhs_pspecs, ref, 0);
+    if (ref) ref->ref_expr = expr;
+    return expr;
 }
 
 asn1p_expr_t *
