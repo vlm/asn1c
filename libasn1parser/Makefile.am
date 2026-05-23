@@ -6,10 +6,13 @@ AM_LFLAGS = -s -p -Cem -Pasn1p_ -olex.yy.c
 
 noinst_LTLIBRARIES = libasn1parser.la
 
+BUILT_SOURCES = asn1p_y.h
+
 libasn1parser_la_LIBDADD = $(top_builddir)/libasn1common/libasn1common.la
 libasn1parser_la_SOURCES =              \
     asn1parser.c asn1parser.h           \
-    asn1p_y.c asn1p_y.h asn1p_l.c       \
+	asn1p_y.y \
+	asn1p_l.l \
     asn1p_module.c asn1p_module.h       \
     asn1p_oid.c asn1p_oid.h             \
     asn1p_value.c asn1p_value.h         \
