@@ -65,7 +65,6 @@ int asn1c_compiled_output(arg_t *arg, const char *file, int lineno,
         INDENTED(arg_t _tmp = *arg; _tmp.expr = ev;      \
                  _tmp.default_cb(&_tmp, NULL););         \
         arg->embed--;                                    \
-        if(ev->expr_type != A1TC_EXTENSIBLE) OUT(";\n"); \
         assert(arg->target->target == OT_TYPE_DECLS      \
                || arg->target->target == OT_FWD_DEFS);   \
     } while(0)
@@ -76,7 +75,6 @@ int asn1c_compiled_output(arg_t *arg, const char *file, int lineno,
         INDENTED(arg_t _tmp = *arg; _tmp.expr = ev;                \
                  _tmp.default_cb(&_tmp, ((ioc).ioct ? &ioc : 0));); \
         arg->embed--;                                              \
-        if(ev->expr_type != A1TC_EXTENSIBLE) OUT(";\n");           \
         assert(arg->target->target == OT_TYPE_DECLS                \
                || arg->target->target == OT_FWD_DEFS);             \
     } while(0)
@@ -95,24 +93,31 @@ int asn1c_compiled_output(arg_t *arg, const char *file, int lineno,
 	} while(0)
 
 /* Generate #include line */
-#define	GEN_INCLUDE_STD(typename)	do {			\
-	if((arg->flags & A1C_INCLUDES_QUOTED)) {			\
+#define GEN_INCLUDE_STD(typename)	do {			\
+	if((arg->flags & A1C_INCLUDES_QUOTED)) {		\
 		GEN_INCLUDE("\"" typename ".h\"");		\
 	} else {						\
 		GEN_INCLUDE("<" typename ".h>");		\
 	} } while(0)
-#define	GEN_INCLUDE(filename)	do {				\
+#define GEN_INCLUDE(filename)					\
+	GEN_POS_INCLUDE(OT_INCLUDES, filename)
+#define GEN_POSTINCLUDE(filename)				\
+	GEN_POS_INCLUDE(OT_POST_INCLUDE, filename)
+#define GEN_POS_INCLUDE(pos, filename)	do {			\
 	int saved_target = arg->target->target;			\
 	if(!filename) break;					\
-	REDIR(OT_INCLUDES);					\
+	REDIR(pos);						\
 	OUT_NOINDENT("#include %s\n", filename);		\
 	REDIR(saved_target);					\
 } while(0)
-#define	GEN_POSTINCLUDE(filename)	do {			\
+#define GEN_POS_INCLUDE_BASE(pos, expr) do {			\
+	asn1p_expr_t *rhs_pspecs = expr->rhs_pspecs;		\
+	expr->rhs_pspecs = (asn1p_expr_t *)0;			\
 	int saved_target = arg->target->target;			\
-	if(!filename) break;					\
-	REDIR(OT_POST_INCLUDE);					\
-	OUT_NOINDENT("#include %s\n", filename);		\
+	REDIR(pos);						\
+	OUT_NOINDENT("#include %s\n",				\
+		asn1c_type_name(arg, expr, TNF_INCLUDE));	\
+	expr->rhs_pspecs = rhs_pspecs;				\
 	REDIR(saved_target);					\
 } while(0)
 

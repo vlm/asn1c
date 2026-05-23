@@ -7,7 +7,7 @@
 /*** <<< TYPE-DECLS [Message] >>> ***/
 
 typedef struct Message {
-	SpecializedContent_42P0_t	 content;
+	TotalRegionExtension_t	 content;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -23,7 +23,7 @@ static asn_TYPE_member_t asn_MBR_Message_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct Message, content),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_SpecializedContent_42P0,
+		.type = &asn_DEF_TotalRegionExtension,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		0, 0, /* No default value */
@@ -66,9 +66,9 @@ asn_TYPE_descriptor_t asn_DEF_Message = {
 #include <NativeInteger.h>
 #include <ANY.h>
 #include <asn_ioc.h>
-#include <OPEN_TYPE.h>
 #include <BOOLEAN.h>
 #include <OCTET_STRING.h>
+#include <OPEN_TYPE.h>
 #include <constr_CHOICE.h>
 #include <constr_SEQUENCE.h>
 
@@ -78,20 +78,18 @@ typedef enum value_PR {
 	value_PR_NOTHING,	/* No components present */
 	value_PR_INTEGER,
 	value_PR_BOOLEAN,
-	value_PR_BOOLEAN,
 	value_PR_OCTET_STRING
 } value_PR;
 
 /*** <<< TYPE-DECLS [SpecializedContent] >>> ***/
 
-typedef struct SpecializedContent_42P0 {
+typedef struct TotalRegionExtension {
 	long	 id;
 	struct value {
 		value_PR present;
-		union SpecializedContent_42P0__value_u {
+		union TotalRegionExtension__value_u {
 			long	 INTEGER;
 			BOOLEAN_t	 BOOLEAN;
-		;
 			OCTET_STRING_t	 OCTET_STRING;
 		} choice;
 		
@@ -101,32 +99,38 @@ typedef struct SpecializedContent_42P0 {
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
-} SpecializedContent_42P0_t;
+} TotalRegionExtension_t;
 
 /*** <<< FUNC-DECLS [SpecializedContent] >>> ***/
 
-extern asn_TYPE_descriptor_t asn_DEF_SpecializedContent_42P0;
-extern asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_42P0_specs_1;
-extern asn_TYPE_member_t asn_MBR_SpecializedContent_42P0_1[2];
+extern asn_TYPE_descriptor_t asn_DEF_TotalRegionExtension;
+extern asn_SEQUENCE_specifics_t asn_SPC_TotalRegionExtension_specs_1;
+extern asn_TYPE_member_t asn_MBR_TotalRegionExtension_1[2];
 
 /*** <<< IOC-TABLES [SpecializedContent] >>> ***/
 
 static const long asn_VAL_1_1 = 1;
 static const long asn_VAL_2_2 = 2;
-static const long asn_VAL_3_2 = 2;
-static const long asn_VAL_4_3 = 3;
+static const long asn_VAL_3_3 = 3;
+static const long asn_VAL_4_1 = 1;
+static const long asn_VAL_5_2 = 2;
+static const long asn_VAL_6_3 = 3;
 static const asn_ioc_cell_t asn_IOS_TotalRegionExtension_1_rows[] = {
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_1 },
-	{ "&Type", ,
+	{ "&Type", aioc__type, &asn_DEF_NativeInteger },
 	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
-	{ "&Type", ,
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_3_2 },
-	{ "&Type", ,
-	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_4_3 },
-	{ "&Type", 
+	{ "&Type", aioc__type, &asn_DEF_BOOLEAN },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_3_3 },
+	{ "&Type", aioc__type, &asn_DEF_OCTET_STRING },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_4_1 },
+	{ "&Type", aioc__type, &asn_DEF_NativeInteger },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_5_2 },
+	{ "&Type", aioc__type, &asn_DEF_BOOLEAN },
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_6_3 },
+	{ "&Type", aioc__type, &asn_DEF_OCTET_STRING }
 };
 static const asn_ioc_set_t asn_IOS_TotalRegionExtension_1[] = {
-	4, 2, asn_IOS_TotalRegionExtension_1_rows
+	{ 6, 2, asn_IOS_TotalRegionExtension_1_rows }
 };
 
 /*** <<< CODE [SpecializedContent] >>> ***/
@@ -151,21 +155,25 @@ memb_id_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
 }
 
 static asn_type_selector_result_t
-select_SpecializedContent_42P0_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+select_TotalRegionExtension_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
 	asn_type_selector_result_t result = {0, 0};
 	const asn_ioc_set_t *itable = asn_IOS_TotalRegionExtension_1;
 	size_t constraining_column = 0; /* &id */
 	size_t for_column = 1; /* &Type */
-	size_t row;
-	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct SpecializedContent_42P0, id));
+	size_t row, presence_index = 0;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct TotalRegionExtension, id));
 	
 	for(row=0; row < itable->rows_count; row++) {
 	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
 	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
 	
+	    if(type_cell->cell_kind == aioc__undefined)
+	        continue;
+	
+	    presence_index++;
 	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
 	        result.type_descriptor = type_cell->type_descriptor;
-	        result.presence_index = row + 1;
+	        result.presence_index = presence_index;
 	        break;
 	    }
 	}
@@ -227,15 +235,6 @@ static asn_TYPE_member_t asn_MBR_value_3[] = {
 		0, 0, /* No default value */
 		.name = "BOOLEAN"
 		},
-	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.BOOLEAN),
-		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
-		.tag_mode = 0,
-		.type = &asn_DEF_BOOLEAN,
-		.type_selector = 0,
-		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		0, 0, /* No default value */
-		.name = "BOOLEAN"
-		},
 	{ ATF_NOFLAGS, 0, offsetof(struct value, choice.OCTET_STRING),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
 		.tag_mode = 0,
@@ -246,13 +245,12 @@ static asn_TYPE_member_t asn_MBR_value_3[] = {
 		.name = "OCTET STRING"
 		},
 };
-static const unsigned asn_MAP_value_to_canonical_3[] = { 1, 2, 0, 3 };
-static const unsigned asn_MAP_value_from_canonical_3[] = { 2, 0, 1, 3 };
+static const unsigned asn_MAP_value_to_canonical_3[] = { 1, 0, 2 };
+static const unsigned asn_MAP_value_from_canonical_3[] = { 1, 0, 2 };
 static const asn_TYPE_tag2member_t asn_MAP_value_tag2el_3[] = {
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 1, 0, 1 }, /* BOOLEAN */
-    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 2, -1, 0 }, /* BOOLEAN */
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 1, 0, 0 }, /* BOOLEAN */
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 }, /* INTEGER */
-    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 3, 0, 0 } /* OCTET STRING */
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 2, 0, 0 } /* OCTET STRING */
 };
 static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	sizeof(struct value),
@@ -260,7 +258,7 @@ static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
 	offsetof(struct value, present),
 	sizeof(((struct value *)0)->present),
 	.tag2el = asn_MAP_value_tag2el_3,
-	.tag2el_count = 4,	/* Count of tags in the map */
+	.tag2el_count = 3,	/* Count of tags in the map */
 	.to_canonical_order = asn_MAP_value_to_canonical_3,
 	.from_canonical_order = asn_MAP_value_from_canonical_3,
 	.first_extension = -1	/* Extensions start */
@@ -276,12 +274,12 @@ asn_TYPE_descriptor_t asn_DEF_value_3 = {
 	0,	/* No tags (count) */
 	{ 0, 0, OPEN_TYPE_constraint },
 	asn_MBR_value_3,
-	4,	/* Elements count */
+	3,	/* Elements count */
 	&asn_SPC_value_specs_3	/* Additional specs */
 };
 
-asn_TYPE_member_t asn_MBR_SpecializedContent_42P0_1[] = {
-	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_42P0, id),
+asn_TYPE_member_t asn_MBR_TotalRegionExtension_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct TotalRegionExtension, id),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
 		.tag_mode = 0,
 		.type = &asn_DEF_NativeInteger,
@@ -290,43 +288,43 @@ asn_TYPE_member_t asn_MBR_SpecializedContent_42P0_1[] = {
 		0, 0, /* No default value */
 		.name = "id"
 		},
-	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_42P0, value),
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct TotalRegionExtension, value),
 		.tag = -1 /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_value_3,
-		.type_selector = select_SpecializedContent_42P0_value_type,
+		.type_selector = select_TotalRegionExtension_value_type,
 		{ .oer_constraints = 0, .per_constraints = &asn_PER_memb_value_constr_3, .general_constraints =  memb_value_constraint_1 },
 		0, 0, /* No default value */
 		.name = "value"
 		},
 };
-static const ber_tlv_tag_t asn_DEF_SpecializedContent_42P0_tags_1[] = {
+static const ber_tlv_tag_t asn_DEF_TotalRegionExtension_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
 };
-static const asn_TYPE_tag2member_t asn_MAP_SpecializedContent_42P0_tag2el_1[] = {
+static const asn_TYPE_tag2member_t asn_MAP_TotalRegionExtension_tag2el_1[] = {
     { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* id */
 };
-asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_42P0_specs_1 = {
-	sizeof(struct SpecializedContent_42P0),
-	offsetof(struct SpecializedContent_42P0, _asn_ctx),
-	.tag2el = asn_MAP_SpecializedContent_42P0_tag2el_1,
+asn_SEQUENCE_specifics_t asn_SPC_TotalRegionExtension_specs_1 = {
+	sizeof(struct TotalRegionExtension),
+	offsetof(struct TotalRegionExtension, _asn_ctx),
+	.tag2el = asn_MAP_TotalRegionExtension_tag2el_1,
 	.tag2el_count = 1,	/* Count of tags in the map */
 	0, 0, 0,	/* Optional elements (not needed) */
 	-1,	/* First extension addition */
 };
-asn_TYPE_descriptor_t asn_DEF_SpecializedContent_42P0 = {
-	"SpecializedContent",
-	"SpecializedContent",
+asn_TYPE_descriptor_t asn_DEF_TotalRegionExtension = {
+	"TotalRegionExtension",
+	"TotalRegionExtension",
 	&asn_OP_SEQUENCE,
-	asn_DEF_SpecializedContent_42P0_tags_1,
-	sizeof(asn_DEF_SpecializedContent_42P0_tags_1)
-		/sizeof(asn_DEF_SpecializedContent_42P0_tags_1[0]), /* 1 */
-	asn_DEF_SpecializedContent_42P0_tags_1,	/* Same as above */
-	sizeof(asn_DEF_SpecializedContent_42P0_tags_1)
-		/sizeof(asn_DEF_SpecializedContent_42P0_tags_1[0]), /* 1 */
+	asn_DEF_TotalRegionExtension_tags_1,
+	sizeof(asn_DEF_TotalRegionExtension_tags_1)
+		/sizeof(asn_DEF_TotalRegionExtension_tags_1[0]), /* 1 */
+	asn_DEF_TotalRegionExtension_tags_1,	/* Same as above */
+	sizeof(asn_DEF_TotalRegionExtension_tags_1)
+		/sizeof(asn_DEF_TotalRegionExtension_tags_1[0]), /* 1 */
 	{ 0, 0, SEQUENCE_constraint },
-	asn_MBR_SpecializedContent_42P0_1,
+	asn_MBR_TotalRegionExtension_1,
 	2,	/* Elements count */
-	&asn_SPC_SpecializedContent_42P0_specs_1	/* Additional specs */
+	&asn_SPC_TotalRegionExtension_specs_1	/* Additional specs */
 };
 

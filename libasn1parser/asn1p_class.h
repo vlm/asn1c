@@ -16,7 +16,7 @@ typedef struct asn1p_ioc_row_s {
 } asn1p_ioc_row_t;
 
 asn1p_ioc_row_t *asn1p_ioc_row_new(struct asn1p_expr_s *oclass);
-asn1p_ioc_row_t *asn1p_ioc_row_clone(asn1p_ioc_row_t *src, int base_idx);
+asn1p_ioc_row_t *asn1p_ioc_row_clone(asn1p_ioc_row_t *src);
 size_t asn1p_ioc_row_max_identifier_length(asn1p_ioc_row_t *);
 void asn1p_ioc_row_delete(asn1p_ioc_row_t *);
 

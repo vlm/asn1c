@@ -24,10 +24,18 @@ asn1p_constraint_set_source(asn1p_constraint_t *ct,
 
 int asn1p_constraint_compare(const asn1p_constraint_t *a,
                              const asn1p_constraint_t *b) {
-    (void)a;
-    (void)b;
-    assert(!"Constraint comparison is not implemented");
-    return -1;
+    assert((a && b));
+
+    if(a->type != b->type)
+        return -1;
+
+    /* Currently we only check VALUESET as a reference */
+    if(a->type == ACT_EL_TYPE) {
+        return strcmp(a->containedSubtype->value.v_type->reference->components[0].name,
+                      b->containedSubtype->value.v_type->reference->components[0].name);
+    }
+
+    return 0;
 }
 
 asn1p_constraint_t *

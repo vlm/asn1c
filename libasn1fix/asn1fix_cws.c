@@ -198,6 +198,14 @@ _asn1f_foreach_unparsed(arg_t *arg, const asn1p_constraint_t *ct,
     case ACT_CA_CSV:    /* , */
         break;
     case ACT_EL_VALUE:
+        if(ct->value->type == ATV_UNPARSED) {
+            if(process
+               && process(ct->value->value.string.buf + 1,
+                          ct->value->value.string.size - 2, key)
+                      != 0) {
+                return -1;
+            }
+        }
         return 0;
     }
 
@@ -268,7 +276,7 @@ asn1f_parse_class_object(arg_t *arg) {
         .arg = arg,
         .expr = expr,
         .eclass = eclass,
-        .sequence = 0
+        .sequence = eclass->_type_unique_index
     };
 
     if(!expr->ioc_table) {
@@ -294,6 +302,8 @@ asn1f_parse_class_object(arg_t *arg) {
             return -1;
         }
     }
+
+    eclass->_type_unique_index = key.sequence;
 
 	return 0;
 }

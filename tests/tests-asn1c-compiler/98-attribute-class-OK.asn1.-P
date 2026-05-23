@@ -29,7 +29,7 @@ static const asn_ioc_cell_t asn_IOS_Attributes_1_rows[] = {
 	{ "&id", aioc__value, &asn_DEF_RELATIVE_OID, &asn_VAL_2_rcf }
 };
 static const asn_ioc_set_t asn_IOS_Attributes_1[] = {
-	2, 1, asn_IOS_Attributes_1_rows
+	{ 2, 1, asn_IOS_Attributes_1_rows }
 };
 
 /*** <<< CODE [Attribute] >>> ***/

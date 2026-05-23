@@ -13,12 +13,12 @@ typedef struct T {
 	long	 unsigned16stack;
 	long	 unsigned16stack_ext;
 	INTEGER_t	 unsigned33;
-	long	*minmax	/* OPTIONAL */;
+	long	*minmax;	/* OPTIONAL */
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
 	 */
-	long	*signed8	/* DEFAULT 3 */;
+	long	*signed8;	/* DEFAULT 3 */
 	long	*signed16;
 	long	*signed16stack;
 	long	*signed16stack_ext;

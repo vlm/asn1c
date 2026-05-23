@@ -38,6 +38,16 @@ reserved_keyword(const char *str) {
 	return 0;
 }
 
+const char *
+asn1c_prefix()
+{
+	const char *prefix = getenv("ASN1C_PREFIX");
+
+	if(!prefix) prefix = "";
+
+	return prefix;
+}
+
 /*
  * Construct identifier from multiple parts.
  * Convert unsafe characters to underscores.
@@ -53,9 +63,12 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	char *first = 0;
 	ssize_t size = 0;
 	char *p;
-	char *prefix = NULL;
+	const char *prefix = NULL;
 	char *sptr[4], **psptr = &sptr[0];
 	int sptr_cnt = 0;
+
+	if(flags & AMI_USE_PREFIX)
+		prefix = asn1c_prefix();
 
 	if(expr) {
 		/*
@@ -73,7 +86,7 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 		sptr[sptr_cnt++] = expr->Identifier;
 
 		size += strlen(expr->Identifier);
-		if(expr->spec_index != -1) {
+		if(expr->spec_index != -1 && expr->_lineno) {
 			static char buf[32];
 			size += 1 + snprintf(buf, sizeof buf, "%dP%d",
 				expr->_lineno, expr->spec_index);
@@ -114,6 +127,7 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 	if(prefix) {
 		strcpy(storage, prefix);
 		p += strlen(prefix);
+		nodelimiter = 1;
 	}
 	nextstr = "";
 	for(str = 0; str || nextstr; str = nextstr) {
@@ -124,6 +138,11 @@ asn1c_make_identifier(enum ami_flags_e flags, asn1p_expr_t *expr, ...) {
 			str = first = nextstr;
 			nextstr = *(psptr) ? *(psptr++) : va_arg(ap, char *);
 			if (!first) continue;
+		}
+
+		if(str[0] == '\0') {
+			nodelimiter = 1;	/* No delimiter */
+			continue;
 		}
 
 		if(str[0] == ' ' && str[1] == '\0') {
@@ -175,6 +194,7 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 	asn1p_expr_t *terminal = 0;
 	int stdname = 0;
 	const char *typename;
+	const char *prefix;
 
 	/* Rewind to the topmost parent expression */
 	if((top_parent = expr->parent_expr))
@@ -297,34 +317,50 @@ asn1c_type_name(arg_t *arg, asn1p_expr_t *expr, enum tnfmt _format) {
 				_format = TNF_CTYPE;
 			stdname = 1;
 			typename = ASN_EXPR_TYPE2STR(expr->expr_type);
+			if(_format == TNF_INCLUDE) {
+				if(expr->expr_type == ASN_CONSTR_SEQUENCE)
+					typename = "constr_SEQUENCE";
+				else if(expr->expr_type == ASN_CONSTR_CHOICE)
+					typename = "constr_CHOICE";
+				else if(expr->expr_type == ASN_CONSTR_SET)
+					typename = "constr_SET";
+				else if(expr->expr_type == ASN_CONSTR_SEQUENCE_OF)
+					typename = "constr_SEQUENCE_OF";
+				else if(expr->expr_type == ASN_CONSTR_SET_OF)
+					typename = "constr_SET_OF";
+				else if(expr->expr_type == ASN_CONSTR_OPEN_TYPE)
+					typename = "OPEN_TYPE";
+			}
 		} else {
 			_format = TNF_RSAFE;
 			typename = expr->Identifier;
 		}
 	}
 
+	prefix = stdname ? "" : asn1c_prefix();
+
 	switch(_format) {
 	case TNF_UNMODIFIED:
-		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
-			0, MODULE_NAME_OF(exprid), exprid ? exprid->Identifier : typename, (char*)0);
+		return asn1c_make_identifier(AMI_MASK_ONLY_SPACES | AMI_NODELIMITER | (stdname ? 0 : AMI_USE_PREFIX),
+			0, prefix, MODULE_NAME_OF(exprid), exprid ? exprid->Identifier : typename, (char*)0);
 	case TNF_INCLUDE:
 		return asn1c_make_identifier(
 			AMI_MASK_ONLY_SPACES | AMI_NODELIMITER,
 			0, ((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
 				? "\"" : "<"),
-			MODULE_NAME_OF(exprid),
+			prefix, MODULE_NAME_OF(exprid),
 			exprid ? exprid->Identifier : typename,
 			((!stdname || (arg->flags & A1C_INCLUDES_QUOTED))
 				? ".h\"" : ".h>"), (char*)0);
 	case TNF_SAFE:
-		return asn1c_make_identifier(0, exprid, typename, (char*)0);
+		return asn1c_make_identifier(stdname ? 0 : AMI_USE_PREFIX, exprid, typename, (char*)0);
 	case TNF_CTYPE:	/* C type */
 	case TNF_CONSTYPE:	/* C type */
-		return asn1c_make_identifier(0, exprid,
+		return asn1c_make_identifier(stdname ? 0 : AMI_USE_PREFIX, exprid,
 				exprid?"t":typename, exprid?0:"t", (char*)0);
 	case TNF_RSAFE:	/* Recursion-safe type */
 		return asn1c_make_identifier(AMI_CHECK_RESERVED | AMI_NODELIMITER, 0,
-			"struct", " ", MODULE_NAME_OF(exprid), typename, (char*)0);
+			"struct", " ", prefix, MODULE_NAME_OF(exprid), typename, (char*)0);
 	}
 
 	assert(!"unreachable");
@@ -491,4 +527,3 @@ asn1c_type_fits_long(arg_t *arg, asn1p_expr_t *expr) {
 
 	return FL_FITS_SIGNED;
 }
-

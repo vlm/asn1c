@@ -6,6 +6,7 @@ typedef struct resolver_arg {
 	asn1p_expr_t	  *original_expr;
 	asn1p_paramlist_t *lhs_params;
 	asn1p_expr_t	  *rhs_pspecs;
+	char		  *resolved_name;
 } resolver_arg_t;
 
 static asn1p_expr_t *resolve_expr(asn1p_expr_t *, void *resolver_arg);
@@ -52,8 +53,14 @@ asn1f_parameterization_fork(arg_t *arg, asn1p_expr_t *expr, asn1p_expr_t *rhs_ps
 	rarg.original_expr = expr;
 	rarg.lhs_params = expr->lhs_params;
 	rarg.rhs_pspecs = rhs_pspecs;
+	rarg.resolved_name = NULL;
 	exc = asn1p_expr_clone_with_resolver(expr, resolve_expr, &rarg);
 	if(!exc) return NULL;
+	if(rarg.resolved_name) {
+		free(exc->Identifier);
+		exc->Identifier = strdup(rarg.resolved_name);
+		exc->_lineno = 0;
+	}
 	rpc = asn1p_expr_clone(rhs_pspecs, 0);
 	assert(rpc);
 
@@ -138,6 +145,16 @@ resolve_expr(asn1p_expr_t *expr_to_resolve, void *resolver_arg) {
 		free(nex->Identifier);
 		nex->Identifier = expr_to_resolve->Identifier
 			? strdup(expr_to_resolve->Identifier) : 0;
+		if(expr->meta_type == AMT_TYPEREF) {
+			asn1p_ref_t *ref = expr->reference;
+			rarg->resolved_name = ref->components[ref->comp_count - 1].name;
+		} else if(expr->meta_type == AMT_VALUESET) {
+			asn1p_constraint_t *ct = expr->constraints;
+			if(ct->type == ACT_EL_TYPE) {
+				asn1p_ref_t *ref = ct->containedSubtype->value.v_type->reference;
+				rarg->resolved_name = ref->components[ref->comp_count - 1].name;
+			}
+		}
 		return nex;
 	} else {
 		FATAL("Feature not implemented for %s (%d/%x), "

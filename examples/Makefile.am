@@ -35,6 +35,7 @@ EXTRA_DIST = \
     sample.source.MHEG5     \
     sample.source.PKIX1     \
     sample.source.RRC       \
+    sample.source.S1AP      \
     sample.source.TAP3      \
     sample.source.ULP       \
     sample.makefile.regen

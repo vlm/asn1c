@@ -28,6 +28,7 @@ typedef struct asn_ioc_set_s {
 typedef struct asn_ioc_cell_s {
     const char *field_name; /* Is equal to corresponding column_name */
     enum {
+        aioc__undefined = 0,
         aioc__value,
         aioc__type,
         aioc__open_type,
