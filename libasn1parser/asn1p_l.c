@@ -2081,7 +2081,7 @@ static asn1c_integer_t _lex_atoi(const char *ptr);
 static double          _lex_atod(const char *ptr);
 
 /*
- * Check that the type is defined in the year of the standard choosen.
+ * Check that the type is defined in the year of the standard chosen.
  */
 #define	TYPE_LIFETIME(fyr, lyr)				\
 	(!asn1p_lexer_types_year			\

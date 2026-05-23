@@ -23,7 +23,7 @@ BEGIN
     I-1-5 ::= INTEGER ((0..5) ^ (EConstr))      -- OER-visible constraint 1..5
     J-4-5 ::= INTEGER ((EConstr) ^ (4..9))      -- OER-visible constraint 4..5
     K-1-4 ::= INTEGER ((FConstr) ^ (EConstr))   -- OER-visible constraint 1..4
-    -- X.696 #8.2.5 UNION with exeptions are ignored
+    -- X.696 #8.2.5 UNION with exceptions are ignored
     L-0-5 ::= INTEGER ((0) | (5))               -- OER-visible constraint 0..5
     M-inv ::= INTEGER ((0) | (EConstr),...)     -- Not OER-visible
     N-0-5 ::= INTEGER ((FConstr) | (5))         -- OER-visible constraint 0..5

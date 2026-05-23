@@ -50,7 +50,7 @@
  * 
  * In the NORMAL mode we use the lower part of the genhash_t structure
  * to hold a set of pointers, including a pointer to the hash buckets.
- * We agressively expand hash buckets size when adding new elements
+ * We aggressively expand hash buckets size when adding new elements
  * to lower the number of key comparisons.
  */
 

@@ -195,7 +195,7 @@ check(const char *fname,
 	} else if(!expected_parseable) {
 		fprintf(stderr,
 			"The file \"%s\" is not expected to be parseable, "
-			"yet parsing was successfull!\n", fname);
+			"yet parsing was successful!\n", fname);
 		r_value = -1;
 	}
 	if(!asn) return r_value;

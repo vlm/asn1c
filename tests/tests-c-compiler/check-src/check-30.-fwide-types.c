@@ -146,7 +146,7 @@ check(int is_ok, uint8_t *buf, size_t size, size_t consumed) {
 	T_t t, *tp;
 	asn_dec_rval_t rval;
 
-	fprintf(stderr, "\nMust %s:\n", is_ok?"suceed":"fail");
+	fprintf(stderr, "\nMust %s:\n", is_ok?"succeed":"fail");
 
 	tp = memset(&t, 0, sizeof(t));
 
