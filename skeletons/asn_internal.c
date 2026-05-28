@@ -1,5 +1,9 @@
 #include <asn_internal.h>
 
+#ifdef ASN_EMIT_DEBUG
+int asn_debug_indent = 0;
+#endif
+
 ssize_t
 asn__format_to_callback(int (*cb)(const void *, size_t, void *key), void *key,
                         const char *fmt, ...) {
