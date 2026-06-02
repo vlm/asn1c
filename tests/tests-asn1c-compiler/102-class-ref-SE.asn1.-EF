@@ -1,0 +1,5 @@
+FATAL: Unknown type "REF-ID2" referenced by "REF-ID" at line 15 in ../../tests/tests-asn1c-compiler/102-class-ref-SE.asn1
+FATAL: Unknown type "REF-ID" referenced by "REF-ID2" at line 17 in ../../tests/tests-asn1c-compiler/102-class-ref-SE.asn1
+FATAL: Class field REF-ID.&id lookup at line 18 in something that is not a class: REF-ID2 at line 17 in ../../tests/tests-asn1c-compiler/102-class-ref-SE.asn1
+FATAL: Unknown type "REF-ID.&id" referenced by "field" at line 18 in ../../tests/tests-asn1c-compiler/102-class-ref-SE.asn1
+FATAL: Unknown type "REF-ID.&Type" referenced by "params" at line 20 in ../../tests/tests-asn1c-compiler/102-class-ref-SE.asn1
