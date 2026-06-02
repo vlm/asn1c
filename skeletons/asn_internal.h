@@ -125,8 +125,15 @@ asn__format_to_callback(
 
 /*
  * Check stack against overflow, if limit is set.
+ * ASan inflates stack frames by ~30x (red zones per variable), making the
+ * distance-based check fire false positives at normal call depth. Disable
+ * when building under ASan — ASan itself catches real stack overflows.
  */
+#ifdef __SANITIZE_ADDRESS__
+#define ASN__DEFAULT_STACK_MAX  (0)
+#else
 #define	ASN__DEFAULT_STACK_MAX	(30000)
+#endif
 static int CC_NOTUSED
 ASN__STACK_OVERFLOW_CHECK(const asn_codec_ctx_t *ctx) {
 	if(ctx && ctx->max_stack_size) {
