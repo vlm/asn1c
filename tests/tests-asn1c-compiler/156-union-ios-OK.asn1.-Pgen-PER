@@ -1,3 +1,15 @@
+WARNING: Parameterized type MYID expected for MYID at line 42 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 43 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 42 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 43 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 42 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 43 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 42 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 42 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 42 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 43 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 43 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 43 in ../../tests/tests-asn1c-compiler/156-union-ios-OK.asn1
 
 /*** <<< INCLUDES [Message] >>> ***/
 

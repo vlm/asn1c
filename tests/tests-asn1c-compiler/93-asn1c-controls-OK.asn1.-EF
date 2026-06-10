@@ -1,3 +1,7 @@
+INFO: Directive <ASN1C:RepresentAsPointer> applied to INTEGER at ../../tests/tests-asn1c-compiler/93-asn1c-controls-OK.asn1:18
+INFO: Directive <ASN1C:RepresentAsPointer> applied to member at ../../tests/tests-asn1c-compiler/93-asn1c-controls-OK.asn1:24
+INFO: Directive <ASN1C:RepresentAsPointer> applied to SET OF at ../../tests/tests-asn1c-compiler/93-asn1c-controls-OK.asn1:28
+INFO: Directive <ASN1C:RepresentAsPointer> applied to member at ../../tests/tests-asn1c-compiler/93-asn1c-controls-OK.asn1:30
 Module-asn1c-controls { iso org(3) dod(6) internet(1) private(4) enterprise(1)
 	spelio(9363) software(1) asn1c(5) test(1) 93 }
 DEFINITIONS AUTOMATIC TAGS ::=

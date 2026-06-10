@@ -1,3 +1,22 @@
+WARNING: Parameterized type max-items expected for max-items at line 41 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 51 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 52 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 53 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 51 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 52 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 53 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 51 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 52 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 53 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 51 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 51 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 51 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 52 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 52 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 52 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 53 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 53 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
+WARNING: Parameterized type PACKET expected for PACKET at line 53 in ../../tests/tests-asn1c-compiler/155-parameterization-more-than-two-level-OK.asn1
 
 /*** <<< INCLUDES [PacketId] >>> ***/
 
