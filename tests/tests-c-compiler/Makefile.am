@@ -76,6 +76,7 @@ EXTRA_DIST =    \
     data-70     \
     data-119    \
     data-126    \
+    data-159    \
     check-src/check64-134.-gen-PER.c    \
     check-src/check64-136.-gen-OER.c
 
