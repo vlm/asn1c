@@ -48,6 +48,14 @@
       * Fix `unber` buffer overrun. Reported by Eric Sesterhenn.
         (Severity: low; Security impact: high)
 
+    Build/test issues:
+      * Disable the stack-depth overflow guard under ASan, whose redzones
+        inflate stack frames and trip the check at normal recursion depth.
+        Fix by Ruud Schramp (github.com/Schramp).
+      * Guard the check-127 PER unsigned-constraint test for 32-bit
+        platforms, where the generated bounds overflow `signed long`.
+        Fix by Ruud Schramp (github.com/Schramp).
+
 0.9.28: 2017-03-26
     * PER decoding: avoid memory leak on error. By github.com/simo5
     * Constness patch #46 by Wim L <wiml@omnigroup.com> (41bbf1c..78d604f).
