@@ -1,3 +1,6 @@
+WARNING: ASN.1 expression "TYPE-IDENTIFIER" at line 17 of module ASN1C-UsefulInformationObjectClasses
+clashes with expression "TYPE-IDENTIFIER" at line 23 of module ModuleTypeIdentifier1 (../../tests/tests-asn1c-compiler/97-type-identifier-SW.asn1).
+Rename or remove either instance to resolve the conflict in ../../skeletons/standard-modules/ASN1C-UsefulInformationObjectClasses.asn1
 ModuleTypeIdentifier1 { iso org(3) dod(6) internet(1) private(4) enterprise(1)
 	spelio(9363) software(1) asn1c(5) test(1) 97 1 }
 DEFINITIONS ::=

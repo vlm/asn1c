@@ -1,3 +1,5 @@
+FATAL: Inappropriate value {3 2 1} for type raf
+FATAL: Inappropriate value {3 2 2} for type rcf
 
 /*** <<< INCLUDES [Attribute] >>> ***/
 
