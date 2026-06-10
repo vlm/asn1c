@@ -1,0 +1,39 @@
+-- OK: Everything is fine
+
+-- Regression test: BER indefinite-length decoder CWE-835
+-- Malformed end-of-contents (0x00 0xNN, NN!=0) must return RC_FAIL.
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .159
+
+ModuleBerIndefLoop
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 159 }
+	DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+	-- constr_SEQUENCE.c
+	MySequence ::= SEQUENCE {
+		a  INTEGER,
+		b  OCTET STRING OPTIONAL
+	}
+
+	-- constr_SET.c
+	MySet ::= SET {
+		a  INTEGER,
+		b  OCTET STRING OPTIONAL
+	}
+
+	-- constr_SET_OF.c
+	MySetOf ::= SET OF INTEGER
+
+	-- constr_CHOICE.c
+	-- [0] in IMPLICIT TAGS module on CHOICE is silently upgraded to EXPLICIT,
+	-- giving the CHOICE its own outer TLV that can use indefinite length.
+	MyChoice ::= [0] CHOICE {
+		a  INTEGER,
+		b  OCTET STRING
+	}
+
+END
