@@ -1,0 +1,8 @@
+Seed corpus for check-159's libFuzzer harness (CWE-835 regression).
+
+data-159-01.ber: [0] EXPLICIT INTEGER 66, well-formed indefinite-length EOC.
+
+This seed gives the fuzzer a structurally valid starting point so mutations
+explore the indefinite-length end-of-contents handling instead of getting
+stuck on tag/length parsing. The malformed-EOC trigger is left for the
+fuzzer to discover on its own via mutation.
