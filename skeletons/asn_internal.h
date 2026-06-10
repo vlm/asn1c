@@ -50,7 +50,8 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 #else	/* !ASN_THREAD_SAFE */
 #undef  ASN_DEBUG_INDENT_ADD
 #undef  asn_debug_indent
-extern int asn_debug_indent;
+extern int asn_debug_indent;	/* A single definition is in asn_internal.c */
+#define ASN__DEBUG_INDENT_NEEDS_DEFINITION 1
 #define ASN_DEBUG_INDENT_ADD(i) do { asn_debug_indent += i; } while(0)
 #endif	/* ASN_THREAD_SAFE */
 #define	ASN_DEBUG(fmt, args...)	do {			\
@@ -125,8 +126,25 @@ asn__format_to_callback(
 
 /*
  * Check stack against overflow, if limit is set.
+ * ASan inflates stack frames by ~30x (red zones per variable), making the
+ * distance-based check fire false positives at normal call depth. Disable
+ * when building under ASan — ASan itself catches real stack overflows.
+ * GCC and MSVC define __SANITIZE_ADDRESS__; Clang only exposes
+ * __has_feature(address_sanitizer).
  */
+#if defined(__SANITIZE_ADDRESS__)
+#define ASN__ASAN_ENABLED 1
+#elif defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#define ASN__ASAN_ENABLED 1
+#endif
+#endif
+
+#ifdef ASN__ASAN_ENABLED
+#define ASN__DEFAULT_STACK_MAX  (0)
+#else
 #define	ASN__DEFAULT_STACK_MAX	(30000)
+#endif
 static int CC_NOTUSED
 ASN__STACK_OVERFLOW_CHECK(const asn_codec_ctx_t *ctx) {
 	if(ctx && ctx->max_stack_size) {

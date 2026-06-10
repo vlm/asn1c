@@ -39,12 +39,22 @@
         In some cases an INTEGER overflow during parsing is not detected
         and incorrect value is returned to the decoder instead of an error.
         Reported by Nika Pona <npona@digamma.ai>.
-        (Severity: low; Security impact: medium).
+        (Severity: low; Security impact: medium)
+      * Fix BER CHOICE decoding infinite loop. Reported by John Bradley (Credex).
+        (Severity: high; Security impact: low)
 
     FIXES IN TOOLING:
       * CVE-2017-12966 verified not present.
       * Fix `unber` buffer overrun. Reported by Eric Sesterhenn.
         (Severity: low; Security impact: high)
+
+    Build/test issues:
+      * Disable the stack-depth overflow guard under ASan, whose redzones
+        inflate stack frames and trip the check at normal recursion depth.
+        Fix by Ruud Schramp (github.com/Schramp).
+      * Guard the check-127 PER unsigned-constraint test for 32-bit
+        platforms, where the generated bounds overflow `signed long`.
+        Fix by Ruud Schramp (github.com/Schramp).
 
 0.9.28: 2017-03-26
     * PER decoding: avoid memory leak on error. By github.com/simo5

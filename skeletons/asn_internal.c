@@ -1,7 +1,11 @@
 #include <asn_internal.h>
 
-#ifdef ASN_EMIT_DEBUG
-int asn_debug_indent = 0;
+#ifdef ASN__DEBUG_INDENT_NEEDS_DEFINITION
+/*
+ * The single definition of the debugging indentation level,
+ * shared by all units which refer to it via "extern" in asn_internal.h.
+ */
+int asn_debug_indent;
 #endif
 
 ssize_t

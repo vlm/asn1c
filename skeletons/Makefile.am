@@ -104,7 +104,7 @@ check_converter_example_CFLAGS = $(TESTSUITE_CFLAGS) -DNO_ASN_PDU
 check_converter_example_SOURCES = converter-example.c
 check_converter_example_LDADD = libasn1cskeletons.la
 
-check_converter_c89_example_CFLAGS = $(SKELETON_CFLAGS) -DNO_ASN_PDU
+check_converter_c89_example_CFLAGS = $(SKELETONS_CFLAGS) -DNO_ASN_PDU
 check_converter_c89_example_SOURCES = converter-example.c
 check_converter_c89_example_LDADD = libasn1cskeletons_c89.la
 
