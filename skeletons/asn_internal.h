@@ -128,8 +128,18 @@ asn__format_to_callback(
  * ASan inflates stack frames by ~30x (red zones per variable), making the
  * distance-based check fire false positives at normal call depth. Disable
  * when building under ASan — ASan itself catches real stack overflows.
+ * GCC and MSVC define __SANITIZE_ADDRESS__; Clang only exposes
+ * __has_feature(address_sanitizer).
  */
-#ifdef __SANITIZE_ADDRESS__
+#if defined(__SANITIZE_ADDRESS__)
+#define ASN__ASAN_ENABLED 1
+#elif defined(__has_feature)
+#if __has_feature(address_sanitizer)
+#define ASN__ASAN_ENABLED 1
+#endif
+#endif
+
+#ifdef ASN__ASAN_ENABLED
 #define ASN__DEFAULT_STACK_MAX  (0)
 #else
 #define	ASN__DEFAULT_STACK_MAX	(30000)
