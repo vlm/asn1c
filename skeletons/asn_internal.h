@@ -50,7 +50,8 @@ int get_asn1c_environment_version(void);	/* Run-time version */
 #else	/* !ASN_THREAD_SAFE */
 #undef  ASN_DEBUG_INDENT_ADD
 #undef  asn_debug_indent
-int asn_debug_indent;
+extern int asn_debug_indent;	/* A single definition is in asn_internal.c */
+#define ASN__DEBUG_INDENT_NEEDS_DEFINITION 1
 #define ASN_DEBUG_INDENT_ADD(i) do { asn_debug_indent += i; } while(0)
 #endif	/* ASN_THREAD_SAFE */
 #define	ASN_DEBUG(fmt, args...)	do {			\
