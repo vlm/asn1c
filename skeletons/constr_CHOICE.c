@@ -340,6 +340,10 @@ CHOICE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 					ADVANCE(2);
 					ctx->left++;
 					continue;
+				} else {
+					ASN_DEBUG("Unexpected continuation in %s",
+						td->name);
+					RETURN(RC_FAIL);
 				}
 			} else {
 				ASN_DEBUG("Unexpected continuation in %s",

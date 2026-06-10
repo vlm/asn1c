@@ -39,7 +39,9 @@
         In some cases an INTEGER overflow during parsing is not detected
         and incorrect value is returned to the decoder instead of an error.
         Reported by Nika Pona <npona@digamma.ai>.
-        (Severity: low; Security impact: medium).
+        (Severity: low; Security impact: medium)
+      * Fix BER CHOICE decoding infinite loop. Reported by John Bradley (Credex).
+        (Severity: high; Security impact: low)
 
     FIXES IN TOOLING:
       * CVE-2017-12966 verified not present.
