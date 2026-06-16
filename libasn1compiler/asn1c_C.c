@@ -2930,12 +2930,14 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 static int
 emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_count, int all_tags_count, int elements_count, enum etd_spec spec) {
 	asn1p_expr_t *terminal;
+	asn1p_expr_type_e terminal_etype;
 	int using_type_name = 0;
 	char *expr_id = strdup(MKID(expr));
 	char *p = expr_id;
 	char *p2 = (char *)0;
 
 	terminal = asn1f_find_terminal_type_ex(arg->asn, arg->ns, expr);
+	terminal_etype = expr_get_type(arg, expr);
 
 	if(emit_member_OER_constraints(arg, expr, "type"))
 		return -1;
@@ -3016,8 +3018,8 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 		OUT("{ ");
 		if(arg->flags & A1C_GEN_OER) {
 			if(expr->combined_constraints
-			|| expr->expr_type == ASN_BASIC_ENUMERATED
-			|| expr->expr_type == ASN_CONSTR_CHOICE) {
+			|| terminal_etype == ASN_BASIC_ENUMERATED
+			|| terminal_etype == ASN_CONSTR_CHOICE) {
 				OUT("&asn_OER_type_%s_constr_%d",
 					expr_id, expr->_type_unique_index);
 			} else {
@@ -3030,9 +3032,9 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 
 		if(arg->flags & A1C_GEN_PER) {
             if(expr->combined_constraints
-               || expr->expr_type == ASN_BASIC_ENUMERATED
-               || expr->expr_type == ASN_CONSTR_CHOICE
-               || (expr->expr_type & ASN_STRING_KM_MASK)) {
+               || terminal_etype == ASN_BASIC_ENUMERATED
+               || terminal_etype == ASN_CONSTR_CHOICE
+               || (terminal_etype & ASN_STRING_KM_MASK)) {
                 OUT("&asn_PER_type_%s_constr_%d",
 					expr_id, expr->_type_unique_index);
 			} else {
