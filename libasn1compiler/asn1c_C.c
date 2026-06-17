@@ -2834,7 +2834,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
     OUT("{ ");
 	if(C99_MODE) OUT(".oer_constraints = ");
 	if(arg->flags & A1C_GEN_OER) {
-		if(expr->constraints) {
+		if(expr->constraints && !(arg->flags & A1C_NO_CONSTRAINTS)) {
 			OUT("&asn_OER_memb_%s_constr_%d",
 				MKID(expr),
 				expr->_type_unique_index);
@@ -2847,7 +2847,7 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
     OUT(", ");
 	if(C99_MODE) OUT(".per_constraints = ");
 	if(arg->flags & A1C_GEN_PER) {
-		if(expr->constraints) {
+		if(expr->constraints && !(arg->flags & A1C_NO_CONSTRAINTS)) {
 			OUT("&asn_PER_memb_%s_constr_%d",
 				MKID(expr),
 				expr->_type_unique_index);
