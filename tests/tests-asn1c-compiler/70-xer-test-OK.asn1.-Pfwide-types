@@ -271,8 +271,8 @@ struct Sequence;
 
 typedef struct Sequence {
 	INTEGER_t	 integer;
-	struct Sequence	*sequence	/* OPTIONAL */;
-	BIT_STRING_t	*bits	/* OPTIONAL */;
+	struct Sequence	*sequence;	/* OPTIONAL */
+	BIT_STRING_t	*bits;	/* OPTIONAL */
 	UTF8String_t	 string;
 	
 	/* Context for parsing across buffer boundaries */
@@ -384,7 +384,7 @@ typedef enum Set_PR {
 
 typedef struct Set {
 	RELATIVE_OID_t	 roid;
-	OCTET_STRING_t	*opaque	/* OPTIONAL */;
+	OCTET_STRING_t	*opaque;	/* OPTIONAL */
 	
 	/* Presence bitmask: ASN_SET_ISPRESENT(pSet, Set_PR_x) */
 	unsigned int _presence_map
@@ -484,7 +484,7 @@ typedef enum Enum {
 /*** <<< TYPE-DECLS [ExtensibleSet] >>> ***/
 
 typedef struct ExtensibleSet {
-	UTF8String_t	*string	/* OPTIONAL */;
+	UTF8String_t	*string;	/* OPTIONAL */
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
@@ -620,12 +620,12 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSet = {
 /*** <<< TYPE-DECLS [ExtensibleSequence] >>> ***/
 
 typedef struct ExtensibleSequence {
-	UTF8String_t	*string	/* OPTIONAL */;
+	UTF8String_t	*string;	/* OPTIONAL */
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
 	 */
-	INTEGER_t	*integer	/* OPTIONAL */;
+	INTEGER_t	*integer;	/* OPTIONAL */
 	GeneralizedTime_t	*gtime;
 	
 	/* Context for parsing across buffer boundaries */
@@ -711,12 +711,12 @@ asn_TYPE_descriptor_t asn_DEF_ExtensibleSequence = {
 /*** <<< TYPE-DECLS [ExtensibleSequence2] >>> ***/
 
 typedef struct ExtensibleSequence2 {
-	UTF8String_t	*string	/* OPTIONAL */;
+	UTF8String_t	*string;	/* OPTIONAL */
 	/*
 	 * This type is extensible,
 	 * possible extensions are below.
 	 */
-	INTEGER_t	*integer	/* OPTIONAL */;
+	INTEGER_t	*integer;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

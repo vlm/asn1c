@@ -17,10 +17,10 @@ typedef struct PDU {
 	 * This type is extensible,
 	 * possible extensions are below.
 	 */
-	IA5String_t	*str_o	/* OPTIONAL */;
+	IA5String_t	*str_o;	/* OPTIONAL */
 	IA5String_t	*str_m;
 	struct Singleton	*singl;
-	struct PDU_2	*pdu_2	/* OPTIONAL */;
+	struct PDU_2	*pdu_2;	/* OPTIONAL */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -118,7 +118,7 @@ asn_TYPE_descriptor_t asn_DEF_PDU = {
 /*** <<< TYPE-DECLS [Singleton] >>> ***/
 
 typedef struct Singleton {
-	IA5String_t	*opt_z	/* DEFAULT z */;
+	IA5String_t	*opt_z;	/* DEFAULT z */
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;

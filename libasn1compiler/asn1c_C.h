@@ -15,8 +15,11 @@ int asn1c_lang_C_type_common_INTEGER(arg_t *);
 int asn1c_lang_C_type_BIT_STRING(arg_t *);
 int asn1c_lang_C_type_REAL(arg_t *);
 int asn1c_lang_C_type_SIMPLE_TYPE(arg_t *);
+int asn1c_lang_C_type_REFERENCE_Value(arg_t *);
 
 static asn1_language_map_t asn1_lang_C[] __attribute__ ((unused)) = {
+	{ AMT_VALUE, A1TC_REFERENCE,	asn1c_lang_C_type_REFERENCE_Value },
+
 	{ AMT_TYPE, A1TC_REFERENCE,	asn1c_lang_C_type_REFERENCE },
 	{ AMT_TYPEREF, A1TC_REFERENCE,	asn1c_lang_C_type_REFERENCE },
 	{ AMT_TYPE, A1TC_EXTENSIBLE,	asn1c_lang_C_type_EXTENSIBLE },

@@ -27,13 +27,11 @@ asn1p_ioc_table_add(asn1p_ioc_table_t *it, asn1p_ioc_row_t *row) {
 
 void
 asn1p_ioc_table_append(asn1p_ioc_table_t *it, asn1p_ioc_table_t *src) {
-    int base_idx;
 
     if(!src || !it) return;
 
-    base_idx = it->rows;
     for(size_t i = 0; i < src->rows; i++) {
-        asn1p_ioc_table_add(it, asn1p_ioc_row_clone(src->row[i], base_idx));
+        asn1p_ioc_table_add(it, asn1p_ioc_row_clone(src->row[i]));
     }
 }
 
@@ -106,7 +104,7 @@ asn1p_ioc_row_new(asn1p_expr_t *oclass) {
 }
 
 asn1p_ioc_row_t *
-asn1p_ioc_row_clone(asn1p_ioc_row_t *src, int base_idx) {
+asn1p_ioc_row_clone(asn1p_ioc_row_t *src) {
 	asn1p_ioc_row_t *row;
 
 	row = calloc(1, sizeof *row);
@@ -124,7 +122,6 @@ asn1p_ioc_row_clone(asn1p_ioc_row_t *src, int base_idx) {
 		row->column[i].value = 0;
 		if(src->column[i].value) {
 			row->column[i].value = asn1p_expr_clone(src->column[i].value, 0);
-			row->column[i].value->_type_unique_index += base_idx;
 		}
 		row->column[i].new_ref = 1;
 	}

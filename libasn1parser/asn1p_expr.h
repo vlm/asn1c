@@ -250,10 +250,8 @@ typedef struct asn1p_expr_s {
 	  TM_RECURSION	= (1<<0), /* Used to break recursion */
 	  TM_BROKEN	= (1<<1), /* A warning was already issued */
 	  TM_PERFROMCT	= (1<<2), /* PER FROM() constraint tables emitted */
-	  TM_NAMECLASH	= (1<<3),  /* Name clash found, need to add module name to resolve */
-	  TM_NAMEGIVEN  = (1<<4),  /* The expression has already yielded a name */
-	  TM_SKIPinUNION  = (1<<5) /* Do not include this identifier in union again due to name duplication,
-                                      especially for OPENTYPE. */
+	  TM_NAMECLASH	= (1<<3), /* Name clash found, need to add module name to resolve */
+	  TM_NAMEGIVEN  = (1<<4)  /* The expression has already yielded a name */
 	} _mark;
 
 	/*
