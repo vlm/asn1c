@@ -82,8 +82,7 @@ OPEN_TYPE_oer_get(const asn_codec_ctx_t *opt_codec_ctx,
     }
 
     if(*memb_ptr2) {
-        const asn_CHOICE_specifics_t *specs =
-            selected.type_descriptor->specifics;
+        const asn_CHOICE_specifics_t *specs = elm->type->specifics;
         if(elm->flags & ATF_POINTER) {
             ASN_STRUCT_FREE(*selected.type_descriptor, inner_value);
             *memb_ptr2 = NULL;

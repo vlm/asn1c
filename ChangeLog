@@ -4,7 +4,7 @@
       * Fix open type decoder NULL dereference and out-of-bounds read when an
         information object set leaves the open type's class field unspecified
         for some objects (an OPTIONAL &Type field omitted by part of the set,
-        e.g. 3GPP elementary-procedure tables).
+        e.g. 3GPP elementary-procedure tables). CVE-2025-32892.
         Reported by Seaver Thorn (NCSU).
         (Severity: medium; Security impact: high)
 
