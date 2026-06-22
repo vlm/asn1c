@@ -1,0 +1,40 @@
+-- OK: Everything is fine
+
+-- Fuzz target: open type (Information Object Class / component relation)
+-- whose information object set has a row that does NOT define a type for the
+-- open type column (an OPTIONAL &Type field omitted by some objects).
+--
+-- Decoding bytes whose discriminant selects the typeless row used to
+-- dereference a NULL type descriptor, and decoding bytes selecting a later,
+-- defined row used to index past the open type CHOICE. A libFuzzer harness
+-- over the decoders (see tests-c-compiler/check-src/check-162.c) reaches both
+-- without any prior knowledge of the triggering input.
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .162
+
+ModuleOpenTypeIOCFuzz
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 162 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	Id ::= INTEGER
+
+	T ::= SEQUENCE {
+		id     P.&id({Objs}),
+		value  P.&Type({Objs}{@id})
+	}
+
+	P ::= CLASS {
+		&id    Id UNIQUE,
+		&Type  OPTIONAL
+	} WITH SYNTAX { ID &id [TYPE &Type] }
+
+	-- The object for id 0 defines no &Type; id 1 selects Payload.
+	Objs P ::= { {ID 0} | {ID 1 TYPE Payload} }
+
+	Payload ::= BOOLEAN
+
+END
