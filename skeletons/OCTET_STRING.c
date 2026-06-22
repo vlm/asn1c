@@ -1028,7 +1028,12 @@ OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf,
 				 * Empty character reference ("&#;" or "&#x;"):
 				 * the ';' immediately follows the prefix, with
 				 * no digits in between. This is malformed.
+				 * Restore nul-termination at the last committed
+				 * size before bailing out, so a caller inspecting
+				 * the failed result sees a valid C string rather
+				 * than the partially written, unterminated bytes.
 				 */
+				st->buf[st->size] = 0;
 				return -1;
 			}
 			/*
