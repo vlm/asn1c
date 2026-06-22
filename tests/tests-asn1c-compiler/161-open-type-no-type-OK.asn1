@@ -1,0 +1,44 @@
+-- OK: Everything is fine
+
+-- Regression test: open type whose information object set contains a row
+-- that does not define a type for the open type column.
+--
+-- Decoding a value whose discriminant selects such a typeless row used to
+-- dereference a NULL type descriptor (reported crash), while decoding a value
+-- which selects a *later*, typed row used to index past the open type CHOICE
+-- (the CHOICE only holds the rows that define a type), reading out of bounds.
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .161
+
+ModuleOpenTypeNoType
+	{ iso org(3) dod(6) internet(1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 161 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	ProcedureCode ::= INTEGER
+
+	UnsuccessfulOutcome ::= SEQUENCE {
+		procedureCode  PROCEDURE.&procedureCode({Procedures}),
+		value          PROCEDURE.&UnsuccessfulOutcome({Procedures}{@procedureCode})
+	}
+
+	PROCEDURE ::= CLASS {
+		&procedureCode       ProcedureCode UNIQUE,
+		&UnsuccessfulOutcome OPTIONAL
+	} WITH SYNTAX {
+		PROCEDURE CODE        &procedureCode
+		[UNSUCCESSFUL OUTCOME &UnsuccessfulOutcome]
+	}
+
+	-- The object for code 0 has no &UnsuccessfulOutcome type; code 1 does.
+	Procedures PROCEDURE ::= {
+		{ PROCEDURE CODE 0 } |
+		{ PROCEDURE CODE 1 UNSUCCESSFUL OUTCOME FailureB }
+	}
+
+	FailureB ::= SEQUENCE {}
+
+END

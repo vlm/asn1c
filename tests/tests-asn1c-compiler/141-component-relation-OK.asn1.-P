@@ -93,15 +93,26 @@ select_Frame_value_type(const asn_TYPE_descriptor_t *parent_type, const void *pa
 	size_t constraining_column = 0; /* &id */
 	size_t for_column = 1; /* &Type */
 	size_t row;
+	size_t presence_index = 0;
 	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct Frame, ident));
 	
 	for(row=0; row < itable->rows_count; row++) {
 	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
 	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
 	
+	    /*
+	     * The CHOICE which carries the open type value only contains the
+	     * rows which actually define a type for this column, so count those
+	     * rows to derive the CHOICE presence index. A row which selects no
+	     * type leaves both result fields cleared, which the decoders treat
+	     * as a decode failure.
+	     */
+	    if(type_cell->type_descriptor) presence_index++;
 	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
-	        result.type_descriptor = type_cell->type_descriptor;
-	        result.presence_index = row + 1;
+	        if(type_cell->type_descriptor) {
+	            result.type_descriptor = type_cell->type_descriptor;
+	            result.presence_index = presence_index;
+	        }
 	        break;
 	    }
 	}

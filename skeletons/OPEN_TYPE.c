@@ -58,7 +58,12 @@ OPEN_TYPE_ber_get(const asn_codec_ctx_t *opt_codec_ctx,
     }
 
     selected = elm->type_selector(td, sptr);
-    if(!selected.presence_index) {
+    if(!selected.presence_index || !selected.type_descriptor) {
+        /*
+         * The constraining value does not select any type, or selects a
+         * row of the information object set which does not define a type
+         * for this open type field. Either way, there's nothing to decode.
+         */
         ASN__DECODE_FAILED;
     }
 
@@ -147,7 +152,12 @@ OPEN_TYPE_xer_get(const asn_codec_ctx_t *opt_codec_ctx,
     }
 
     selected = elm->type_selector(td, sptr);
-    if(!selected.presence_index) {
+    if(!selected.presence_index || !selected.type_descriptor) {
+        /*
+         * The constraining value does not select any type, or selects a
+         * row of the information object set which does not define a type
+         * for this open type field. Either way, there's nothing to decode.
+         */
         ASN__DECODE_FAILED;
     }
 
@@ -306,7 +316,12 @@ OPEN_TYPE_uper_get(const asn_codec_ctx_t *opt_codec_ctx,
     }
 
     selected = elm->type_selector(td, sptr);
-    if(!selected.presence_index) {
+    if(!selected.presence_index || !selected.type_descriptor) {
+        /*
+         * The constraining value does not select any type, or selects a
+         * row of the information object set which does not define a type
+         * for this open type field. Either way, there's nothing to decode.
+         */
         ASN__DECODE_FAILED;
     }
 
