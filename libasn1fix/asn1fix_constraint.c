@@ -238,6 +238,9 @@ _remove_extensions(arg_t *arg, asn1p_constraint_t *ct, int forgive_last) {
 
 	if(!ct) return;
 
+	/* Keep extensible SizeConstraint */
+	if(ct->type == ACT_CT_SIZE && forgive_last) return;
+
 	for(i = 0; i < ct->el_count; i++) {
 		if(ct->elements[i]->type == ACT_EL_EXT)
 			break;
