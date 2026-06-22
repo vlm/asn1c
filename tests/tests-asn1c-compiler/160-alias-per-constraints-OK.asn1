@@ -1,0 +1,29 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .160
+
+ModuleAliasPERConstraints
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 160 }
+	DEFINITIONS ::=
+BEGIN
+
+    -- A CHOICE type, and a plain alias to it.  The alias gets its own
+    -- PER/OER constraint table generated (driven by the terminal type),
+    -- but historically that table was not linked into the alias'
+    -- asn_TYPE_descriptor_t, so uPER encode/decode of the alias failed.
+    CombInfo ::= CHOICE {
+        a   INTEGER (0..3),
+        b   BOOLEAN
+    }
+
+    AckCombInfo ::= CombInfo
+
+    T ::= SEQUENCE {
+        direct  CombInfo,
+        alias   AckCombInfo
+    }
+
+END
