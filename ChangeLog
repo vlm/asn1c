@@ -1,4 +1,13 @@
 
+0.9.??:
+    FIXES IN COMPILER-GENERATED OUTPUT:
+      * Fix open type decoder NULL dereference and out-of-bounds read when an
+        information object set leaves the open type's class field unspecified
+        for some objects (an OPTIONAL &Type field omitted by part of the set,
+        e.g. 3GPP elementary-procedure tables).
+        Reported by Seaver Thorn (NCSU).
+        (Severity: medium; Security impact: high)
+
 0.9.29:
     FEATURES:
     * Added support for basic Information Object Sets driven code generation.
