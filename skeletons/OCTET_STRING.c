@@ -1023,7 +1023,18 @@ OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf,
 				continue;
 			}
 			if(!len || pval[len-1] != 0x3b) goto want_more;
-			assert(val > 0);
+			if(len == 1) {
+				/*
+				 * Empty character reference ("&#;" or "&#x;"):
+				 * the ';' immediately follows the prefix, with
+				 * no digits in between. This is malformed.
+				 */
+				return -1;
+			}
+			/*
+			 * A zero-valued reference ("&#0;", "&#x0;") is valid
+			 * and yields a NUL octet, emitted by the code below.
+			 */
 			p += (pval - p) + len - 1; /* Advance past entref */
 
 			if(val < 0x80) {
