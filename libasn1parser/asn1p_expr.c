@@ -57,6 +57,12 @@ asn1p_expr_compare(const asn1p_expr_t *a, const asn1p_expr_t *b) {
         return -1;
     }
 
+    if((!a->constraints && b->constraints) || (a->constraints && !b->constraints)) {
+        return -1;
+    } else if(a->constraints && asn1p_constraint_compare(a->constraints, b->constraints)) {
+        return -1;
+    }
+
     if((a->tag.tag_class != b->tag.tag_class)
        || (a->tag.tag_mode != b->tag.tag_mode)
        || (a->tag.tag_value != b->tag.tag_value)) {

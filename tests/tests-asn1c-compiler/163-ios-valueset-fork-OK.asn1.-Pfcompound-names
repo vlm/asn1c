@@ -1,0 +1,539 @@
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 46 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+WARNING: Parameterized type MYID expected for MYID at line 47 in ../../tests/tests-asn1c-compiler/163-ios-valueset-fork-OK.asn1
+
+/*** <<< INCLUDES [Message] >>> ***/
+
+#include "SpecializedContent.h"
+#include <constr_SEQUENCE.h>
+
+/*** <<< TYPE-DECLS [Message] >>> ***/
+
+typedef struct Message {
+	SpecializedContent_46P0_t	 first;
+	SpecializedContent_46P1_t	 second;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} Message_t;
+
+/*** <<< FUNC-DECLS [Message] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_Message;
+
+/*** <<< STAT-DEFS [Message] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_Message_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct Message, first),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_SpecializedContent_46P0,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "first"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct Message, second),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_SpecializedContent_46P1,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "second"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_Message_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_Message_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 0, 0, 1 }, /* first */
+    { (ASN_TAG_CLASS_UNIVERSAL | (16 << 2)), 1, -1, 0 } /* second */
+};
+static asn_SEQUENCE_specifics_t asn_SPC_Message_specs_1 = {
+	sizeof(struct Message),
+	offsetof(struct Message, _asn_ctx),
+	.tag2el = asn_MAP_Message_tag2el_1,
+	.tag2el_count = 2,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* First extension addition */
+};
+asn_TYPE_descriptor_t asn_DEF_Message = {
+	"Message",
+	"Message",
+	&asn_OP_SEQUENCE,
+	asn_DEF_Message_tags_1,
+	sizeof(asn_DEF_Message_tags_1)
+		/sizeof(asn_DEF_Message_tags_1[0]), /* 1 */
+	asn_DEF_Message_tags_1,	/* Same as above */
+	sizeof(asn_DEF_Message_tags_1)
+		/sizeof(asn_DEF_Message_tags_1[0]), /* 1 */
+	{ 0, 0, SEQUENCE_constraint },
+	asn_MBR_Message_1,
+	2,	/* Elements count */
+	&asn_SPC_Message_specs_1	/* Additional specs */
+};
+
+
+/*** <<< INCLUDES [SpecializedContent] >>> ***/
+
+#include <NativeInteger.h>
+#include <ANY.h>
+#include <asn_ioc.h>
+#include <OPEN_TYPE.h>
+#include <BOOLEAN.h>
+#include <constr_CHOICE.h>
+#include <constr_SEQUENCE.h>
+#include <OCTET_STRING.h>
+#include <IA5String.h>
+
+/*** <<< DEPS [SpecializedContent] >>> ***/
+
+typedef enum SpecializedContent_46P0__value_PR {
+	SpecializedContent_46P0__value_PR_NOTHING,	/* No components present */
+	SpecializedContent_46P0__value_PR_INTEGER,
+	SpecializedContent_46P0__value_PR_BOOLEAN
+} SpecializedContent_46P0__value_PR;
+typedef enum SpecializedContent_46P1__value_PR {
+	SpecializedContent_46P1__value_PR_NOTHING,	/* No components present */
+	SpecializedContent_46P1__value_PR_OCTET_STRING,
+	SpecializedContent_46P1__value_PR_IA5String
+} SpecializedContent_46P1__value_PR;
+
+/*** <<< TYPE-DECLS [SpecializedContent] >>> ***/
+
+typedef struct SpecializedContent_46P0 {
+	long	 id;
+	struct SpecializedContent_46P0__value {
+		SpecializedContent_46P0__value_PR present;
+		union SpecializedContent_46P0__value_u {
+			long	 INTEGER;
+			BOOLEAN_t	 BOOLEAN;
+		} choice;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} value;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SpecializedContent_46P0_t;
+typedef struct SpecializedContent_46P1 {
+	long	 id;
+	struct SpecializedContent_46P1__value {
+		SpecializedContent_46P1__value_PR present;
+		union SpecializedContent_46P1__value_u {
+			OCTET_STRING_t	 OCTET_STRING;
+			IA5String_t	 IA5String;
+		} choice;
+		
+		/* Context for parsing across buffer boundaries */
+		asn_struct_ctx_t _asn_ctx;
+	} value;
+	
+	/* Context for parsing across buffer boundaries */
+	asn_struct_ctx_t _asn_ctx;
+} SpecializedContent_46P1_t;
+
+/*** <<< FUNC-DECLS [SpecializedContent] >>> ***/
+
+extern asn_TYPE_descriptor_t asn_DEF_SpecializedContent_46P0;
+extern asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_46P0_specs_1;
+extern asn_TYPE_member_t asn_MBR_SpecializedContent_46P0_1[2];
+extern asn_TYPE_descriptor_t asn_DEF_SpecializedContent_46P1;
+extern asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_46P1_specs_4;
+extern asn_TYPE_member_t asn_MBR_SpecializedContent_46P1_4[2];
+
+/*** <<< IOC-TABLES [SpecializedContent] >>> ***/
+
+static const long asn_VAL_1_1 = 1;
+static const long asn_VAL_2_2 = 2;
+static const asn_ioc_cell_t asn_IOS_SetA_1_rows[] = {
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_1 },
+	{ "&Type", ,
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_2 },
+	{ "&Type", 
+};
+static const asn_ioc_set_t asn_IOS_SetA_1[] = {
+	2, 2, asn_IOS_SetA_1_rows
+};
+static const long asn_VAL_1_3 = 3;
+static const long asn_VAL_2_4 = 4;
+static const asn_ioc_cell_t asn_IOS_SetB_1_rows[] = {
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_1_3 },
+	{ "&Type", ,
+	{ "&id", aioc__value, &asn_DEF_NativeInteger, &asn_VAL_2_4 },
+	{ "&Type", 
+};
+static const asn_ioc_set_t asn_IOS_SetB_1[] = {
+	2, 2, asn_IOS_SetB_1_rows
+};
+
+/*** <<< CODE [SpecializedContent] >>> ***/
+
+static int
+memb_id_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+static asn_type_selector_result_t
+select_SpecializedContent_46P0_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+	asn_type_selector_result_t result = {0, 0};
+	const asn_ioc_set_t *itable = asn_IOS_SetA_1;
+	size_t constraining_column = 0; /* &id */
+	size_t for_column = 1; /* &Type */
+	size_t row;
+	size_t presence_index = 0;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct SpecializedContent_46P0, id));
+	
+	for(row=0; row < itable->rows_count; row++) {
+	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
+	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
+	
+	    /*
+	     * The CHOICE which carries the open type value only contains the
+	     * rows which actually define a type for this column, so count those
+	     * rows to derive the CHOICE presence index. A row which selects no
+	     * type leaves both result fields cleared, which the decoders treat
+	     * as a decode failure.
+	     */
+	    if(type_cell->type_descriptor) presence_index++;
+	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	        if(type_cell->type_descriptor) {
+	            result.type_descriptor = type_cell->type_descriptor;
+	            result.presence_index = presence_index;
+	        }
+	        break;
+	    }
+	}
+	
+	return result;
+}
+
+static int
+memb_value_constraint_1(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+static int
+memb_id_constraint_4(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+static asn_type_selector_result_t
+select_SpecializedContent_46P1_value_type(const asn_TYPE_descriptor_t *parent_type, const void *parent_sptr) {
+	asn_type_selector_result_t result = {0, 0};
+	const asn_ioc_set_t *itable = asn_IOS_SetB_1;
+	size_t constraining_column = 0; /* &id */
+	size_t for_column = 1; /* &Type */
+	size_t row;
+	size_t presence_index = 0;
+	const long *constraining_value = (const long *)((const char *)parent_sptr + offsetof(struct SpecializedContent_46P1, id));
+	
+	for(row=0; row < itable->rows_count; row++) {
+	    const asn_ioc_cell_t *constraining_cell = &itable->rows[row * itable->columns_count + constraining_column];
+	    const asn_ioc_cell_t *type_cell = &itable->rows[row * itable->columns_count + for_column];
+	
+	    /*
+	     * The CHOICE which carries the open type value only contains the
+	     * rows which actually define a type for this column, so count those
+	     * rows to derive the CHOICE presence index. A row which selects no
+	     * type leaves both result fields cleared, which the decoders treat
+	     * as a decode failure.
+	     */
+	    if(type_cell->type_descriptor) presence_index++;
+	    if(constraining_cell->type_descriptor->op->compare_struct(constraining_cell->type_descriptor, constraining_value, constraining_cell->value_sptr) == 0) {
+	        if(type_cell->type_descriptor) {
+	            result.type_descriptor = type_cell->type_descriptor;
+	            result.presence_index = presence_index;
+	        }
+	        break;
+	    }
+	}
+	
+	return result;
+}
+
+static int
+memb_value_constraint_4(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	
+	if(1 /* No applicable constraints whatsoever */) {
+		/* Nothing is here. See below */
+	}
+	
+	return td->encoding_constraints.general_constraints(td, sptr, ctfailcb, app_key);
+}
+
+
+/*** <<< STAT-DEFS [SpecializedContent] >>> ***/
+
+static asn_TYPE_member_t asn_MBR_value_3[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P0__value, choice.INTEGER),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "INTEGER"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P0__value, choice.BOOLEAN),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_BOOLEAN,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "BOOLEAN"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_value_tag2el_3[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (1 << 2)), 1, 0, 0 }, /* BOOLEAN */
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* INTEGER */
+};
+static asn_CHOICE_specifics_t asn_SPC_value_specs_3 = {
+	sizeof(struct SpecializedContent_46P0__value),
+	offsetof(struct SpecializedContent_46P0__value, _asn_ctx),
+	offsetof(struct SpecializedContent_46P0__value, present),
+	sizeof(((struct SpecializedContent_46P0__value *)0)->present),
+	.tag2el = asn_MAP_value_tag2el_3,
+	.tag2el_count = 2,	/* Count of tags in the map */
+	0, 0,
+	.first_extension = -1	/* Extensions start */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_value_3 = {
+	"value",
+	"value",
+	&asn_OP_OPEN_TYPE,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	{ 0, 0, OPEN_TYPE_constraint },
+	asn_MBR_value_3,
+	2,	/* Elements count */
+	&asn_SPC_value_specs_3	/* Additional specs */
+};
+
+asn_TYPE_member_t asn_MBR_SpecializedContent_46P0_1[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P0, id),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_id_constraint_1 },
+		0, 0, /* No default value */
+		.name = "id"
+		},
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P0, value),
+		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag_mode = 0,
+		.type = &asn_DEF_value_3,
+		.type_selector = select_SpecializedContent_46P0_value_type,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_value_constraint_1 },
+		0, 0, /* No default value */
+		.name = "value"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_SpecializedContent_46P0_tags_1[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_SpecializedContent_46P0_tag2el_1[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* id */
+};
+asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_46P0_specs_1 = {
+	sizeof(struct SpecializedContent_46P0),
+	offsetof(struct SpecializedContent_46P0, _asn_ctx),
+	.tag2el = asn_MAP_SpecializedContent_46P0_tag2el_1,
+	.tag2el_count = 1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* First extension addition */
+};
+asn_TYPE_descriptor_t asn_DEF_SpecializedContent_46P0 = {
+	"SpecializedContent",
+	"SpecializedContent",
+	&asn_OP_SEQUENCE,
+	asn_DEF_SpecializedContent_46P0_tags_1,
+	sizeof(asn_DEF_SpecializedContent_46P0_tags_1)
+		/sizeof(asn_DEF_SpecializedContent_46P0_tags_1[0]), /* 1 */
+	asn_DEF_SpecializedContent_46P0_tags_1,	/* Same as above */
+	sizeof(asn_DEF_SpecializedContent_46P0_tags_1)
+		/sizeof(asn_DEF_SpecializedContent_46P0_tags_1[0]), /* 1 */
+	{ 0, 0, SEQUENCE_constraint },
+	asn_MBR_SpecializedContent_46P0_1,
+	2,	/* Elements count */
+	&asn_SPC_SpecializedContent_46P0_specs_1	/* Additional specs */
+};
+
+static asn_TYPE_member_t asn_MBR_value_6[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P1__value, choice.OCTET_STRING),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_OCTET_STRING,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "OCTET STRING"
+		},
+	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P1__value, choice.IA5String),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_IA5String,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
+		0, 0, /* No default value */
+		.name = "IA5String"
+		},
+};
+static const asn_TYPE_tag2member_t asn_MAP_value_tag2el_6[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (4 << 2)), 0, 0, 0 }, /* OCTET STRING */
+    { (ASN_TAG_CLASS_UNIVERSAL | (22 << 2)), 1, 0, 0 } /* IA5String */
+};
+static asn_CHOICE_specifics_t asn_SPC_value_specs_6 = {
+	sizeof(struct SpecializedContent_46P1__value),
+	offsetof(struct SpecializedContent_46P1__value, _asn_ctx),
+	offsetof(struct SpecializedContent_46P1__value, present),
+	sizeof(((struct SpecializedContent_46P1__value *)0)->present),
+	.tag2el = asn_MAP_value_tag2el_6,
+	.tag2el_count = 2,	/* Count of tags in the map */
+	0, 0,
+	.first_extension = -1	/* Extensions start */
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_value_6 = {
+	"value",
+	"value",
+	&asn_OP_OPEN_TYPE,
+	0,	/* No effective tags (pointer) */
+	0,	/* No effective tags (count) */
+	0,	/* No tags (pointer) */
+	0,	/* No tags (count) */
+	{ 0, 0, OPEN_TYPE_constraint },
+	asn_MBR_value_6,
+	2,	/* Elements count */
+	&asn_SPC_value_specs_6	/* Additional specs */
+};
+
+asn_TYPE_member_t asn_MBR_SpecializedContent_46P1_4[] = {
+	{ ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P1, id),
+		.tag = (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)),
+		.tag_mode = 0,
+		.type = &asn_DEF_NativeInteger,
+		.type_selector = 0,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_id_constraint_4 },
+		0, 0, /* No default value */
+		.name = "id"
+		},
+	{ ATF_OPEN_TYPE | ATF_NOFLAGS, 0, offsetof(struct SpecializedContent_46P1, value),
+		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag_mode = 0,
+		.type = &asn_DEF_value_6,
+		.type_selector = select_SpecializedContent_46P1_value_type,
+		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_value_constraint_4 },
+		0, 0, /* No default value */
+		.name = "value"
+		},
+};
+static const ber_tlv_tag_t asn_DEF_SpecializedContent_46P1_tags_4[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (16 << 2))
+};
+static const asn_TYPE_tag2member_t asn_MAP_SpecializedContent_46P1_tag2el_4[] = {
+    { (ASN_TAG_CLASS_UNIVERSAL | (2 << 2)), 0, 0, 0 } /* id */
+};
+asn_SEQUENCE_specifics_t asn_SPC_SpecializedContent_46P1_specs_4 = {
+	sizeof(struct SpecializedContent_46P1),
+	offsetof(struct SpecializedContent_46P1, _asn_ctx),
+	.tag2el = asn_MAP_SpecializedContent_46P1_tag2el_4,
+	.tag2el_count = 1,	/* Count of tags in the map */
+	0, 0, 0,	/* Optional elements (not needed) */
+	-1,	/* First extension addition */
+};
+asn_TYPE_descriptor_t asn_DEF_SpecializedContent_46P1 = {
+	"SpecializedContent",
+	"SpecializedContent",
+	&asn_OP_SEQUENCE,
+	asn_DEF_SpecializedContent_46P1_tags_4,
+	sizeof(asn_DEF_SpecializedContent_46P1_tags_4)
+		/sizeof(asn_DEF_SpecializedContent_46P1_tags_4[0]), /* 1 */
+	asn_DEF_SpecializedContent_46P1_tags_4,	/* Same as above */
+	sizeof(asn_DEF_SpecializedContent_46P1_tags_4)
+		/sizeof(asn_DEF_SpecializedContent_46P1_tags_4[0]), /* 1 */
+	{ 0, 0, SEQUENCE_constraint },
+	asn_MBR_SpecializedContent_46P1_4,
+	2,	/* Elements count */
+	&asn_SPC_SpecializedContent_46P1_specs_4	/* Additional specs */
+};
+

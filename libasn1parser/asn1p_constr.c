@@ -22,12 +22,62 @@ asn1p_constraint_set_source(asn1p_constraint_t *ct,
     }
 }
 
+/*
+ * Safely extract the reference that an ACT_EL_TYPE (contained subtype)
+ * constraint points to, e.g. the VALUESET reference in (VALUE-SET-A).
+ * Returns NULL if the constraint does not carry such a reference, guarding
+ * against the various intermediate NULL pointers so the comparison never
+ * dereferences uninitialized constraint shapes.
+ */
+static const asn1p_ref_t *
+constraint_ref(const asn1p_constraint_t *ct) {
+    const asn1p_value_t *cs = ct->containedSubtype;
+    if(cs && cs->type == ATV_REFERENCED)
+        return cs->value.reference;
+    if(cs && cs->type == ATV_TYPE && cs->value.v_type)
+        return cs->value.v_type->reference;
+    return NULL;
+}
+
 int asn1p_constraint_compare(const asn1p_constraint_t *a,
                              const asn1p_constraint_t *b) {
-    (void)a;
-    (void)b;
-    assert(!"Constraint comparison is not implemented");
-    return -1;
+    assert((a && b));
+
+    if(a->type != b->type)
+        return -1;
+
+    /*
+     * Currently we only distinguish VALUESET expressed as a reference to
+     * a contained subtype, e.g. (VALUE-SET-A) vs (VALUE-SET-B). This is
+     * enough to make asn1f_parameterization_fork() fork parameterizations
+     * that differ only by their VALUESET reference (CVE-2025-32893),
+     * so the associated information object tables are generated for each
+     * distinct value set instead of being silently deduplicated.
+     */
+    if(a->type == ACT_EL_TYPE) {
+        const asn1p_ref_t *ra = constraint_ref(a);
+        const asn1p_ref_t *rb = constraint_ref(b);
+
+        /*
+         * If either side is not a plain reference (or the reference does
+         * not carry a comparable component name), fall back to treating
+         * the constraints as comparable-equal rather than dereferencing a
+         * NULL pointer or asserting. We only special-case the shape we
+         * positively recognize.
+         */
+        if(ra && rb) {
+            if(ra->comp_count == 0 || rb->comp_count == 0
+               || !ra->components[0].name || !rb->components[0].name)
+                return 0;
+            return strcmp(ra->components[0].name, rb->components[0].name);
+        }
+        /* One has a reference and the other does not -> different. */
+        if(ra || rb)
+            return -1;
+        return 0;
+    }
+
+    return 0;
 }
 
 asn1p_constraint_t *
