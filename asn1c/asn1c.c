@@ -271,6 +271,21 @@ main(int ac, char **av) {
     }
 
     /*
+     * PER and OER encodings rely on the type constraints to determine the
+     * wire representation (e.g. SIZE and value ranges drive the encoding).
+     * Disabling constraints would silently produce non-conformant output,
+     * so refuse the combination outright.
+     */
+    if((asn1_compiler_flags & A1C_NO_CONSTRAINTS)
+       && (asn1_compiler_flags & (A1C_GEN_PER | A1C_GEN_OER))) {
+        fprintf(stderr,
+                "Error: -fno-constraints is incompatible with %s"
+                " (these encodings rely on constraints)\n",
+                (asn1_compiler_flags & A1C_GEN_PER) ? "-gen-PER" : "-gen-OER");
+        exit(EX_USAGE);
+    }
+
+    /*
      * Ensure that there are some input files present.
      */
     if(ac > optind) {
