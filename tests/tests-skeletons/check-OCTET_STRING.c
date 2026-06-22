@@ -8,12 +8,15 @@
 
 enum encoding_type { HEX, BINARY, UTF8 };
 
-#define check(t, tag, buf, verify)  check_impl(__LINE__, t, tag, buf, verify)
+#define check(t, tag, buf, verify) \
+	check_impl(__LINE__, t, tag, buf, verify, (verify) ? strlen(verify) : 0)
+/* Variant with an explicit verify length, for values with embedded NULs. */
+#define check_n(t, tag, buf, verify, vlen) \
+	check_impl(__LINE__, t, tag, buf, verify, vlen)
 
 static void
-check_impl(int lineno, enum encoding_type type, char *tagname, char *xmlbuf, char *verify) {
+check_impl(int lineno, enum encoding_type type, char *tagname, char *xmlbuf, char *verify, size_t verlen) {
 	size_t xmllen = strlen(xmlbuf);
-	size_t verlen = verify ? strlen(verify) : 0;
 	asn_TYPE_descriptor_t *td = &asn_DEF_OCTET_STRING;
 	OCTET_STRING_t *st = 0;
 	OCTET_STRING_t **stp = &st;
@@ -139,6 +142,12 @@ main() {
 	check(UTF8, "z", "<z>a&#5000000000;b</z>", "a&#5000000000;b");
 	check(UTF8, "z", "<z>a&#300</z>", "a&#300");
 	check(UTF8, "z", "<z>a&#-300;</z>", "a&#-300;");
+	/* Zero-valued reference is valid and carries a NUL octet. */
+	check_n(UTF8, "z", "<z>a&#0;b</z>", "a\0b", 3);
+	check_n(UTF8, "z", "<z>a&#x0;b</z>", "a\0b", 3);
+	/* Empty reference (no digits) is malformed and must fail. */
+	check(UTF8, "z", "<z>a&#;b</z>", 0);
+	check(UTF8, "z", "<z>a&#x;b</z>", 0);
 	check(UTF8, "z", "<z>a<ff/>b</z>", "a\014b");
 	check(UTF8, "z", "<z>a<soh/>b</z>", "a\001b");
 	check(UTF8, "z", "<z>a<bel/></z>", "a\007");
