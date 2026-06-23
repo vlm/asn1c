@@ -383,6 +383,7 @@ SET_OF__encode_sorted(const asn_TYPE_member_t *elm,
             erval = elm->type->op->der_encoder(elm->type, memb_ptr, 0, elm->tag,
                                                _el_addbytes, encoding_el);
             break;
+#ifndef ASN_DISABLE_PER_SUPPORT
         case SOES_CUPER:
             erval = uper_encode(elm->type,
                                 elm->encoding_constraints.per_constraints,
@@ -393,6 +394,7 @@ SET_OF__encode_sorted(const asn_TYPE_member_t *elm,
                 encoding_el->bits_unused = (8 - extra_bits) & 0x7;
             }
             break;
+#endif
         default:
             assert(!"Unreachable");
             break;
