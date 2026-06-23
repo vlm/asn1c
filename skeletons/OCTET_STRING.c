@@ -119,7 +119,7 @@ asn_TYPE_descriptor_t asn_DEF_OCTET_STRING = {
 /*
  * The main reason why ASN.1 is still alive is that too much time and effort
  * is necessary for learning it more or less adequately, thus creating a gut
- * necessity to demonstrate that aquired skill everywhere afterwards.
+ * necessity to demonstrate that acquired skill everywhere afterwards.
  * No, I am not going to explain what the following stuff is.
  */
 struct _stack_el {

@@ -190,7 +190,7 @@ int genhash_iter_init(genhash_iter_t *iter,
  * Returns the key and value of each element in optional (key) and (value),
  * which must be passed as the pointers to pointers (hence these ***'s).
  * OWNERSHIP:
- * 	The key and value are pointers to the internally manageed locations.
+ * 	The key and value are pointers to the internally managed locations.
  * RETURN VALUES:
  * 	0 if no more elements will be returned, otherwise 1.
  * EXAMPLE:
@@ -207,7 +207,7 @@ int genhash_iter(genhash_iter_t *iter, void */***/key, void */***/val);
 /*
  * Dispose of the iterator.
  * After this operations, the iterator contents unusable
- * and shall not be accesed. (genhash_iter_init() is OK).
+ * and shall not be accessed. (genhash_iter_init() is OK).
  */
 void genhash_iter_done(genhash_iter_t *iter);
 
