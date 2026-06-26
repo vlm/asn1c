@@ -208,6 +208,8 @@ Check out https://clang.llvm.org/docs/AddressSanitizer.html#how-to-build])])
     CFLAGS="${CFLAGS} ${SANITIZER_CFLAGS}"
     AC_RUN_IFELSE([AC_LANG_PROGRAM()], [
         ASAN_ENV_FLAGS="${ASAN_ENV_FLAGS} ASAN_OPTIONS=detect_leaks=1"
+    ], [], [
+        AC_MSG_WARN([cannot determine ASan leak-detection support while cross-compiling; assuming detect_leaks=1 is unsupported])
     ])
     CFLAGS="${save_cflags}"
     unset ASAN_OPTIONS
