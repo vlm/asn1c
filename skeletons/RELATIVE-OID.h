@@ -31,6 +31,8 @@ asn_random_fill_f  RELATIVE_OID_random_fill;
 #define RELATIVE_OID_encode_oer   oer_encode_primitive
 #define RELATIVE_OID_decode_uper  OCTET_STRING_decode_uper
 #define RELATIVE_OID_encode_uper  OCTET_STRING_encode_uper
+#define RELATIVE_OID_decode_aper  OCTET_STRING_decode_aper
+#define RELATIVE_OID_encode_aper  OCTET_STRING_encode_aper
 
 /**********************************
  * Some handy conversion routines *

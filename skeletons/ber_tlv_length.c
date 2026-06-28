@@ -123,7 +123,7 @@ ber_skip_length(const asn_codec_ctx_t *opt_codec_ctx,
 
 		ptr = ((const char *)ptr) + tl + ll;
 		size -= tl + ll;
- 	}
+	}
 
 	/* UNREACHABLE */
 }
