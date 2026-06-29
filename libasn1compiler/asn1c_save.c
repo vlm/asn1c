@@ -353,6 +353,15 @@ asn1c__save_autotools_example(const char *destdir,
 	return 0;
 }
 
+static const char *basename(const char *filename) {
+	char *lastslash = strrchr(filename, '/');
+
+	if (lastslash)
+		return lastslash + 1;
+	else
+		return filename;
+}
+
 static int
 can_generate_pdu_collection(arg_t *arg) {
     abuf *buf = generate_pdu_collection(arg);
@@ -613,7 +622,7 @@ generate_preamble(arg_t *arg, FILE *fp, int optc, char **argv) {
 	" * From ASN.1 module \"%s\"\n"
 	" * \tfound in \"%s\"\n",
 		arg->expr->module->ModuleName,
-		arg->expr->module->source_file_name);
+		basename(arg->expr->module->source_file_name));
 	if(optc > 1) {
 		int i;
 		safe_fprintf(fp, " * \t`asn1c ");
@@ -813,7 +822,7 @@ generate_pdu_collection(arg_t *arg) {
             if(!mod_printed++) {
                 abuf_printf(buf, "\t/* From module %s in %s */\n",
                              arg->expr->module->ModuleName,
-                             arg->expr->module->source_file_name);
+                             basename(arg->expr->module->source_file_name));
             }
             abuf_printf(buf, "\t&asn_DEF_%s,\t\n",
                          asn1c_make_identifier(0, arg->expr, NULL));
