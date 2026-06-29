@@ -20,6 +20,8 @@ xer_type_decoder_f Short_decode_xer;
 xer_type_encoder_f Short_encode_xer;
 per_type_decoder_f Short_decode_uper;
 per_type_encoder_f Short_encode_uper;
+per_type_decoder_f Short_decode_aper;
+per_type_encoder_f Short_encode_aper;
 
 /*** <<< CODE [Short] >>> ***/
 
@@ -103,6 +105,8 @@ xer_type_decoder_f Alias_decode_xer;
 xer_type_encoder_f Alias_encode_xer;
 per_type_decoder_f Alias_decode_uper;
 per_type_encoder_f Alias_encode_uper;
+per_type_decoder_f Alias_decode_aper;
+per_type_encoder_f Alias_encode_aper;
 
 /*** <<< CODE [Alias] >>> ***/
 

@@ -29,6 +29,8 @@ der_type_encoder_f ANY_encode_der;
 xer_type_encoder_f ANY_encode_xer;
 per_type_decoder_f ANY_decode_uper;
 per_type_encoder_f ANY_encode_uper;
+per_type_decoder_f ANY_decode_aper;
+per_type_encoder_f ANY_encode_aper;
 
 #define ANY_free         OCTET_STRING_free
 #define ANY_print        OCTET_STRING_print
@@ -44,10 +46,13 @@ per_type_encoder_f ANY_encode_uper;
 
 /* Convert another ASN.1 type into the ANY. This implies DER encoding. */
 int ANY_fromType(ANY_t *, asn_TYPE_descriptor_t *td, void *struct_ptr);
+int ANY_fromType_aper(ANY_t *st, asn_TYPE_descriptor_t *td, void *sptr);
 ANY_t *ANY_new_fromType(asn_TYPE_descriptor_t *td, void *struct_ptr);
+ANY_t *ANY_new_fromType_aper(asn_TYPE_descriptor_t *td, void *sptr);
 
 /* Convert the contents of the ANY type into the specified type. */
 int ANY_to_type(ANY_t *, asn_TYPE_descriptor_t *td, void **struct_ptr);
+int ANY_to_type_aper(ANY_t *, asn_TYPE_descriptor_t *td, void **struct_ptr);
 
 #define	ANY_fromBuf(s, buf, size)	OCTET_STRING_fromBuf((s), (buf), (size))
 #define	ANY_new_fromBuf(buf, size)	OCTET_STRING_new_fromBuf(	\

@@ -153,6 +153,8 @@ typedef struct asn_TYPE_operation_s {
     oer_type_encoder_f *oer_encoder;      /* Canonical OER encoder */
     per_type_decoder_f *uper_decoder;     /* Unaligned PER decoder */
     per_type_encoder_f *uper_encoder;     /* Unaligned PER encoder */
+    per_type_decoder_f *aper_decoder;     /* Aligned PER decoder */
+    per_type_encoder_f *aper_encoder;     /* Aligned PER encoder */
     asn_random_fill_f *random_fill;       /* Initialize with a random value */
     asn_outmost_tag_f *outmost_tag;       /* <optional, internal> */
 } asn_TYPE_operation_t;

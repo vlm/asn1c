@@ -51,6 +51,8 @@ enum asn_transfer_syntax {
      */
     ATS_UNALIGNED_BASIC_PER,
     ATS_UNALIGNED_CANONICAL_PER,
+    ATS_ALIGNED_BASIC_PER,
+    ATS_ALIGNED_CANONICAL_PER,
     /*
      * X.693:
      * XER: XML Encoding Rules.
