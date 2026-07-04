@@ -355,8 +355,9 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		csiz->flags & APC_EXTENSIBLE ? "extensible" : "non-extensible",
 		csiz->lower_bound, csiz->upper_bound, csiz->effective_bits);
 
+	int inext = 0;
 	if(csiz->flags & APC_EXTENSIBLE) {
-		int inext = per_get_few_bits(pd, 1);
+		inext = per_get_few_bits(pd, 1);
 		if(inext < 0) RETURN(RC_WMORE);
 		if(inext) {
 			csiz = &asn_DEF_BIT_STRING_constraint_size;
@@ -373,7 +374,9 @@ BIT_STRING_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	/* X.691, #16.5: zero-length encoding */
 	/* X.691, #16.6: short fixed length encoding (up to 2 octets) */
 	/* X.691, #16.7: long fixed length encoding (up to 64K octets) */
-	if(csiz->effective_bits == 0) {
+	/* X.691, #16.6: extensible, ext = 1, encode length and value; otherwise,
+		encode as if no extension present */
+	if(csiz->effective_bits == 0 && !inext) {
 		int ret;
         ASN_DEBUG("Encoding BIT STRING size %ld", csiz->upper_bound);
         ret = per_get_many_bits(pd, st->buf, 0, csiz->upper_bound);

@@ -20,6 +20,7 @@ extern "C" {
 #define OPEN_TYPE_decode_xer NULL
 #define OPEN_TYPE_encode_xer CHOICE_encode_xer
 #define OPEN_TYPE_decode_uper NULL
+#define OPEN_TYPE_decode_oer NULL
 
 extern asn_TYPE_operation_t asn_OP_OPEN_TYPE;
 
@@ -55,6 +56,13 @@ asn_enc_rval_t OPEN_TYPE_encode_uper(
     const asn_TYPE_descriptor_t *type_descriptor,
     const asn_per_constraints_t *constraints, const void *struct_ptr,
     asn_per_outp_t *per_output);
+
+asn_enc_rval_t OPEN_TYPE_encode_oer(
+    const struct asn_TYPE_descriptor_s *td,
+    const asn_oer_constraints_t *constraints,
+    const void *sptr,
+    asn_app_consume_bytes_f *cb,
+    void *app_key);
 
 #ifdef __cplusplus
 }
