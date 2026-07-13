@@ -85,6 +85,8 @@ NativeEnumerated_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
     }
 }
 
+#ifdef	ASN_DISABLE_OER_SUPPORT
+
 asn_dec_rval_t
 NativeEnumerated_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
                              const asn_TYPE_descriptor_t *td,
@@ -223,4 +225,6 @@ NativeEnumerated_encode_uper(const asn_TYPE_descriptor_t *td,
 
 	ASN__ENCODED_OK(er);
 }
+
+#endif
 
