@@ -1331,6 +1331,11 @@ SEQUENCE__handle_extensions(const asn_TYPE_descriptor_t *td, const void *sptr,
 			present = 1;
 		}
 
+        /* Eliminate default values */
+        if(present && elm->default_value_cmp
+           && elm->default_value_cmp(*memb_ptr2) == 0)
+            present = 0;
+
         ASN_DEBUG("checking %s:%s (@%" ASN_PRI_SIZE ") present => %d", elm->name,
                   elm->type->name, edx, present);
         exts_count++;

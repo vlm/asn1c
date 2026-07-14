@@ -1,0 +1,34 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .168
+
+-- UPER canonical encoding of a DEFAULT-valued SEQUENCE member (X.691
+-- #18.2 / #18.4): when the actual value equals the DEFAULT, the member
+-- must be omitted (root: skip the field after "present" bit; extension
+-- addition group: report it as absent so it does not contribute to the
+-- extension presence bit-map / count / open-type list). asn1c already
+-- did this correctly for root-position DEFAULT members but not for
+-- DEFAULT members appearing as extension additions after "...".
+
+ModuleSequenceDefaultExtension
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 168 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	-- Root-position DEFAULT, used as a control/reference.
+	R1 ::= SEQUENCE {
+		x INTEGER(0..15),
+		y INTEGER(0..15) DEFAULT 5
+	}
+
+	-- DEFAULT as an extension addition.
+	R2 ::= SEQUENCE {
+		x INTEGER(0..15),
+		...,
+		y INTEGER(0..15) DEFAULT 5
+	}
+
+END
