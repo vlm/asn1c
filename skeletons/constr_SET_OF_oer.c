@@ -170,6 +170,12 @@ SET_OF_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
 
         ASN_DEBUG("OER SET OF %s Decoding PHASE 1", td->name);
 
+        if(ctx->left > 0 && !elm->type->op->oer_decoder) {
+            ASN_DEBUG("Element type %s of %s has no OER decoder",
+                      elm->type->name, td->name);
+            RETURN(RC_FAIL);
+        }
+
         for(; ctx->left > 0; ctx->left--) {
             asn_dec_rval_t rv = elm->type->op->oer_decoder(
                 opt_codec_ctx, elm->type,
@@ -255,6 +261,12 @@ SET_OF_encode_oer(const asn_TYPE_descriptor_t *td,
 
     elm = td->elements;
     list = _A_CSET_FROM_VOID(sptr);
+
+    if(list->count > 0 && !elm->type->op->oer_encoder) {
+        ASN_DEBUG("Element type %s of %s has no OER encoder",
+                  elm->type->name, td->name);
+        ASN__ENCODE_FAILED;
+    }
 
     qty_len = oer_put_quantity(list->count, cb, app_key);
     if(qty_len < 0) {

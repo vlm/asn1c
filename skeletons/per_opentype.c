@@ -108,6 +108,12 @@ uper_open_type_get_simple(const asn_codec_ctx_t *ctx,
 	ASN_DEBUG("Getting open type %s encoded in %ld bytes", td->name,
 		(long)bufLen);
 
+	if(!td->op->uper_decoder) {
+		ASN_DEBUG("No UPER decoder for open type %s", td->name);
+		FREEMEM(buf);
+		ASN__DECODE_FAILED;
+	}
+
 	memset(&spd, 0, sizeof(spd));
 	spd.buffer = buf;
 	spd.nbits = bufLen << 3;

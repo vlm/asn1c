@@ -1171,6 +1171,11 @@ SEQUENCE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 
 		if(elm->flags & ATF_OPEN_TYPE) {
 			rv = OPEN_TYPE_uper_get(opt_codec_ctx, td, st, elm, pd);
+		} else if(!elm->type->op->uper_decoder) {
+			ASN_DEBUG("Member %s->%s has no UPER decoder",
+				td->name, elm->name);
+			FREEMEM(opres);
+			ASN__DECODE_FAILED;
 		} else {
 			rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
 					elm->encoding_constraints.per_constraints, memb_ptr2, pd);
@@ -1456,6 +1461,11 @@ SEQUENCE_encode_uper(const asn_TYPE_descriptor_t *td,
 			continue;
 
         ASN_DEBUG("Encoding %s->%s:%s", td->name, elm->name, elm->type->name);
+        if(!elm->type->op->uper_encoder) {
+            ASN_DEBUG("Member %s->%s has no UPER encoder",
+                td->name, elm->name);
+            ASN__ENCODE_FAILED;
+        }
         er = elm->type->op->uper_encoder(
             elm->type, elm->encoding_constraints.per_constraints, *memb_ptr2,
             po);

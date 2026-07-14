@@ -197,6 +197,10 @@ SEQUENCE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
         microphase2_decode_continues:
             if(elm->flags & ATF_OPEN_TYPE) {
                 rval = OPEN_TYPE_oer_get(opt_codec_ctx, td, st, elm, ptr, size);
+            } else if(!elm->type->op->oer_decoder) {
+                ASN_DEBUG("Member %s->%s has no OER decoder",
+                          td->name, elm->name);
+                RETURN(RC_FAIL);
             } else {
                 void *save_memb_ptr; /* Temporary reference. */
                 void **memb_ptr2;  /* Pointer to a pointer to a memmber */

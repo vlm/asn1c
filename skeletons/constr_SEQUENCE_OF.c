@@ -154,6 +154,12 @@ SEQUENCE_OF_encode_uper(const asn_TYPE_descriptor_t *td,
 	if(!sptr) ASN__ENCODE_FAILED;
     list = _A_CSEQUENCE_FROM_VOID(sptr);
 
+    if(list->count > 0 && !elm->type->op->uper_encoder) {
+        ASN_DEBUG("Element type %s of %s has no UPER encoder",
+                  elm->type->name, td->name);
+        ASN__ENCODE_FAILED;
+    }
+
     er.encoded = 0;
 
 	ASN_DEBUG("Encoding %s as SEQUENCE OF (%d)", td->name, list->count);

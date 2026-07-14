@@ -16,6 +16,14 @@ oer_encode(const asn_TYPE_descriptor_t *type_descriptor, const void *struct_ptr,
     /*
      * Invoke type-specific encoder.
      */
+    if(!type_descriptor->op->oer_encoder) {
+        asn_enc_rval_t er;
+        er.encoded = -1;
+        er.failed_type = type_descriptor;
+        er.structure_ptr = struct_ptr;
+        ASN_DEBUG("No OER encoder for type %s", type_descriptor->name);
+        return er;
+    }
     return type_descriptor->op->oer_encoder(
         type_descriptor, 0,
         struct_ptr, /* Pointer to the destination structure */
@@ -123,6 +131,11 @@ oer_open_type_put(const asn_TYPE_descriptor_t *td,
     size_t serialized_byte_count = 0;
     asn_enc_rval_t er;
     ssize_t len_len;
+
+    if(!td->op->oer_encoder) {
+        ASN_DEBUG("No OER encoder for open type %s", td->name);
+        return -1;
+    }
 
     er = td->op->oer_encoder(td, constraints, sptr, oer__count_bytes,
                              &serialized_byte_count);

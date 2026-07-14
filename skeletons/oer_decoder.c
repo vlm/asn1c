@@ -33,6 +33,13 @@ oer_decode(const asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Invoke type-specific decoder.
 	 */
+	if(!type_descriptor->op->oer_decoder) {
+		asn_dec_rval_t rv;
+		ASN_DEBUG("No OER decoder for type %s", type_descriptor->name);
+		rv.code = RC_FAIL;
+		rv.consumed = 0;
+		return rv;
+	}
 	return type_descriptor->op->oer_decoder(opt_codec_ctx, type_descriptor, 0,
 		struct_ptr,	/* Pointer to the destination structure */
 		ptr, size	/* Buffer and its size */
@@ -80,6 +87,11 @@ oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
     if(size - len_len < container_len) {
         /* More data is expected */
         return 0;
+    }
+
+    if(!td->op->oer_decoder) {
+        ASN_DEBUG("No OER decoder for open type %s", td->name);
+        return -1;
     }
 
     dr = td->op->oer_decoder(opt_codec_ctx, td, constraints, struct_ptr,

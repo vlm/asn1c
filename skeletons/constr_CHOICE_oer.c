@@ -247,6 +247,10 @@ CHOICE_decode_oer(const asn_codec_ctx_t *opt_codec_ctx,
             if(got == 0) ASN__DECODE_STARVED;
             rval.code = RC_OK;
             rval.consumed = got;
+        } else if(!elm->type->op->oer_decoder) {
+            ASN_DEBUG("Member %s->%s has no OER decoder",
+                      td->name, elm->name);
+            ASN__DECODE_FAILED;
         } else {
             rval = elm->type->op->oer_decoder(
                 opt_codec_ctx, elm->type,
@@ -367,6 +371,10 @@ CHOICE_encode_oer(const asn_TYPE_descriptor_t *td,
                                memb_ptr, cb, app_key);
         if(encoded < 0) ASN__ENCODE_FAILED;
         er.encoded = tag_len + encoded;
+    } else if(!elm->type->op->oer_encoder) {
+        ASN_DEBUG("Member %s->%s has no OER encoder",
+                  td->name, elm->name);
+        ASN__ENCODE_FAILED;
     } else {
         er = elm->type->op->oer_encoder(
             elm->type, elm->encoding_constraints.oer_constraints, memb_ptr, cb,

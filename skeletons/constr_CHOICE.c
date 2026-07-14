@@ -907,6 +907,11 @@ CHOICE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	ASN_DEBUG("Discovered CHOICE %s encodes %s", td->name, elm->name);
 
 	if(ct && ct->range_bits >= 0) {
+		if(!elm->type->op->uper_decoder) {
+			ASN_DEBUG("Member %s->%s has no UPER decoder",
+				td->name, elm->name);
+			ASN__DECODE_FAILED;
+		}
 		rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
 			elm->encoding_constraints.per_constraints, memb_ptr2, pd);
 	} else {
@@ -997,6 +1002,12 @@ CHOICE_encode_uper(const asn_TYPE_descriptor_t *td,
     if(ct && ct->range_bits >= 0) {
         if(per_put_few_bits(po, present_enc, ct->range_bits))
             ASN__ENCODE_FAILED;
+
+        if(!elm->type->op->uper_encoder) {
+            ASN_DEBUG("Member %s->%s has no UPER encoder",
+                td->name, elm->name);
+            ASN__ENCODE_FAILED;
+        }
 
         return elm->type->op->uper_encoder(
             elm->type, elm->encoding_constraints.per_constraints, memb_ptr, po);
