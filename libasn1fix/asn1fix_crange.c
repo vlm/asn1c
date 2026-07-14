@@ -824,7 +824,7 @@ asn1constraint_compute_OER_range(const char *dbg_name, asn1p_expr_type_e expr_ty
 asn1cnst_range_t *
 asn1constraint_compute_PER_range(const char *dbg_name, asn1p_expr_type_e expr_type, const asn1p_constraint_t *ct, enum asn1p_constraint_type_e requested_ct_type, const asn1cnst_range_t *minmax, int *exmet, enum cpr_flags cpr_flags) {
     if(0) return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags | CPR_strict_PER_visibility);
-    /* Due to pecularities of PER constraint handling, we don't enable strict PER visibility upfront here. */
+    /* Due to peculiarities of PER constraint handling, we don't enable strict PER visibility upfront here. */
     return asn1constraint_compute_constraint_range(dbg_name, expr_type, ct, requested_ct_type, minmax, exmet, cpr_flags);
 }
 

@@ -25,7 +25,7 @@ BEGIN
 
 	blah blah blah
 	/* nested comment */
-	-- this is an insignificant coment
+	-- this is an insignificant comment
 	-- this is a comment too -- and this is a comment
 
  */

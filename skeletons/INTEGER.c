@@ -684,7 +684,7 @@ INTEGER_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	/* #12.2.3 */
 	if(ct && ct->lower_bound) {
 		/*
-		 * TODO: replace by in-place arithmetics.
+		 * TODO: replace by in-place arithmetic.
 		 */
 		long value = 0;
 		if(asn_INTEGER2long(st, &value))

@@ -349,7 +349,7 @@ _asn1f_parse_class_object_data(arg_t *arg, asn1p_expr_t *eclass,
 			cell = asn1p_ioc_row_cell_fetch(row,
 					chunk->content.token);
 			if(cell == NULL) {
-				FATAL("Field reference %s found in WITH SYNAX {} clause does not match actual field in Object Class %s",
+				FATAL("Field reference %s found in WITH SYNTAX {} clause does not match actual field in Object Class %s",
 					chunk->content.token,
 					eclass->Identifier, eclass->_lineno);
 				if(newpos) *newpos = buf;

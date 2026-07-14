@@ -121,7 +121,7 @@ asn1c_open_file(const char *destdir, const char *name, const char *ext,
 	if(opt_tmpname) {
 		*opt_tmpname = strdup(fname);
 		if(*opt_tmpname) {
-			/* Successfull */
+			/* Successful */
 		} else {
 			if(created) unlink(fname);
 			fclose(fp);

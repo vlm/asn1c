@@ -138,7 +138,7 @@ uper_open_type_get_simple(const asn_codec_ctx_t *ctx,
 	} else {
 		FREEMEM(buf);
 		/* rv.code could be RC_WMORE, nonsense in this context */
-		rv.code = RC_FAIL; /* Noone would give us more */
+		rv.code = RC_FAIL; /* No one would give us more */
 	}
 
 	return rv;

@@ -65,7 +65,7 @@
 static unsigned _fetch_present_idx(const void *struct_ptr, unsigned off,
                                    unsigned size);
 static void _set_present_idx(void *sptr, unsigned offset, unsigned size,
-                             unsigned pres);
+                             unsigned present);
 static const void *_get_member_ptr(const asn_TYPE_descriptor_t *,
                                    const void *sptr, asn_TYPE_member_t **elm,
                                    unsigned *present);
@@ -162,7 +162,7 @@ CHOICE_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 			}
 
 			if(ctx->left >= 0) {
-				/* ?Substracted below! */
+				/* ?Subtracted below! */
 				ctx->left += rval.consumed;
 			}
 			ADVANCE(rval.consumed);
