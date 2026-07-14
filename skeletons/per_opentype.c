@@ -274,6 +274,20 @@ uper_open_type_skip(const asn_codec_ctx_t *ctx, asn_per_data_t *pd) {
     s_op.uper_decoder = uper_sot_suck;
 
 	rv = uper_open_type_get(ctx, &s_td, 0, 0, pd);
+	/*
+	 * The rich rval code is collapsed to a boolean here, so callers
+	 * (constr_SEQUENCE.c, constr_CHOICE.c) uniformly map any failure to
+	 * ASN__DECODE_STARVED (RC_WMORE). uper_open_type_get() can in principle
+	 * report RC_FAIL as well -- for the skip use case only via an
+	 * out-of-memory REALLOC in uper_open_type_get_simple(), since the
+	 * uper_sot_suck() decoder itself never fails and an integral-octet open
+	 * type leaves no non-zero padding. Distinguishing that one case would
+	 * require widening this public API's return contract and updating both
+	 * callers, for a state (OOM mid-decode) where the whole decode is
+	 * already aborting and reporting "want more data" is imprecise but
+	 * harmless: the buffer is not advanced and no caller recovers by
+	 * retrying. The conservative STARVED mapping is therefore retained.
+	 */
 	if(rv.code != RC_OK)
 		return -1;
 	else
@@ -295,7 +309,17 @@ uper_sot_suck(const asn_codec_ctx_t *ctx, const asn_TYPE_descriptor_t *td,
 	(void)constraints;
 	(void)sptr;
 
-	while(per_get_few_bits(pd, 24) >= 0);
+	/*
+	 * Consume (skip) the open type content of an unrecognized extension.
+	 * The content is always an integral number of octets (X.691), so step
+	 * 8 bits at a time. per_get_few_bits() has all-or-nothing semantics:
+	 * a 24-bit step reads nothing once fewer than 24 bits remain, so any
+	 * open type whose length is not a multiple of 3 octets is under-read,
+	 * leaving residual bits that derail decoding of the following fields
+	 * (e.g. a 1-octet extension fails with "Too large padding").
+	 * The step MUST stay a divisor of 8.
+	 */
+	while(per_get_few_bits(pd, 8) >= 0);
 
 	rv.code = RC_OK;
 	rv.consumed = pd->moved;
