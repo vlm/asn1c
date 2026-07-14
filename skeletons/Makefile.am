@@ -20,10 +20,19 @@ uninstall-local:
 
 check_LTLIBRARIES =             \
     libasn1cskeletons.la        \
-    libasn1cskeletons_c89.la
+    libasn1cskeletons_c89.la    \
+    libasn1cskeletons_strict.la
 
 libasn1cskeletons_c89_la_CFLAGS = $(SKELETONS_CFLAGS)
 libasn1cskeletons_c89_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
+
+# Variant of the skeletons library built with -DASN_REJECT_UNKNOWN_EXTENSIONS
+# (see asn_internal.h), used solely by
+# tests/tests-skeletons/check-PER-strict-ext.c to exercise the strict,
+# clean-reject behavior of the three unknown-extension decode sites without
+# affecting the default library used by every other test.
+libasn1cskeletons_strict_la_CFLAGS = $(TESTSUITE_CFLAGS) -DASN_REJECT_UNKNOWN_EXTENSIONS
+libasn1cskeletons_strict_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
 
 libasn1cskeletons_la_CFLAGS = $(TESTSUITE_CFLAGS)
 libasn1cskeletons_la_SOURCES =                  \
@@ -117,5 +126,9 @@ check_PROGRAMS += check-converter_c89_32_example
 check_converter_c89_32_example_CFLAGS = $(CFLAGS_M32) -DNO_ASN_PDU
 check_converter_c89_32_example_SOURCES = converter-example.c
 check_converter_c89_32_example_LDADD = libasn1cskeletons_c89_32.la
+
+check_LTLIBRARIES += libasn1cskeletons_strict_32.la
+libasn1cskeletons_strict_32_la_CFLAGS = $(CFLAGS_M32) -Wno-format -DASN_REJECT_UNKNOWN_EXTENSIONS
+libasn1cskeletons_strict_32_la_SOURCES = $(libasn1cskeletons_la_SOURCES)
 endif
 

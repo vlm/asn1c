@@ -17,7 +17,22 @@ check_PROGRAMS =            \
     check-OER-NativeEnumerated \
     check-PER-support       \
     check-PER-UniversalString  \
-    check-PER-INTEGER
+    check-PER-INTEGER       \
+    check-PER-opentype      \
+    check-PER-NativeEnumerated \
+    check-PER-nsnnwn        \
+    check-PER-strict-ext
+
+# check-PER-strict-ext.c asserts that, under -DASN_REJECT_UNKNOWN_EXTENSIONS
+# (see asn_internal.h), the three unknown-extension decode sites (UPER CHOICE,
+# UPER NativeEnumerated, OER CHOICE) all cleanly RC_FAIL instead of skipping
+# or relaying. It links against the skeletons library built with that macro
+# (libasn1cskeletons_strict.la), rather than the default libasn1cskeletons.la,
+# so that the skeleton .c sources it exercises are actually compiled with the
+# macro defined.
+check_PER_strict_ext_CFLAGS = -DASN_REJECT_UNKNOWN_EXTENSIONS
+check_PER_strict_ext_SOURCES = check-PER-strict-ext.c
+check_PER_strict_ext_LDADD = -lm $(top_builddir)/skeletons/libasn1cskeletons_strict.la
 
 if EXPLICIT_M32
 check_PROGRAMS +=                   \
@@ -37,7 +52,11 @@ check_PROGRAMS +=                   \
     check-32-OER-NativeEnumerated   \
     check-32-PER-support            \
     check-32-PER-UniversalString    \
-    check-32-PER-INTEGER
+    check-32-PER-INTEGER            \
+    check-32-PER-opentype           \
+    check-32-PER-NativeEnumerated   \
+    check-32-PER-nsnnwn             \
+    check-32-PER-strict-ext
 
 check_32_ber_tlv_tag_CFLAGS=$(CFLAGS_M32)
 check_32_ber_tlv_tag_LDADD=$(LDADD_32)
@@ -90,6 +109,18 @@ check_32_PER_UniversalString_SOURCES=check-PER-UniversalString.c
 check_32_PER_INTEGER_CFLAGS=$(CFLAGS_M32)
 check_32_PER_INTEGER_LDADD=$(LDADD_32)
 check_32_PER_INTEGER_SOURCES=check-PER-INTEGER.c
+check_32_PER_opentype_CFLAGS=$(CFLAGS_M32)
+check_32_PER_opentype_LDADD=$(LDADD_32)
+check_32_PER_opentype_SOURCES=check-PER-opentype.c
+check_32_PER_NativeEnumerated_CFLAGS=$(CFLAGS_M32)
+check_32_PER_NativeEnumerated_LDADD=$(LDADD_32)
+check_32_PER_NativeEnumerated_SOURCES=check-PER-NativeEnumerated.c
+check_32_PER_nsnnwn_CFLAGS=$(CFLAGS_M32)
+check_32_PER_nsnnwn_LDADD=$(LDADD_32)
+check_32_PER_nsnnwn_SOURCES=check-PER-nsnnwn.c
+check_32_PER_strict_ext_CFLAGS=$(CFLAGS_M32) -DASN_REJECT_UNKNOWN_EXTENSIONS
+check_32_PER_strict_ext_LDADD=-lm $(top_builddir)/skeletons/libasn1cskeletons_strict_32.la
+check_32_PER_strict_ext_SOURCES=check-PER-strict-ext.c
 
 LDADD_32 = -lm $(top_builddir)/skeletons/libasn1cskeletons_c89_32.la
 endif

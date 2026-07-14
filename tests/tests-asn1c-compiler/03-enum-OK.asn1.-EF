@@ -7,7 +7,7 @@ Enum1 ::= ENUMERATED {
     red(0),
     green(1),
     blue(4),
-    alpha(5),
+    alpha(2),
     ...
 }
 
@@ -16,7 +16,7 @@ Enum2 ::= ENUMERATED {
     green(1),
     blue(45),
     orange(23),
-    alpha(46),
+    alpha(2),
     ...,
     beta(12),
     gamma(103)
@@ -41,7 +41,7 @@ Enum5 ::= ENUMERATED {
     a(0),
     z(25),
     ...,
-    d(26)
+    d(1)
 }
 
 END

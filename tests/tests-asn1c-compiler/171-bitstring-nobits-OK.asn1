@@ -1,0 +1,36 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .171
+
+ModuleBitStringCompactify
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 171 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	-- No NamedBitList: trailing 0 bits are significant (X.680 #22.7)
+	-- and must NOT be stripped by the UPER encoder (fix for issue #11).
+	T ::= BIT STRING (SIZE(4,...,8))
+
+	-- Has a NamedBitList: trailing 0 bits remain insignificant and
+	-- may be compacted away by the UPER encoder, as before.
+	Flags ::= BIT STRING { a(0), b(1), c(2) } (SIZE(0..8))
+
+	-- Unconstrained BIT STRING, no NamedBitList.
+	U ::= BIT STRING
+
+	-- SEQUENCE with an inline NamedBitList BIT STRING member:
+	-- the member table must route to the member's own specifics
+	-- (has_named_bits=1) so trailing 0 bits keep being compacted.
+	S ::= SEQUENCE {
+		flags	BIT STRING { x(0), y(1) } (SIZE(0..8))
+	}
+
+	-- Top-level alias of a NamedBitList BIT STRING: must inherit
+	-- the aliased type's specifics (has_named_bits=1), not the
+	-- generic BIT STRING ones.
+	TAlias ::= Flags
+
+END

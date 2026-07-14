@@ -33,6 +33,13 @@ oer_decode(const asn_codec_ctx_t *opt_codec_ctx,
 	/*
 	 * Invoke type-specific decoder.
 	 */
+	if(!type_descriptor->op->oer_decoder) {
+		asn_dec_rval_t rv;
+		ASN_DEBUG("No OER decoder for type %s", type_descriptor->name);
+		rv.code = RC_FAIL;
+		rv.consumed = 0;
+		return rv;
+	}
 	return type_descriptor->op->oer_decoder(opt_codec_ctx, type_descriptor, 0,
 		struct_ptr,	/* Pointer to the destination structure */
 		ptr, size	/* Buffer and its size */
@@ -41,12 +48,31 @@ oer_decode(const asn_codec_ctx_t *opt_codec_ctx,
 
 /*
  * Open Type is encoded as a length (#8.6) followed by that number of bytes.
- * Since we're just skipping, reading the length would be enough.
+ * RETURN VALUES:
+ *       0:     More data expected than bufptr contains.
+ *      -1:     Fatal error deciphering length.
+ *      >0:     Number of bytes to skip, i.e. the length determinant itself
+ *              plus the Open Type contents it describes.
  */
 ssize_t
 oer_open_type_skip(const void *bufptr, size_t size) {
     size_t len = 0;
-    return oer_fetch_length(bufptr, size, &len);
+    ssize_t len_len = oer_fetch_length(bufptr, size, &len);
+
+    if(len_len <= 0) {
+        return len_len; /* Error or more data expected */
+    }
+
+    /*
+     * len_len can't be bigger than size, but size without len_len
+     * should be bigger or equal to the content length.
+     */
+    if(size - len_len < len) {
+        /* More data is expected */
+        return 0;
+    }
+
+    return len_len + len;
 }
 
 /*
@@ -80,6 +106,11 @@ oer_open_type_get(const asn_codec_ctx_t *opt_codec_ctx,
     if(size - len_len < container_len) {
         /* More data is expected */
         return 0;
+    }
+
+    if(!td->op->oer_decoder) {
+        ASN_DEBUG("No OER decoder for open type %s", td->name);
+        return -1;
     }
 
     dr = td->op->oer_decoder(opt_codec_ctx, td, constraints, struct_ptr,

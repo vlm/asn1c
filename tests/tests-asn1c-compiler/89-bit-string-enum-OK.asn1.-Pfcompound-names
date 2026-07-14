@@ -29,15 +29,48 @@ typedef struct T {
 
 /*** <<< FUNC-DECLS [T] >>> ***/
 
+/* extern asn_TYPE_descriptor_t asn_DEF_bs_2;	// (Use -fall-defs-global to expose) */
 extern asn_TYPE_descriptor_t asn_DEF_T;
 
+/*** <<< CODE [T] >>> ***/
+
+/*
+ * This type is implemented using BIT_STRING,
+ * so here we adjust the DEF accordingly.
+ */
+
 /*** <<< STAT-DEFS [T] >>> ***/
+
+static const asn_OCTET_STRING_specifics_t asn_SPC_bs_specs_2 = {
+	sizeof(BIT_STRING_t),
+	offsetof(BIT_STRING_t, _asn_ctx),
+	ASN_OSUBV_BIT,
+	1	/* Has NamedBitList: trailing 0 bits are insignificant */
+};
+static const ber_tlv_tag_t asn_DEF_bs_tags_2[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_bs_2 = {
+	"bs",
+	"bs",
+	&asn_OP_BIT_STRING,
+	asn_DEF_bs_tags_2,
+	sizeof(asn_DEF_bs_tags_2)
+		/sizeof(asn_DEF_bs_tags_2[0]), /* 1 */
+	asn_DEF_bs_tags_2,	/* Same as above */
+	sizeof(asn_DEF_bs_tags_2)
+		/sizeof(asn_DEF_bs_tags_2[0]), /* 1 */
+	{ 0, 0, BIT_STRING_constraint },
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_bs_specs_2	/* Additional specs */
+};
 
 static asn_TYPE_member_t asn_MBR_T_1[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct T, choice.bs),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_BIT_STRING,
+		.type = &asn_DEF_bs_2,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
 		0, 0, /* No default value */

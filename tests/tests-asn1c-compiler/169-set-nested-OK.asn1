@@ -1,0 +1,84 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .169
+
+-- asn1c had no PER codec implementation for the SET type
+-- (skeletons/constr_SET.c's asn_OP_SET left uper_decoder and uper_encoder
+-- as null function pointers), so a SET nested inside a PER-encoded PDU
+-- crashed with SIGSEGV at the unguarded member-level call sites
+-- (issue #12). The UPER codec for extension-free SETs is now implemented
+-- per X.691 #20: same as SEQUENCE, but the root components are
+-- transmitted in the canonical order of their tags.
+--
+-- Types in this module:
+--   M/S:  the original issue #12 reproducer, a SET nested in a
+--         SEQUENCE. {s {a 1, b TRUE}} must encode as 01 80.
+--   S2:   declaration order (b, a) differs from canonical tag order
+--         (a [1], b [2]); exercises the tag2el-driven reordering.
+--   S3:   DEFAULT + OPTIONAL members; exercises the presence bitmap
+--         and the canonical DEFAULT value elimination.
+--   S4/CH: untagged CHOICE member of a SET; the tag map (tag2el) then
+--         carries one entry per possible CHOICE tag and the canonical
+--         order must sort the CHOICE by its smallest tag (c [3]
+--         before n [5], although n is declared first).
+--   EmptyOD: unconstrained SEQUENCE OF; the regression driver uses it
+--         (simulating an element type without UPER codec) to pin down
+--         that the null-codec guard in the SET OF/SEQUENCE OF decoder
+--         only fires when there is at least one element to decode.
+
+ModuleSetNested
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 169 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	M ::= SEQUENCE {
+		s S
+	}
+
+	S ::= SET {
+		a INTEGER(0..255),
+		b BOOLEAN
+	}
+
+	-- Declaration order differs from the canonical tag order:
+	-- b is declared first but has the greater tag [2], so in UPER
+	-- the components are transmitted as a [1], then b [2].
+	S2 ::= SET {
+		b [2] BOOLEAN,
+		a [1] INTEGER(0..255)
+	}
+
+	-- Presence bitmap (2 bits: a, b in canonical order) plus
+	-- canonical DEFAULT value elimination for a.
+	S3 ::= SET {
+		a INTEGER(0..7) DEFAULT 5,
+		b BOOLEAN OPTIONAL,
+		c INTEGER(0..255)
+	}
+
+	-- The untagged CHOICE member c makes tag2el carry one entry per
+	-- CHOICE alternative tag ([3] and [4], both mapping to c), so
+	-- tag2el_count > elements_count and the canonical-order
+	-- reconstruction must de-duplicate. Canonical order is c (by its
+	-- smallest tag [3]), then n [5]; declaration order is n first.
+	S4 ::= SET {
+		n [5] INTEGER(0..255),
+		c CH
+	}
+
+	CH ::= CHOICE {
+		x [3] INTEGER(0..255),
+		y [4] BOOLEAN
+	}
+
+	-- Used by the regression driver to verify that when the element
+	-- type has no UPER codec (simulated there by nulling the element
+	-- operation slots), an *empty* collection still decodes and
+	-- encodes fine (the element codec is never invoked), while a
+	-- non-empty one fails cleanly instead of crashing.
+	EmptyOD ::= SEQUENCE OF ObjectDescriptor
+
+END

@@ -56,6 +56,12 @@ T_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [T] >>> ***/
 
+static const asn_OCTET_STRING_specifics_t asn_SPC_T_specs_1 = {
+	sizeof(BIT_STRING_t),
+	offsetof(BIT_STRING_t, _asn_ctx),
+	ASN_OSUBV_BIT,
+	1	/* Has NamedBitList: trailing 0 bits are insignificant */
+};
 static const ber_tlv_tag_t asn_DEF_T_tags_1[] = {
 	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
 };
@@ -71,6 +77,6 @@ asn_TYPE_descriptor_t asn_DEF_T = {
 		/sizeof(asn_DEF_T_tags_1[0]), /* 1 */
 	{ 0, 0, T_constraint },
 	0, 0,	/* Defined elsewhere */
-	&asn_SPC_BIT_STRING_specs	/* Additional specs */
+	&asn_SPC_T_specs_1	/* Additional specs */
 };
 

@@ -882,8 +882,60 @@ CHOICE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		value = uper_get_nsnnwn(pd);
 		if(value < 0) ASN__DECODE_STARVED;
 		value += specs->ext_start;
-		if((unsigned)value >= td->elements_count)
+		if((unsigned)value >= td->elements_count) {
+			/*
+			 * Unknown extension alternative: the peer selected a CHOICE
+			 * alternative added in a newer version of the type. X.691
+			 * wraps that value in an open type; skip it and present the
+			 * CHOICE as an absent selection so that an enclosing type can
+			 * keep decoding its following fields, instead of failing the
+			 * whole message (forward compatibility).
+			 *
+			 * Application-visible contract of this recovery: present==0 is
+			 * overloaded to mean both "no alternative selected" and "an
+			 * unknown extension alternative was received and skipped". The
+			 * forward-compatibility guarantee ends at decoding -- the
+			 * message decodes successfully and every field surrounding this
+			 * CHOICE is recovered, but the unknown alternative's contents
+			 * are discarded. Consequently any whole-message operation that
+			 * must revisit this CHOICE fails cleanly (never crashes) while
+			 * present==0:
+			 *   - asn_check_constraints() reports "no CHOICE element given"
+			 *     (see the else branch of CHOICE_constraint() below);
+			 *   - xer_fprint() / XER encoding of the enclosing value fails;
+			 *   - DER and UPER re-encoding fail (an absent selection is not
+			 *     encodable).
+			 * This is by design and matches the reference toolchain and asn1tools, which
+			 * likewise cannot re-encode an alternative they do not know: a
+			 * relaying application must carry the original octets rather
+			 * than decode-then-re-encode through this type.
+			 *
+			 * The skip's failure is reported conservatively as STARVED
+			 * (RC_WMORE): uper_open_type_skip() collapses every failure to
+			 * -1, and in this path the only non-starvation failure would be
+			 * an out-of-memory REALLOC deep inside uper_open_type_get(),
+			 * where the whole decode is aborting anyway (see the note in
+			 * uper_open_type_skip(), per_opentype.c).
+			 */
+#ifdef ASN_REJECT_UNKNOWN_EXTENSIONS
+			/*
+			 * Strict mode: restore the pre-fix behavior of cleanly failing
+			 * on an unknown extension alternative instead of skipping it
+			 * and presenting the CHOICE as absent. Escape hatch for callers
+			 * not yet prepared to handle present==0 meaning "unknown
+			 * extension skipped" (see ASN_REJECT_UNKNOWN_EXTENSIONS in
+			 * asn_internal.h).
+			 */
 			ASN__DECODE_FAILED;
+#else
+			if(uper_open_type_skip(opt_codec_ctx, pd))
+				ASN__DECODE_STARVED;
+			_set_present_idx(st, specs->pres_offset, specs->pres_size, 0);
+			rv.code = RC_OK;
+			rv.consumed = 0;
+			return rv;
+#endif	/* ASN_REJECT_UNKNOWN_EXTENSIONS */
+		}
 	}
 
 	/* Adjust if canonical order is different from natural order */
@@ -907,6 +959,11 @@ CHOICE_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 	ASN_DEBUG("Discovered CHOICE %s encodes %s", td->name, elm->name);
 
 	if(ct && ct->range_bits >= 0) {
+		if(!elm->type->op->uper_decoder) {
+			ASN_DEBUG("Member %s->%s has no UPER decoder",
+				td->name, elm->name);
+			ASN__DECODE_FAILED;
+		}
 		rv = elm->type->op->uper_decoder(opt_codec_ctx, elm->type,
 			elm->encoding_constraints.per_constraints, memb_ptr2, pd);
 	} else {
@@ -997,6 +1054,12 @@ CHOICE_encode_uper(const asn_TYPE_descriptor_t *td,
     if(ct && ct->range_bits >= 0) {
         if(per_put_few_bits(po, present_enc, ct->range_bits))
             ASN__ENCODE_FAILED;
+
+        if(!elm->type->op->uper_encoder) {
+            ASN_DEBUG("Member %s->%s has no UPER encoder",
+                td->name, elm->name);
+            ASN__ENCODE_FAILED;
+        }
 
         return elm->type->op->uper_encoder(
             elm->type, elm->encoding_constraints.per_constraints, memb_ptr, po);

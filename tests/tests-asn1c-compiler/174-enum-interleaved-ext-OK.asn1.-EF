@@ -1,0 +1,34 @@
+ModuleTestEnumInterleavedExt { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 174 }
+DEFINITIONS ::=
+BEGIN
+
+E ::= ENUMERATED {
+    a(0),
+    b(3),
+    ...,
+    c(1)
+}
+
+F ::= ENUMERATED {
+    a(0),
+    z(25),
+    ...,
+    d(1)
+}
+
+H ::= ENUMERATED {
+    a(0),
+    b(3),
+    ...,
+    c(1),
+    d(50)
+}
+
+G ::= ENUMERATED {
+    x(5),
+    y(2),
+    w(0)
+}
+
+END

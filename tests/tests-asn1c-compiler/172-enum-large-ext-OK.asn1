@@ -1,0 +1,32 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .172
+
+ModuleEnumLargeExt
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 172 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	-- An extensible ENUMERATED with 70 extension additions, so that
+	-- the UPER extension index (normally small non-negative whole
+	-- number, X.691 #11.6) crosses the short/long form boundary at 64.
+	-- Exercises the long-form "1" flag bit emitted by
+	-- uper_put_nsnnwn() (fix for issue #16).
+	E ::= ENUMERATED {
+		zero,
+		...,
+		add0, add1, add2, add3, add4, add5, add6, add7, add8, add9,
+		add10, add11, add12, add13, add14, add15, add16, add17,
+		add18, add19, add20, add21, add22, add23, add24, add25,
+		add26, add27, add28, add29, add30, add31, add32, add33,
+		add34, add35, add36, add37, add38, add39, add40, add41,
+		add42, add43, add44, add45, add46, add47, add48, add49,
+		add50, add51, add52, add53, add54, add55, add56, add57,
+		add58, add59, add60, add61, add62, add63, add64, add65,
+		add66, add67, add68, add69
+	}
+
+END

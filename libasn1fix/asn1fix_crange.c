@@ -963,6 +963,7 @@ asn1constraint_compute_constraint_range(
 	int expectation_met;
 	unsigned int i;
 	int ret;
+	int past_ext = 0;	/* Seen the "..." extension marker in this list */
 
 	if(!exmet) {
 		exmet = &expectation_met;
@@ -1215,6 +1216,7 @@ asn1constraint_compute_constraint_range(
 				if(errno == ERANGE) {
 					range->extensible = 1;
 					range->not_OER_visible = 1;
+					past_ext = 1;
 					continue;
 				} else {
 					_range_free(range);
@@ -1235,6 +1237,29 @@ asn1constraint_compute_constraint_range(
 				 */
 				range->extensible |= tmp->extensible;
 				range->not_OER_visible |= tmp->not_OER_visible;
+				_range_free(tmp);
+				continue;
+			}
+
+			if(past_ext && (cpr_flags & CPR_ignore_extension_additions)) {
+				/*
+				 * Elements following the "..." extension marker are
+				 * extension additions (e.g. the "3" in SIZE(2,...,3)).
+				 * When the caller asked to compute the PER-visible root
+				 * range (CPR_ignore_extension_additions), they must not
+				 * widen it: in PER an extension value is encoded with a
+				 * general length determinant, independent of which
+				 * extension sizes the version happens to name. Folding
+				 * them into the root produced encodings incompatible with
+				 * the standard and corrupted cross-version decoding.
+				 *
+				 * Every other caller (notably the generated
+				 * asn_check_constraints checker, which has no ellipsis
+				 * escape and compares against the returned root) keeps the
+				 * additions folded in, so that a value in the named
+				 * extension range still satisfies the constraint.
+				 */
+				range->extensible = 1;
 				_range_free(tmp);
 				continue;
 			}

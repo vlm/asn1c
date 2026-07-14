@@ -24,6 +24,57 @@ extern "C" {
 #define	ASN1C_ENVIRONMENT_VERSION	929	/* Compile-time version */
 int get_asn1c_environment_version(void);	/* Run-time version */
 
+/*
+ * ASN_REJECT_UNKNOWN_EXTENSIONS
+ *
+ * Compile-time escape hatch restoring strict, pre-fix rejection of unknown
+ * ASN.1 extension additions (X.691/X.696 forward-compatibility material a
+ * decoder does not know about because it was compiled against an older,
+ * shorter version of the schema).
+ *
+ * Default behavior (this macro undefined) follows the ASN.1 standard: a
+ * decoder that encounters an extension addition beyond its own version of
+ * the type does NOT fail the whole message. Instead it skips/relays the
+ * unknown material and lets an enclosing type keep decoding subsequent
+ * fields -- X.680 clause 6 requires this forward compatibility, and it is
+ * what the reference toolchain and asn1tools do as well. The three decode sites
+ * below adopted this behavior in recent fixes; the price is that decoding
+ * now can succeed while surfacing new, previously-impossible states to the
+ * caller (e.g. a CHOICE decoding successfully with no recognized
+ * alternative selected).
+ *
+ * Some applications built against the old, stricter behavior are not yet
+ * prepared to handle these new states safely. Defining
+ * ASN_REJECT_UNKNOWN_EXTENSIONS at build time restores the old, conservative
+ * behavior at exactly these sites: an unknown extension addition makes the
+ * whole decode fail cleanly (RC_FAIL) instead of being skipped or relayed.
+ * This is a blunt instrument -- it forfeits forward compatibility -- so it
+ * should only be used as a temporary escape hatch while the application is
+ * updated to handle the new states, not as a permanent posture.
+ *
+ * Sites controlled by this macro (decode-side unknown-extension handling
+ * only; encode-side behavior is unaffected):
+ *   - constr_CHOICE.c:      CHOICE_decode_uper(), unknown extension
+ *                           alternative (skip open type + present=0).
+ *   - NativeEnumerated.c:   NativeEnumerated_decode_uper(), unknown
+ *                           extension value (stored as LONG_MAX - index
+ *                           for lossless relay).
+ *   - constr_CHOICE_oer.c:  CHOICE_decode_oer(), unknown extension
+ *                           alternative (skip Open Type + present=0).
+ *
+ * Explicitly OUT of scope (unaffected by this macro, regardless of value):
+ *   - UPER SEQUENCE unknown-extension skipping (per_opentype.c /
+ *     uper_sot_suck()), OER SEQUENCE unknown-extension skipping, and the
+ *     SET codec's equivalents. These fixed genuine bugs (misaligned skip
+ *     stride, crashes) rather than introducing new decode outcomes, so
+ *     there is no well-defined "old behavior" to fall back to and no
+ *     legitimate reason for an application to depend on the broken one.
+ *   - All PER/OER *encode*-side code, including the NativeEnumerated
+ *     relay-encode branch, which simply cannot trigger when this macro is
+ *     defined (its decoder counterpart never produces the value it looks
+ *     for).
+ */
+
 #define	CALLOC(nmemb, size)	calloc(nmemb, size)
 #define	MALLOC(size)		malloc(size)
 #define	REALLOC(oldptr, size)	realloc(oldptr, size)

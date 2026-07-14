@@ -1,0 +1,46 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .166
+
+-- Forward compatibility of UPER coding of an extensible ENUMERATED
+-- (Solution C, reference-isomorphic lossless relay).
+--
+-- This module is the OLD (base) version. The test decodes enumeration
+-- values added by a NEWER version (after the ellipsis) and expects them
+-- to be accepted (RC_OK) without aliasing any known value, so fields
+-- following the enum keep decoding, and to re-encode byte-for-byte
+-- identically, so an unknown value received from one peer can be relayed
+-- to another under the same PER transfer syntax, as the reference toolchain does.
+
+ModuleUPEREnumExtension
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 166 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	E ::= ENUMERATED {
+		ee1 (0),
+		ee2 (1),
+		...
+	}
+
+	-- Sparse values: the placeholder for an unknown extension must not
+	-- alias sp2(2). Storing LONG_MAX-index (not the extension ordinal)
+	-- guarantees this.
+	S ::= ENUMERATED {
+		sp1 (0),
+		sp2 (2),
+		...
+	}
+
+	N ::= SEQUENCE {
+		a MsgCount,
+		en E,
+		b MsgCount
+	}
+
+	MsgCount ::= INTEGER (0..127)
+
+END

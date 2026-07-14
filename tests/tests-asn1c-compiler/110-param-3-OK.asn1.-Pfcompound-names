@@ -14,8 +14,8 @@ typedef enum Flag_15P0__field {
 } e_Flag_15P0__field;
 typedef enum Flag_15P1__field {
 	Flag_15P1__field_red	= 3,
-	Flag_15P1__field_green	= 4,
-	Flag_15P1__field_blue	= 5
+	Flag_15P1__field_green	= 0,
+	Flag_15P1__field_blue	= 1
 } e_Flag_15P1__field;
 
 /*** <<< TYPE-DECLS [Flag] >>> ***/
@@ -27,7 +27,7 @@ typedef struct Flag_15P0 {
 	asn_struct_ctx_t _asn_ctx;
 } Flag_15P0_t;
 typedef struct Flag_15P1 {
-	long	*field	/* DEFAULT 5 */;
+	long	*field	/* DEFAULT 1 */;
 	
 	/* Context for parsing across buffer boundaries */
 	asn_struct_ctx_t _asn_ctx;
@@ -116,17 +116,17 @@ asn_TYPE_descriptor_t asn_DEF_Flag_15P0 = {
 	&asn_SPC_Flag_15P0_specs_1	/* Additional specs */
 };
 
-static int asn_DFL_7_cmp_5(const void *sptr) {
+static int asn_DFL_7_cmp_1(const void *sptr) {
 	const long *st = sptr;
 	
 	if(!st) {
 		return -1; /* No value is not a default value */
 	}
 	
-	/* Test default value 5 */
-	return (*st != 5);
+	/* Test default value 1 */
+	return (*st != 1);
 }
-static int asn_DFL_7_set_5(void **sptr) {
+static int asn_DFL_7_set_1(void **sptr) {
 	long *st = *sptr;
 	
 	if(!st) {
@@ -134,19 +134,19 @@ static int asn_DFL_7_set_5(void **sptr) {
 		if(!st) return -1;
 	}
 	
-	/* Install default value 5 */
-	*st = 5;
+	/* Install default value 1 */
+	*st = 1;
 	return 0;
 }
 static const asn_INTEGER_enum_map_t asn_MAP_field_value2enum_7[] = {
-	{ 3,	3,	"red" },
-	{ 4,	5,	"green" },
-	{ 5,	4,	"blue" }
+	{ 0,	5,	"green" },
+	{ 1,	4,	"blue" },
+	{ 3,	3,	"red" }
 };
 static const unsigned int asn_MAP_field_enum2value_7[] = {
-	2,	/* blue(5) */
-	1,	/* green(4) */
-	0	/* red(3) */
+	1,	/* blue(1) */
+	0,	/* green(0) */
+	2	/* red(3) */
 };
 static const asn_INTEGER_specifics_t asn_SPC_field_specs_7 = {
 	asn_MAP_field_value2enum_7,	/* "tag" => N; sorted by tag */
@@ -183,8 +183,8 @@ asn_TYPE_member_t asn_MBR_Flag_15P1_6[] = {
 		.type = &asn_DEF_field_7,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints = 0 },
-		.default_value_cmp = &asn_DFL_7_cmp_5,	/* Compare DEFAULT 5 */
-		.default_value_set = &asn_DFL_7_set_5,	/* Set DEFAULT 5 */
+		.default_value_cmp = &asn_DFL_7_cmp_1,	/* Compare DEFAULT 1 */
+		.default_value_set = &asn_DFL_7_set_1,	/* Set DEFAULT 1 */
 		.name = "field"
 		},
 };

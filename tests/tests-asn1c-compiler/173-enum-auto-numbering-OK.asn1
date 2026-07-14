@@ -1,0 +1,48 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .173
+
+-- Regression test for issue #19: automatic numbering of ENUMERATED
+-- items after the extension marker "..." must assign the smallest
+-- unused non-negative value (X.680 (02/2021) 20.6), not
+-- (global max value so far) + 1. Extension additions must still be
+-- strictly increasing among themselves (X.680 20.4).
+
+ModuleTestEnumAutoNumbering
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 173 }
+	DEFINITIONS ::=
+BEGIN
+
+	-- The canonical example from X.680 (02/2021) 20.6:
+	-- automatic value for "d" is the smallest unused non-negative
+	-- integer (1), not 26 (= z's value + 1).
+	E1 ::= ENUMERATED { a, z(25), ..., d }
+
+	-- Consecutive automatic values interleaved with an explicit
+	-- extension addition: each automatic value is the smallest
+	-- unused value that is still greater than the previous
+	-- extension addition's value.
+	E2 ::= ENUMERATED { a, z(25), ..., d, e, f(30), g }
+
+	-- Root-only automatic numbering across an extension marker with
+	-- no gaps: behaves the same as before this fix (regression
+	-- guard).
+	E3 ::= ENUMERATED { x, y, ..., h }
+
+	-- Automatic numbering must not grab a value that an explicit
+	-- item declared LATER already owns: 20.6's "unused" spans the
+	-- whole enumeration, so b skips 0 (taken by c) and gets 1.
+	-- A single-pass "smallest unused so far" scheme would assign
+	-- b=0 and then reject c(0) as a collision. (The reference toolchain
+	-- assigns b=1 here.)
+	E4 ::= ENUMERATED { a(5), b, c(0) }
+
+	-- Same order-independence with a later explicit value in the
+	-- root: d skips 1 (taken by z) and gets 2, exactly as if the
+	-- type were written { a, z(1), d }. (The reference toolchain assigns d=2.)
+	E5 ::= ENUMERATED { a, d, z(1) }
+
+END

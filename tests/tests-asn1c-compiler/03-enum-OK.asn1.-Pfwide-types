@@ -9,7 +9,7 @@ typedef enum Enum1 {
 	Enum1_red	= 0,
 	Enum1_green	= 1,
 	Enum1_blue	= 4,
-	Enum1_alpha	= 5
+	Enum1_alpha	= 2
 	/*
 	 * Enumeration is extensible
 	 */
@@ -42,13 +42,13 @@ xer_type_encoder_f Enum1_encode_xer;
 static const asn_INTEGER_enum_map_t asn_MAP_Enum1_value2enum_1[] = {
 	{ 0,	3,	"red" },
 	{ 1,	5,	"green" },
-	{ 4,	4,	"blue" },
-	{ 5,	5,	"alpha" }
+	{ 2,	5,	"alpha" },
+	{ 4,	4,	"blue" }
 	/* This list is extensible */
 };
 static const unsigned int asn_MAP_Enum1_enum2value_1[] = {
-	3,	/* alpha(5) */
-	2,	/* blue(4) */
+	2,	/* alpha(2) */
+	3,	/* blue(4) */
 	1,	/* green(1) */
 	0	/* red(0) */
 	/* This list is extensible */
@@ -92,7 +92,7 @@ typedef enum Enum2 {
 	Enum2_green	= 1,
 	Enum2_blue	= 45,
 	Enum2_orange	= 23,
-	Enum2_alpha	= 46,
+	Enum2_alpha	= 2,
 	/*
 	 * Enumeration is extensible
 	 */
@@ -127,16 +127,16 @@ xer_type_encoder_f Enum2_encode_xer;
 static const asn_INTEGER_enum_map_t asn_MAP_Enum2_value2enum_1[] = {
 	{ 0,	3,	"red" },
 	{ 1,	5,	"green" },
-	{ 12,	4,	"beta" },
+	{ 2,	5,	"alpha" },
 	{ 23,	6,	"orange" },
 	{ 45,	4,	"blue" },
-	{ 46,	5,	"alpha" },
+	{ 12,	4,	"beta" },
 	{ 103,	5,	"gamma" }
 	/* This list is extensible */
 };
 static const unsigned int asn_MAP_Enum2_enum2value_1[] = {
-	5,	/* alpha(46) */
-	2,	/* beta(12) */
+	2,	/* alpha(2) */
+	5,	/* beta(12) */
 	4,	/* blue(45) */
 	6,	/* gamma(103) */
 	1,	/* green(1) */
@@ -213,14 +213,14 @@ xer_type_encoder_f Enum3_encode_xer;
 
 static const asn_INTEGER_enum_map_t asn_MAP_Enum3_value2enum_1[] = {
 	{ 0,	1,	"a" },
-	{ 1,	1,	"c" },
-	{ 3,	1,	"b" }
+	{ 3,	1,	"b" },
+	{ 1,	1,	"c" }
 	/* This list is extensible */
 };
 static const unsigned int asn_MAP_Enum3_enum2value_1[] = {
 	0,	/* a(0) */
-	2,	/* b(3) */
-	1	/* c(1) */
+	1,	/* b(3) */
+	2	/* c(1) */
 	/* This list is extensible */
 };
 static const asn_INTEGER_specifics_t asn_SPC_Enum3_specs_1 = {
@@ -345,7 +345,7 @@ typedef enum Enum5 {
 	/*
 	 * Enumeration is extensible
 	 */
-	Enum5_d	= 26
+	Enum5_d	= 1
 } e_Enum5;
 
 /*** <<< TYPE-DECLS [Enum5] >>> ***/
@@ -375,12 +375,12 @@ xer_type_encoder_f Enum5_encode_xer;
 static const asn_INTEGER_enum_map_t asn_MAP_Enum5_value2enum_1[] = {
 	{ 0,	1,	"a" },
 	{ 25,	1,	"z" },
-	{ 26,	1,	"d" }
+	{ 1,	1,	"d" }
 	/* This list is extensible */
 };
 static const unsigned int asn_MAP_Enum5_enum2value_1[] = {
 	0,	/* a(0) */
-	2,	/* d(26) */
+	2,	/* d(1) */
 	1	/* z(25) */
 	/* This list is extensible */
 };

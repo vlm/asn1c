@@ -96,24 +96,35 @@ uper_get_nsnnwn(asn_per_data_t *pd) {
 /*
  * X.691-11/2008, #11.6
  * Encoding of a normally small non-negative whole number
+ *
+ * This is the strict inverse of uper_get_nsnnwn() above: for n <= 63,
+ * emit a single 7-bit field whose top bit (the "0" flag) is naturally
+ * zero, followed by 6 bits of n (#11.6, short form referencing #11.5).
+ * For n >= 64, emit an explicit 1-bit "1" flag, followed by a
+ * short-form general length determinant octet (#11.9.3.6) giving the
+ * number of octets ("bytes") used to encode n, followed by that many
+ * octets of n itself. uper_get_nsnnwn() only understands 1- or 2-octet
+ * long forms (n up to 65535), so we fail cleanly rather than emitting
+ * a stream our own decoder (or any compliant peer) cannot read back.
  */
 int
 uper_put_nsnnwn(asn_per_outp_t *po, int n) {
 	int bytes;
 
+	if(n < 0) return -1;
 	if(n <= 63) {
-		if(n < 0) return -1;
 		return per_put_few_bits(po, n, 7);
 	}
 	if(n < 256)
 		bytes = 1;
 	else if(n < 65536)
 		bytes = 2;
-	else if(n < 256 * 65536)
-		bytes = 3;
 	else
-		return -1;	/* This is not a "normally small" value */
-	if(per_put_few_bits(po, bytes, 8))
+		return -1;	/* Not supported by uper_get_nsnnwn() either */
+
+	if(per_put_few_bits(po, 1, 1))	/* Long-form flag bit, #11.6 */
+		return -1;
+	if(per_put_few_bits(po, bytes, 8)) /* Length determinant, #11.9.3.6 */
 		return -1;
 
 	return per_put_few_bits(po, n, 8 * bytes);
@@ -196,15 +207,25 @@ uper_put_length(asn_per_outp_t *po, size_t length, int *need_eom) {
  * Put the normally small length "n" into the stream.
  * This procedure used to encode length of extensions bit-maps
  * for SET and SEQUENCE types.
+ *
+ * This is the strict inverse of uper_get_nslength() above: short form
+ * (length <= 64) is a "0" flag bit folded into a 7-bit field together
+ * with (length - 1). Long form (length > 64) requires an explicit
+ * "1" flag bit before the general length determinant of #11.9 --
+ * without it, uper_get_nslength() cannot tell the two forms apart.
  */
 int
 uper_put_nslength(asn_per_outp_t *po, size_t length) {
+    if(length == 0) return -1; /* #11.9.3.4 */
     if(length <= 64) {
-        /* #11.9.3.4 */
-        if(length == 0) return -1;
+        /* #11.9.3.4: "0" flag bit + 6-bit (length - 1) */
         return per_put_few_bits(po, length - 1, 7) ? -1 : 0;
     } else {
         int need_eom = 0;
+        /* Long-form flag bit, mirrors uper_get_nslength()'s
+         * per_get_few_bits(pd, 1) branch test. */
+        if(per_put_few_bits(po, 1, 1))
+            return -1;
         if(uper_put_length(po, length, &need_eom) != (ssize_t)length
            || need_eom) {
             /* This might happen in case of >16K extensions */
