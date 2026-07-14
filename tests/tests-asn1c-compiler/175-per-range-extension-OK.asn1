@@ -1,0 +1,31 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .175
+
+-- Constraints with extension additions after the "..." marker must not
+-- widen the PER-visible root, whatever the governed type is: the named
+-- additions are encoded as extensions (general length determinant or
+-- unconstrained value), independent of which additions the version names.
+-- Companion of test 167 (BIT STRING / OCTET STRING SIZE); this one locks
+-- the remaining constraint kinds routed through the same range builder:
+-- INTEGER value ranges, SEQUENCE OF sizes, character string sizes, and
+-- extensible permitted alphabets (the latter are not PER-visible at all,
+-- per X.691 #9.3.10).
+
+ModulePERRangeExtension
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 175 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	I ::= INTEGER (0..5, ..., 6..10)
+
+	S ::= SEQUENCE (SIZE(1, ..., 3)) OF INTEGER (0..255)
+
+	A ::= IA5String (SIZE(1, ..., 8))
+
+	F ::= IA5String (FROM("AB", ..., "C"))
+
+END

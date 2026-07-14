@@ -376,12 +376,49 @@ typedef struct Type2 {
 
 /*** <<< FUNC-DECLS [Type2] >>> ***/
 
+/* extern asn_TYPE_descriptor_t asn_DEF_a_4;	// (Use -fall-defs-global to expose) */
+/* extern asn_TYPE_descriptor_t asn_DEF_a_9;	// (Use -fall-defs-global to expose) */
 extern asn_TYPE_descriptor_t asn_DEF_Type2;
 extern asn_CHOICE_specifics_t asn_SPC_Type2_specs_1;
 extern asn_TYPE_member_t asn_MBR_Type2_1[2];
 
 /*** <<< CODE [Type2] >>> ***/
 
+static int
+a_4_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(st->size > 0) {
+		/* Size in bits */
+		size = 8 * st->size - (st->bits_unused & 0x07);
+	} else {
+		size = 0;
+	}
+	
+	if((size == 2)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using BIT_STRING,
+ * so here we adjust the DEF accordingly.
+ */
 static int
 memb_a_constraint_3(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
@@ -413,6 +450,41 @@ memb_a_constraint_3(const asn_TYPE_descriptor_t *td, const void *sptr,
 	}
 }
 
+static int
+a_9_constraint(const asn_TYPE_descriptor_t *td, const void *sptr,
+			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
+	const BIT_STRING_t *st = (const BIT_STRING_t *)sptr;
+	size_t size;
+	
+	if(!sptr) {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: value not given (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+	
+	if(st->size > 0) {
+		/* Size in bits */
+		size = 8 * st->size - (st->bits_unused & 0x07);
+	} else {
+		size = 0;
+	}
+	
+	if((size == 2)) {
+		/* Constraint check succeeded */
+		return 0;
+	} else {
+		ASN__CTFAIL(app_key, td, sptr,
+			"%s: constraint failed (%s:%d)",
+			td->name, __FILE__, __LINE__);
+		return -1;
+	}
+}
+
+/*
+ * This type is implemented using BIT_STRING,
+ * so here we adjust the DEF accordingly.
+ */
 static int
 memb_a_constraint_8(const asn_TYPE_descriptor_t *td, const void *sptr,
 			asn_app_constraint_failed_f *ctfailcb, void *app_key) {
@@ -447,11 +519,36 @@ memb_a_constraint_8(const asn_TYPE_descriptor_t *td, const void *sptr,
 
 /*** <<< STAT-DEFS [Type2] >>> ***/
 
+static const asn_OCTET_STRING_specifics_t asn_SPC_a_specs_4 = {
+	sizeof(BIT_STRING_t),
+	offsetof(BIT_STRING_t, _asn_ctx),
+	ASN_OSUBV_BIT,
+	1	/* Has NamedBitList: trailing 0 bits are insignificant */
+};
+static const ber_tlv_tag_t asn_DEF_a_tags_4[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_a_4 = {
+	"a",
+	"a",
+	&asn_OP_BIT_STRING,
+	asn_DEF_a_tags_4,
+	sizeof(asn_DEF_a_tags_4)
+		/sizeof(asn_DEF_a_tags_4[0]), /* 1 */
+	asn_DEF_a_tags_4,	/* Same as above */
+	sizeof(asn_DEF_a_tags_4)
+		/sizeof(asn_DEF_a_tags_4[0]), /* 1 */
+	{ 0, 0, a_4_constraint },
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_a_specs_4	/* Additional specs */
+};
+
 static asn_TYPE_member_t asn_MBR_another_name_3[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_BIT_STRING,
+		.type = &asn_DEF_a_4,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_a_constraint_3 },
 		0, 0, /* No default value */
@@ -541,11 +638,36 @@ asn_TYPE_descriptor_t asn_DEF_one_name_2 = {
 	&asn_SPC_one_name_specs_2	/* Additional specs */
 };
 
+static const asn_OCTET_STRING_specifics_t asn_SPC_a_specs_9 = {
+	sizeof(BIT_STRING_t),
+	offsetof(BIT_STRING_t, _asn_ctx),
+	ASN_OSUBV_BIT,
+	1	/* Has NamedBitList: trailing 0 bits are insignificant */
+};
+static const ber_tlv_tag_t asn_DEF_a_tags_9[] = {
+	(ASN_TAG_CLASS_UNIVERSAL | (3 << 2))
+};
+static /* Use -fall-defs-global to expose */
+asn_TYPE_descriptor_t asn_DEF_a_9 = {
+	"a",
+	"a",
+	&asn_OP_BIT_STRING,
+	asn_DEF_a_tags_9,
+	sizeof(asn_DEF_a_tags_9)
+		/sizeof(asn_DEF_a_tags_9[0]), /* 1 */
+	asn_DEF_a_tags_9,	/* Same as above */
+	sizeof(asn_DEF_a_tags_9)
+		/sizeof(asn_DEF_a_tags_9[0]), /* 1 */
+	{ 0, 0, a_9_constraint },
+	0, 0,	/* Defined elsewhere */
+	&asn_SPC_a_specs_9	/* Additional specs */
+};
+
 static asn_TYPE_member_t asn_MBR_another_name_8[] = {
 	{ ATF_NOFLAGS, 0, offsetof(struct another_name, a),
 		.tag = (ASN_TAG_CLASS_UNIVERSAL | (3 << 2)),
 		.tag_mode = 0,
-		.type = &asn_DEF_BIT_STRING,
+		.type = &asn_DEF_a_9,
 		.type_selector = 0,
 		{ .oer_constraints = 0, .per_constraints = 0, .general_constraints =  memb_a_constraint_8 },
 		0, 0, /* No default value */

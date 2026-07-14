@@ -834,9 +834,19 @@ asn1print_expr(asn1p_t *asn, asn1p_module_t *mod, asn1p_expr_t *tc, enum asn1pri
 				tc->combined_constraints, CPR_strict_OER_visibility);
 			safe_printf("\n-- PER-visible constraints (%s): ",
 				top_parent->Identifier);
+			/*
+			 * Report the PER-visible *root* range: named extension
+			 * additions (e.g. the "3" in SIZE(2,...,3)) are encoded as
+			 * extensions with a general length determinant, so they are
+			 * not part of the root the way the emitted asn_per_constraints_t
+			 * table represents it. Use the same flag the table emitter uses
+			 * so the diagnostic matches what is actually generated.
+			 */
 			asn1print_constraint_explain(top_parent->Identifier,
 				top_parent->expr_type,
-				tc->combined_constraints, CPR_strict_PER_visibility);
+				tc->combined_constraints,
+				CPR_strict_PER_visibility
+					| CPR_ignore_extension_additions);
 		}
 		safe_printf("\n");
 	}

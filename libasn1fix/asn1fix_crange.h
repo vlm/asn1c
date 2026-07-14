@@ -51,6 +51,18 @@ enum cpr_flags {
 	CPR_strict_OER_visibility	= 0x01,
 	CPR_strict_PER_visibility	= 0x02,
 	CPR_simulate_fbless_SIZE	= 0x04,
+	/*
+	 * Drop named extension additions from the computed root range, e.g.
+	 * turn SIZE(2,...,3) into root [2,2] (extensible) instead of [2,3].
+	 * Only the caller that emits the PER-visible root constraint table
+	 * (asn_per_constraints_t) requests this: in PER an extension value is
+	 * encoded with a general length determinant, independent of which
+	 * extension sizes/values a particular version happens to name. Other
+	 * consumers (the generated asn_check_constraints checker, native-type
+	 * width selection) must keep the additions folded in so that legal
+	 * extension values continue to satisfy the range.
+	 */
+	CPR_ignore_extension_additions	= 0x08,
 };
 asn1cnst_range_t *asn1constraint_compute_OER_range(const char *dbg_name,
 	asn1p_expr_type_e expr_type,
