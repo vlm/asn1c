@@ -54,6 +54,16 @@ ssize_t uper_get_length(asn_per_data_t *pd, int effective_bound_bits,
 ssize_t uper_get_nslength(asn_per_data_t *pd);
 
 /*
+ * The widest normally small non-negative whole number (X.691 #11.6) this
+ * implementation can transfer: uper_get_nsnnwn() reads at most a 2-octet
+ * long form (X.691 itself sets no bound). Contracts derived from this
+ * capability (e.g. the NativeEnumerated.h unknown-extension reserved
+ * region) are cross-checked against it at compile time; see
+ * NativeEnumerated.c.
+ */
+#define ASN_UPER_NSNNWN_MAX 65535
+
+/*
  * Get the normally small non-negative whole number.
  */
 ssize_t uper_get_nsnnwn(asn_per_data_t *pd);

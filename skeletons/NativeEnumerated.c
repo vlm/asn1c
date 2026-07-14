@@ -13,6 +13,18 @@
 #include <NativeEnumerated.h>
 
 /*
+ * The unknown-extension reserved region published in NativeEnumerated.h is
+ * sized by the widest extension index the PER runtime can transfer
+ * (ASN_UPER_NSNNWN_MAX, per_support.h). NativeEnumerated.h must stay
+ * self-contained -- it also ships in builds that do not carry per_support.h
+ * -- so the two constants are defined independently; fail the build here,
+ * where both are visible, if they ever drift apart.
+ */
+#if ASN_NATIVE_ENUMERATED_UNKNOWN_EXT_BASE != (LONG_MAX - ASN_UPER_NSNNWN_MAX)
+#error ASN_NATIVE_ENUMERATED_UNKNOWN_EXT_BASE out of sync with ASN_UPER_NSNNWN_MAX
+#endif
+
+/*
  * NativeEnumerated basic type description.
  */
 static const ber_tlv_tag_t asn_DEF_NativeEnumerated_tags[] = {
@@ -131,9 +143,38 @@ NativeEnumerated_decode_uper(const asn_codec_ctx_t *opt_codec_ctx,
 		 */
 		value = uper_get_nsnnwn(pd);
 		if(value < 0) ASN__DECODE_STARVED;
+		if(value + specs->extension - 1 >= specs->map_count) {
+			/*
+			 * Unknown extension value: the peer used an enumeration value
+			 * added in a newer version of the type. Such a value is carried
+			 * (X.691 #14) only as its extension index -- there is no open
+			 * type to skip and the index has already been consumed. X.680 #6
+			 * forbids treating this as an error, so accept it: an enclosing
+			 * type can then keep decoding its following fields (forward
+			 * compatibility).
+			 *
+			 * The true abstract value is unknowable to this older decoder,
+			 * and a plain long has no out-of-band way to flag "unknown". So,
+			 * like a commercial ASN.1 toolchain (the project's interoperability
+			 * reference, which stores INT_MAX - index), store the wire index enciphered as
+			 * LONG_MAX - index -- `value` still holds the raw index here.
+			 * NativeEnumerated_encode_uper recognises this reserved region
+			 * and re-emits the identical index, so the value can be relayed
+			 * byte-for-byte under the same PER transfer syntax. See the
+			 * contract in NativeEnumerated.h.
+			 *
+			 * uper_get_nsnnwn caps the index at two length octets
+			 * (ASN_UPER_NSNNWN_MAX); guard the reserved region against
+			 * anything wider.
+			 */
+			if(value > ASN_UPER_NSNNWN_MAX)
+				ASN__DECODE_FAILED;
+			*native = LONG_MAX - value;
+			ASN_DEBUG("Decoded %s = unknown extension index %ld"
+				" (stored as LONG_MAX-%ld)", td->name, value, value);
+			return rval;
+		}
 		value += specs->extension - 1;
-		if(value >= specs->map_count)
-			ASN__DECODE_FAILED;
 	}
 
 	*native = specs->value2enum[value].nat_value;
@@ -184,6 +225,31 @@ NativeEnumerated_encode_uper(const asn_TYPE_descriptor_t *td,
 	kf = bsearch(&key, specs->value2enum, specs->map_count,
 		sizeof(key), NativeEnumerated__compar_value2enum);
 	if(!kf) {
+		/*
+		 * No known enumeration maps to this value. If it is an unknown
+		 * extension value that a previous UPER decode stored enciphered as
+		 * LONG_MAX - wire_index (see NativeEnumerated.h), and this
+		 * enumeration is extensible, relay it: recover the index and
+		 * re-emit it exactly as received (extension bit + nsnnwn index).
+		 * This mirrors the reference toolchain and yields a byte-for-byte
+		 * identical relay under the same PER transfer syntax. A value the
+		 * application fabricated inside the reserved region is passed
+		 * through as an index too (garbage in, garbage out, as with the
+		 * reference toolchain); a
+		 * reserved-region value handed to a non-extensible enumeration
+		 * still fails below.
+		 */
+		if((ct->flags & APC_EXTENSIBLE) && specs->extension
+		&& ASN_NATIVE_ENUMERATED_IS_UNKNOWN_EXT(native)) {
+			long ext_index = LONG_MAX - native;
+			ASN_DEBUG("Relaying %s unknown extension index %ld",
+				td->name, ext_index);
+			if(per_put_few_bits(po, 1, 1))	/* extension present bit */
+				ASN__ENCODE_FAILED;
+			if(uper_put_nsnnwn(po, ext_index))
+				ASN__ENCODE_FAILED;
+			ASN__ENCODED_OK(er);
+		}
 		ASN_DEBUG("No element corresponds to %ld", native);
 		ASN__ENCODE_FAILED;
 	}
