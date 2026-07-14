@@ -1,0 +1,45 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .174
+
+-- Regression test for issue #18: an extensible ENUMERATED whose
+-- extension addition value is numerically lower than the maximum
+-- root value must still UPER-encode root values by their root-only
+-- index and extension additions by their extension-only ordinal
+-- (X.691 14.1 indexes the extension series independently of the
+-- root). The generated value2enum map is laid out as two segments,
+-- each sorted by value: root members first, extension additions
+-- after them.
+
+ModuleTestEnumInterleavedExt
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 174 }
+	DEFINITIONS ::=
+BEGIN
+
+	-- The literal reproduction case from issue #18: c(1) sorts
+	-- between the root values a(0) and b(3), which used to make
+	-- the runtime encode b as if it were the extension addition c
+	-- (and vice versa).
+	E ::= ENUMERATED { a, b(3), ..., c(1) }
+
+	-- The same shape as produced by the issue #19 fix: the
+	-- automatically numbered extension addition d receives the
+	-- smallest unused value 1 (X.680 20.6), below the root
+	-- maximum z(25).
+	F ::= ENUMERATED { a, z(25), ..., d }
+
+	-- Multi-element extension segment: the additions straddle the
+	-- root maximum (c below it, d above it); the extension-segment
+	-- bsearch must find each by value and produce its addition
+	-- ordinal (c -> 0, d -> 1).
+	H ::= ENUMERATED { a, b(3), ..., c(1), d(50) }
+
+	-- Non-extensible control: a single value-sorted root segment,
+	-- unaffected by the two-segment layout. w is automatically
+	-- numbered with the smallest unused value 0.
+	G ::= ENUMERATED { x(5), y(2), w }
+
+END

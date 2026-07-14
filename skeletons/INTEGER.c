@@ -295,6 +295,24 @@ const asn_INTEGER_enum_map_t *
 INTEGER_map_value2enum(const asn_INTEGER_specifics_t *specs, long value) {
 	int count = specs ? specs->map_count : 0;
 	if(!count) return 0;
+	if(specs->extension) {
+		/*
+		 * As in NativeEnumerated_encode_uper(): value2enum is two
+		 * independently value-sorted segments (root, then extension
+		 * additions), so a single whole-array bsearch() is only
+		 * valid when the array is globally monotonic. Search each
+		 * segment in turn.
+		 */
+		int root_count = specs->extension - 1;
+		const asn_INTEGER_enum_map_t *el = (const asn_INTEGER_enum_map_t *)
+			bsearch(&value, specs->value2enum, root_count,
+				sizeof(specs->value2enum[0]),
+				INTEGER__compar_value2enum);
+		if(el) return el;
+		return (asn_INTEGER_enum_map_t *)bsearch(&value,
+			specs->value2enum + root_count, count - root_count,
+			sizeof(specs->value2enum[0]), INTEGER__compar_value2enum);
+	}
 	return (asn_INTEGER_enum_map_t *)bsearch(&value, specs->value2enum,
 		count, sizeof(specs->value2enum[0]),
 		INTEGER__compar_value2enum);

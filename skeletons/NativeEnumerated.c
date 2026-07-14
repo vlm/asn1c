@@ -181,8 +181,30 @@ NativeEnumerated_encode_uper(const asn_TYPE_descriptor_t *td,
 	native = *(const long *)sptr;
 
 	key.nat_value = native;
-	kf = bsearch(&key, specs->value2enum, specs->map_count,
-		sizeof(key), NativeEnumerated__compar_value2enum);
+	if(specs->extension) {
+		/*
+		 * value2enum is laid out as two independently-sorted
+		 * segments: root members [0, extension-1) and extension
+		 * additions [extension-1, map_count), each sorted by
+		 * nat_value on its own (see asn1c_lang_C_type_common_INTEGER
+		 * in the compiler). A single bsearch() over the whole array
+		 * requires the entire array to be monotonically sorted,
+		 * which no longer holds when an extension addition's value
+		 * is numerically smaller than a root value (X.691 #14.1
+		 * indexes root and extension additions independently of
+		 * each other's numeric values). Search each segment in turn.
+		 */
+		int root_count = specs->extension - 1;
+		kf = bsearch(&key, specs->value2enum, root_count,
+			sizeof(key), NativeEnumerated__compar_value2enum);
+		if(!kf)
+			kf = bsearch(&key, specs->value2enum + root_count,
+				specs->map_count - root_count,
+				sizeof(key), NativeEnumerated__compar_value2enum);
+	} else {
+		kf = bsearch(&key, specs->value2enum, specs->map_count,
+			sizeof(key), NativeEnumerated__compar_value2enum);
+	}
 	if(!kf) {
 		ASN_DEBUG("No element corresponds to %ld", native);
 		ASN__ENCODE_FAILED;

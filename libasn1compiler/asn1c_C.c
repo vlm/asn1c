@@ -185,7 +185,25 @@ asn1c_lang_C_type_common_INTEGER(arg_t *arg) {
 
 		OUT("static const asn_INTEGER_enum_map_t asn_MAP_%s_value2enum_%d[] = {\n",
 			MKID(expr), expr->_type_unique_index);
-		qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byValue);
+		/*
+		 * Root members and extension additions occupy disjoint
+		 * segments of value2enum, delimited by map_extensions - 1
+		 * (see below). Sort each segment independently by value
+		 * so that the runtime's extension-boundary index (based on
+		 * declaration order) keeps pointing at the segment split
+		 * regardless of how root/extension values interleave
+		 * numerically (X.691 #14.1: root and extension additions
+		 * are indexed independently).
+		 */
+		if(map_extensions) {
+			int root_count = map_extensions - 1;
+			qsort(v2e, root_count, sizeof(v2e[0]),
+				compar_enumMap_byValue);
+			qsort(v2e + root_count, el_count - root_count,
+				sizeof(v2e[0]), compar_enumMap_byValue);
+		} else {
+			qsort(v2e, el_count, sizeof(v2e[0]), compar_enumMap_byValue);
+		}
 		for(eidx = 0; eidx < el_count; eidx++) {
 			v2e[eidx].idx = eidx;
 			OUT("\t{ %s,\t%ld,\t\"%s\" }%s\n",
