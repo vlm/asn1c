@@ -290,6 +290,26 @@ asn1c_lang_C_type_BIT_STRING(arg_t *arg) {
 		}
 		OUT("} %s;\n", c_name(arg).members_name);
 		assert(eidx == el_count);
+
+		/*
+		 * X.680 #22.7 permits treating trailing 0 bits as
+		 * insignificant only for BIT STRING types which have a
+		 * NamedBitList. Emit a per-type specifics structure so the
+		 * UPER encoder (BIT_STRING_encode_uper) can tell this type
+		 * apart from a plain BIT STRING, which must preserve
+		 * trailing 0 bits verbatim.
+		 */
+		REDIR(OT_STAT_DEFS);
+		if(!(expr->_type_referenced)) OUT("static ");
+		OUT("const asn_OCTET_STRING_specifics_t asn_SPC_%s_specs_%d = {\n",
+			c_name(arg).part_name, expr->_type_unique_index);
+		INDENT(+1);
+		OUT("sizeof(BIT_STRING_t),\n");
+		OUT("offsetof(BIT_STRING_t, _asn_ctx),\n");
+		OUT("ASN_OSUBV_BIT,\n");
+		OUT("1\t/* Has NamedBitList: trailing 0 bits are insignificant */\n");
+		INDENT(-1);
+		OUT("};\n");
 	}
 
 	REDIR(saved_target);
@@ -1319,6 +1339,8 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
 	|| (expr->expr_type == ASN_BASIC_INTEGER
 		&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN)
 	|| asn1c_REAL_fits(arg, expr) == RL_FITS_FLOAT32
+	|| (expr->expr_type == ASN_BASIC_BIT_STRING
+		&& expr_elements_count(arg, expr))
 	)
 		etd_spec = ETD_HAS_SPECIFICS;
 	else
@@ -1415,6 +1437,10 @@ asn1c_lang_C_type_SIMPLE_TYPE(arg_t *arg) {
                 OUT("extern const asn_INTEGER_specifics_t "
                     "asn_SPC_%s_specs_%d;\n",
                     c_name(arg).base_name, expr->_type_unique_index);
+            } else if(expr->expr_type == ASN_BASIC_BIT_STRING) {
+                OUT("extern const asn_OCTET_STRING_specifics_t "
+                    "asn_SPC_%s_specs_%d;\n",
+                    c_name(arg).part_name, expr->_type_unique_index);
             } else {
                 asn1p_expr_t *terminal = WITH_MODULE_NAMESPACE(
                     expr->module, expr_ns,
@@ -2205,7 +2231,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	} else if(etype & ASN_STRING_KM_MASK) {
 		range = asn1constraint_compute_PER_range(expr->Identifier, etype,
 				expr->combined_constraints, ACT_CT_FROM,
-				0, 0, 0);
+				0, 0, CPR_ignore_extension_additions);
 		DEBUG("Emitting FROM constraint for %s", expr->Identifier);
 
 		if((range->left.type == ARE_MIN && range->right.type == ARE_MAX)
@@ -2235,7 +2261,7 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	} else {
 		range = asn1constraint_compute_PER_range(expr->Identifier, etype,
 				expr->combined_constraints, ACT_EL_RANGE,
-				0, 0, 0);
+				0, 0, CPR_ignore_extension_additions);
 		if(emit_single_member_PER_constraint(arg, range, 0, 0))
 			return -1;
 		asn1constraint_range_free(range);
@@ -2243,7 +2269,8 @@ emit_member_PER_constraints(arg_t *arg, asn1p_expr_t *expr, const char *pfx) {
 	OUT(",\n");
 
 	range = asn1constraint_compute_PER_range(expr->Identifier, etype,
-			expr->combined_constraints, ACT_CT_SIZE, 0, 0, 0);
+			expr->combined_constraints, ACT_CT_SIZE, 0, 0,
+			CPR_ignore_extension_additions);
 	if(emit_single_member_PER_constraint(arg, range, 0, "SIZE"))
 		return -1;
 	asn1constraint_range_free(range);
@@ -2819,7 +2846,9 @@ emit_member_table(arg_t *arg, asn1p_expr_t *expr, asn1c_ioc_table_and_objset_t *
 			&& expr->expr_type == ASN_BASIC_INTEGER
 			&& expr_elements_count(arg, expr))
 		|| (expr->expr_type == ASN_BASIC_INTEGER
-			&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN);
+			&& asn1c_type_fits_long(arg, expr) == FL_FITS_UNSIGN)
+		|| (expr->expr_type == ASN_BASIC_BIT_STRING
+			&& expr_elements_count(arg, expr));
 	if(C99_MODE) OUT(".type = ");
 
     OUT("&asn_DEF_");
@@ -3130,7 +3159,9 @@ emit_type_DEF(arg_t *arg, asn1p_expr_t *expr, enum tvm_compat tv_mode, int tags_
 				((terminal->expr_type & ASN_CONSTR_MASK) ||
 				(terminal->expr_type == ASN_BASIC_ENUMERATED) ||
 				((terminal->expr_type == ASN_BASIC_INTEGER) &&
-				(asn1c_type_fits_long(arg, terminal) == FL_FITS_UNSIGN)))) {
+				(asn1c_type_fits_long(arg, terminal) == FL_FITS_UNSIGN)) ||
+				((terminal->expr_type == ASN_BASIC_BIT_STRING) &&
+				expr_elements_count(arg, terminal)))) {
                 OUT("&asn_SPC_%s_specs_%d\t/* Additional specs */\n",
                     c_expr_name(arg, terminal).part_name,
                     terminal->_type_unique_index);

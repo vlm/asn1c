@@ -454,8 +454,19 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
 	}
 	ct_extensible = csiz->flags & APC_EXTENSIBLE;
 
-    /* Figure out the size without the trailing bits */
-    st = BIT_STRING__compactify(st, &compact_bstr);
+    /*
+     * Figure out the size without the trailing bits.
+     *
+     * X.680 (2015) #22.7 only allows trailing 0 bits to be treated
+     * as insignificant when the BIT STRING type has a NamedBitList.
+     * Compactifying (stripping trailing 0 bits) an ordinary BIT
+     * STRING without a NamedBitList would silently truncate the
+     * abstract value, which breaks re-encoding under a variable or
+     * extensible SIZE constraint.
+     */
+    if(specs->has_named_bits) {
+        st = BIT_STRING__compactify(st, &compact_bstr);
+    }
     size_in_bits = 8 * st->size - st->bits_unused;
 
     ASN_DEBUG(
@@ -468,6 +479,21 @@ BIT_STRING_encode_uper(const asn_TYPE_descriptor_t *td,
 
     if(csiz->effective_bits >= 0) {
         if((ssize_t)size_in_bits > csiz->upper_bound) {
+            if(ct_extensible) {
+                csiz = &asn_DEF_BIT_STRING_constraint_size;
+                inext = 1;
+            } else {
+                ASN__ENCODE_FAILED;
+            }
+        } else if((ssize_t)size_in_bits < csiz->lower_bound
+                  && !specs->has_named_bits) {
+            /*
+             * Without a NamedBitList the trailing 0 bits used to pad
+             * the value up to the constraint's lower bound would
+             * become part of the abstract value, corrupting it.
+             * Encode such a size through the extension addition
+             * instead (when permitted), like other UPER tools do.
+             */
             if(ct_extensible) {
                 csiz = &asn_DEF_BIT_STRING_constraint_size;
                 inext = 1;

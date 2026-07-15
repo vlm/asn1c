@@ -1,0 +1,38 @@
+-- OK: Everything is fine
+
+-- iso.org.dod.internet.private.enterprise (1.3.6.1.4.1)
+-- .spelio.software.asn1c.test (9363.1.5.1)
+-- .176
+
+-- Self-contained regression for the extensible BIT STRING SIZE fix
+-- when the BIT STRING is nested inside a SEQUENCE and a value below
+-- the constraint root's lower bound must be routed through the
+-- extension addition rather than zero-padded (companion to
+-- check-165's SEQUENCE/CHOICE extension-skip tests, and to
+-- check-167/171's same-version BIT STRING extension coverage).
+--
+-- Also covers the companion compactify-gating fix (issue #11's
+-- original reproducer): a BIT STRING with no NamedBitList must not
+-- have its trailing 0 bits stripped before UPER length/data are
+-- computed, or a value like '11110000'B under SIZE(4,...,8) is
+-- silently re-encoded as if it were '1111'B.
+
+ModuleBitStringExtensionNested
+	{ iso org(3) dod(6) internet (1) private(4) enterprise(1)
+		spelio(9363) software(1) asn1c(5) test(1) 176 }
+	DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+	W ::= SEQUENCE {
+		a	MsgCount,
+		bs	BIT STRING (SIZE(2,...)),
+		b	MsgCount
+	}
+
+	MsgCount ::= INTEGER (0..127)
+
+	-- No NamedBitList: trailing 0 bits are part of the abstract
+	-- value and must not be compactified away.
+	Comp ::= BIT STRING (SIZE(4,...,8))
+
+END

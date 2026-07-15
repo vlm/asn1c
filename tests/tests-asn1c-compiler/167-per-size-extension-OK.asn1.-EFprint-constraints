@@ -1,0 +1,18 @@
+ModulePERSizeExtension { iso org(3) dod(6) internet(1) private(4)
+	enterprise(1) spelio(9363) software(1) asn1c(5) test(1) 167 }
+DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+T ::= BIT STRING (SIZE(2,...,3))
+-- Combined constraints: (SIZE(2,...,3))
+-- Practical constraints (T):  (SIZE(2..3,...)) 
+-- OER-visible constraints (T):  (SIZE(0..MAX)) 
+-- PER-visible constraints (T):  (SIZE(2,...)) 
+
+O ::= OCTET STRING (SIZE(2,...,3))
+-- Combined constraints: (SIZE(2,...,3))
+-- Practical constraints (O):  (SIZE(2..3,...)) 
+-- OER-visible constraints (O):  (SIZE(0..MAX)) 
+-- PER-visible constraints (O):  (SIZE(2,...)) 
+
+END

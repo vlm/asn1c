@@ -31,6 +31,7 @@ TESTS += check-src/check-131.-gen-PER.c
 TESTS += check-src/check-132.-gen-PER.c
 TESTS += check-src/check-133.-gen-PER.c
 TESTS += check-src/check-135.-gen-OER.c
+TESTS += check-src/check-171.-gen-PER.c
 TESTS += check-src/check-148.c
 TESTS += check-src/check-19.c
 TESTS += check-src/check-22.-fwide-types.c
@@ -67,6 +68,8 @@ TESTS += check-src/check-161.-fcompound-names.c
 TESTS += check-src/check-161.-fcompound-names.-gen-PER.c
 TESTS += check-src/check-162.c
 TESTS += check-src/check-164.-fcompound-names.c
+TESTS += check-src/check-167.-gen-PER.c
+TESTS += check-src/check-176.-gen-PER.c
 
 if TEST_64BIT
 TESTS += check-src/check64-134.-gen-PER.c
