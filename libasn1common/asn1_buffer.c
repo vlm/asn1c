@@ -129,8 +129,15 @@ int abuf_vprintf(abuf *ab, const char *fmt, va_list ap) {
     char *str = 0;
 
     ret = vasprintf(&str, fmt, ap);
-    assert(ret >= 0);
-    assert(str != NULL);
+    if(ret < 0 || str == NULL) {
+        /* vasprintf() failed. POSIX leaves *strp undefined on error, so
+         * don't free str or pass it on. Without this, an NDEBUG build
+         * (asserts compiled out) would call abuf_add_bytes() with a
+         * negative ret, whose size_t length parameter wraps to a huge
+         * value and reads far out of bounds. Check ret first so str is
+         * never inspected when it may be indeterminate. */
+        return -1;
+    }
 
     abuf_add_bytes(ab, str, ret);
 
@@ -149,22 +156,29 @@ vasprintf(char **ret, const char *fmt, va_list args) {
 
     int suggested = vsnprintf(NULL, 0, fmt, args);
     if(suggested >= 0) {
-        *ret = malloc(suggested + 1);
+        /* (size_t)suggested + 1: with a plain int, suggested == INT_MAX
+         * would overflow (undefined behavior) before the widening. */
+        *ret = malloc((size_t)suggested + 1);
         if(*ret) {
-            int actual_length = vsnprintf(*ret, suggested + 1, fmt, copy);
-            if(actual_length >= 0) {
-                assert(actual_length == suggested);
+            actual_length = vsnprintf(*ret, (size_t)suggested + 1, fmt, copy);
+            if(actual_length >= 0 && actual_length <= suggested) {
                 assert((*ret)[actual_length] == '\0');
             } else {
+                /* The second vsnprintf() call failed, or reported a length
+                 * larger than the buffer allocated from the first call's
+                 * size. Don't trust the buffer, and don't let an NDEBUG
+                 * build hand a mismatched (buffer, length) pair to the
+                 * caller. */
                 free(*ret);
                 *ret = 0;
+                actual_length = -1;
             }
         }
     } else {
         *ret = NULL;
         assert(suggested >= 0); /* Can't function like this */
     }
-    va_end(args);
+    va_end(copy);
 
     return actual_length;
 }
