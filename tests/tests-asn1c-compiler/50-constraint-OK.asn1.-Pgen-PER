@@ -545,7 +545,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -659,7 +660,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -770,7 +772,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -868,7 +871,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -965,7 +969,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1062,7 +1067,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1159,7 +1165,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1256,7 +1263,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1353,7 +1361,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1453,7 +1462,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1553,7 +1563,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -1753,7 +1764,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is UTF8String */
 	const UTF8String_t *st = (const UTF8String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -2018,7 +2030,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is VisibleString */
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -2752,7 +2765,8 @@ static int check_permitted_alphabet_1(const void *sptr) {
 	/* The underlying type is VisibleString */
 	const VisibleString_t *st = (const VisibleString_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;

@@ -464,7 +464,8 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	switch(terminal->expr_type) {
 	case ASN_STRING_UTF8String:
 		OUT("const uint8_t *ch = st->buf;\n");
-		OUT("const uint8_t *end = ch + st->size;\n");
+		OUT("const uint8_t *end = ch ? ch + st->size : ch;\n");
+		OUT("if(!ch) return st->size ? -1 : 0;\n");
 		OUT("\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);
@@ -474,7 +475,8 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 		break;
 	case ASN_STRING_UniversalString:
 		OUT("const uint8_t *ch = st->buf;\n");
-		OUT("const uint8_t *end = ch + st->size;\n");
+		OUT("const uint8_t *end = ch ? ch + st->size : ch;\n");
+		OUT("if(!ch) return st->size ? -1 : 0;\n");
 		OUT("\n");
 		OUT("if(st->size %% 4) return -1; /* (size%%4)! */\n");
 		OUT("for(; ch < end; ch += 4) {\n");
@@ -488,7 +490,8 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 		break;
 	case ASN_STRING_BMPString:
 		OUT("const uint8_t *ch = st->buf;\n");
-		OUT("const uint8_t *end = ch + st->size;\n");
+		OUT("const uint8_t *end = ch ? ch + st->size : ch;\n");
+		OUT("if(!ch) return st->size ? -1 : 0;\n");
 		OUT("\n");
 		OUT("if(st->size %% 2) return -1; /* (size%%2)! */\n");
 		OUT("for(; ch < end; ch += 2) {\n");
@@ -501,7 +504,8 @@ emit_alphabet_check_loop(arg_t *arg, asn1cnst_range_t *range) {
 	case ASN_BASIC_OCTET_STRING:
 	default:
 		OUT("const uint8_t *ch = st->buf;\n");
-		OUT("const uint8_t *end = ch + st->size;\n");
+		OUT("const uint8_t *end = ch ? ch + st->size : ch;\n");
+		OUT("if(!ch) return st->size ? -1 : 0;\n");
 		OUT("\n");
 		OUT("for(; ch < end; ch++) {\n");
 			INDENT(+1);

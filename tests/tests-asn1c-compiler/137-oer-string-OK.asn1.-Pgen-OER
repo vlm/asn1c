@@ -40,7 +40,8 @@ static int check_permitted_alphabet_7(const void *sptr) {
 	/* The underlying type is IA5String */
 	const IA5String_t *st = (const IA5String_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	for(; ch < end; ch++) {
 		uint8_t cv = *ch;
@@ -53,7 +54,8 @@ static int check_permitted_alphabet_9(const void *sptr) {
 	/* The underlying type is UniversalString */
 	const UniversalString_t *st = (const UniversalString_t *)sptr;
 	const uint8_t *ch = st->buf;
-	const uint8_t *end = ch + st->size;
+	const uint8_t *end = ch ? ch + st->size : ch;
+	if(!ch) return st->size ? -1 : 0;
 	
 	if(st->size % 4) return -1; /* (size%4)! */
 	for(; ch < end; ch += 4) {
