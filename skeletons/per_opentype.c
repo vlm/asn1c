@@ -98,7 +98,15 @@ uper_open_type_get_simple(const asn_codec_ctx_t *ctx,
 			}
 			buf = ptr;
 		}
-		if(per_get_many_bits(pd, buf + bufLen, 0, chunk_bytes << 3)) {
+		/*
+		 * A leading zero-length determinant (malformed: X.691 (02/2021)
+		 * 11.1.3 and 11.2.1 imply that a complete UPER open-type
+		 * encoding is at least one octet) leaves buf unallocated.
+		 * Avoid arithmetic on a null pointer (C17 6.5.6p8);
+		 * asn_get_many_bits() does not access dst for zero bits.
+		 */
+		if(per_get_many_bits(pd, buf ? buf + bufLen : NULL, 0,
+		                     chunk_bytes << 3)) {
 			FREEMEM(buf);
 			ASN__DECODE_STARVED;
 		}
