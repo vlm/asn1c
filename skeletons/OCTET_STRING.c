@@ -615,7 +615,7 @@ OCTET_STRING_encode_xer(const asn_TYPE_descriptor_t *td, const void *sptr,
 	 * Dump the contents of the buffer in hexadecimal.
 	 */
 	buf = st->buf;
-	end = buf + st->size;
+	end = buf ? buf + st->size : buf;
 	if(flags & XER_F_CANONICAL) {
 		char *scend = scratch + (sizeof(scratch) - 2);
 		for(; buf < end; buf++) {
@@ -762,7 +762,7 @@ OCTET_STRING_encode_xer_utf8(const asn_TYPE_descriptor_t *td, const void *sptr,
 		ASN__ENCODE_FAILED;
 
 	buf = st->buf;
-	end = buf + st->size;
+	end = buf ? buf + st->size : buf;
 	for(ss = buf; buf < end; buf++) {
 		unsigned int ch = *buf;
 		int s_len;	/* Special encoding sequence length */
@@ -797,7 +797,7 @@ static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, const void *chunk_b
 	OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
 	const char *chunk_stop = (const char *)chunk_buf;
 	const char *p = chunk_stop;
-	const char *pend = p + chunk_size;
+	const char *pend = p ? p + chunk_size : p;
 	unsigned int clv = 0;
 	int half = 0;	/* Half bit */
 	uint8_t *buf;
@@ -873,7 +873,7 @@ static ssize_t OCTET_STRING__convert_hexadecimal(void *sptr, const void *chunk_b
 static ssize_t OCTET_STRING__convert_binary(void *sptr, const void *chunk_buf, size_t chunk_size, int have_more) {
 	BIT_STRING_t *st = (BIT_STRING_t *)sptr;
 	const char *p = (const char *)chunk_buf;
-	const char *pend = p + chunk_size;
+	const char *pend = p ? p + chunk_size : p;
 	int bits_unused = st->bits_unused & 0x7;
 	uint8_t *buf;
 
@@ -979,7 +979,7 @@ OCTET_STRING__convert_entrefs(void *sptr, const void *chunk_buf,
                               size_t chunk_size, int have_more) {
     OCTET_STRING_t *st = (OCTET_STRING_t *)sptr;
 	const char *p = (const char *)chunk_buf;
-	const char *pend = p + chunk_size;
+	const char *pend = p ? p + chunk_size : p;
 	uint8_t *buf;
 
 	/* Reallocate buffer */
@@ -1681,7 +1681,7 @@ OCTET_STRING_print(const asn_TYPE_descriptor_t *td, const void *sptr,
 	 * Dump the contents of the buffer in hexadecimal.
 	 */
 	buf = st->buf;
-	end = buf + st->size;
+	end = buf ? buf + st->size : buf;
 	for(i = 0; buf < end; buf++, i++) {
 		if(!(i % 16) && (i || st->size > 16)) {
 			if(cb(scratch, p - scratch, app_key) < 0)

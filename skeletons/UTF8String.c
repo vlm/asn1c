@@ -120,8 +120,8 @@ static ssize_t
 UTF8String__process(const UTF8String_t *st, uint32_t *dst, size_t dstlen) {
 	size_t length;
 	uint8_t *buf = st->buf;
-	uint8_t *end = buf + st->size;
-	uint32_t *dstend = dst + dstlen;
+	uint8_t *end = buf ? buf + st->size : buf;
+	uint32_t *dstend = dst ? dst + dstlen : dst;
 
 	for(length = 0; buf < end; length++) {
 		int ch = *buf;

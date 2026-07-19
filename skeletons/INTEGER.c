@@ -325,7 +325,7 @@ INTEGER__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
 	intmax_t hex_value = 0;
 	const char *lp;
 	const char *lstart = (const char *)chunk_buf;
-	const char *lstop = lstart + chunk_size;
+	const char *lstop = lstart ? lstart + chunk_size : lstart;
 	enum {
 		ST_LEADSPACE,
 		ST_SKIPSPHEX,

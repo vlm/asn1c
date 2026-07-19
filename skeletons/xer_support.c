@@ -83,7 +83,7 @@ ssize_t pxml_parse(int *stateContext, const void *xmlbuf, size_t size, pxml_call
 	pstate_e state = (pstate_e)*stateContext;
 	const char *chunk_start = (const char *)xmlbuf;
 	const char *p = chunk_start;
-	const char *end = p + size;
+	const char *end = p ? p + size : p;
 
 	for(; p < end; p++) {
 	  int C = *(const unsigned char *)p;

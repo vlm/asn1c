@@ -225,8 +225,10 @@ xer_decode__primitive_body(void *key, const void *chunk_buf, size_t chunk_size, 
 	}
 
 	lead_wsp_size = xer_whitespace_span(chunk_buf, chunk_size);
-	chunk_buf = (const char *)chunk_buf + lead_wsp_size;
-	chunk_size -= lead_wsp_size;
+	if(lead_wsp_size) {	/* Non-zero span implies chunk_buf != NULL */
+		chunk_buf = (const char *)chunk_buf + lead_wsp_size;
+		chunk_size -= lead_wsp_size;
+	}
 
 	bret = arg->prim_body_decoder(arg->type_descriptor,
 		arg->struct_key, chunk_buf, chunk_size);

@@ -186,7 +186,8 @@ static enum xer_pbd_rval
 OBJECT_IDENTIFIER__xer_body_decode(const asn_TYPE_descriptor_t *td, void *sptr,
                                    const void *chunk_buf, size_t chunk_size) {
     OBJECT_IDENTIFIER_t *st = (OBJECT_IDENTIFIER_t *)sptr;
-	const char *chunk_end = (const char *)chunk_buf + chunk_size;
+	const char *chunk_end = chunk_buf
+		? (const char *)chunk_buf + chunk_size : (const char *)chunk_buf;
 	const char *endptr;
 	asn_oid_arc_t s_arcs[10];
 	asn_oid_arc_t *arcs = s_arcs;
