@@ -183,7 +183,7 @@ SET_OF_decode_ber(const asn_codec_ctx_t *opt_codec_ctx,
 		}
 
 		/* Outmost tag may be unknown and cannot be fetched/compared */
-		if(elm->tag != (ber_tlv_tag_t)-1) {
+		if(elm->tag != ASN_TAG_AMBIGUOUS) {
 		    if(BER_TAGS_EQUAL(tlv_tag, elm->tag)) {
 			/*
 			 * The new list member of expected type has arrived.

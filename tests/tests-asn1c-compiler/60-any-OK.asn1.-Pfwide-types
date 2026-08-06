@@ -32,7 +32,7 @@ static asn_TYPE_member_t asn_MBR_T1_1[] = {
 		.name = "i"
 		},
 	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T1, any),
-		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_ANY,
 		.type_selector = 0,
@@ -169,7 +169,7 @@ extern asn_TYPE_descriptor_t asn_DEF_T3;
 
 static asn_TYPE_member_t asn_MBR_T3_1[] = {
 	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any1),
-		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_ANY,
 		.type_selector = 0,
@@ -178,7 +178,7 @@ static asn_TYPE_member_t asn_MBR_T3_1[] = {
 		.name = "any1"
 		},
 	{ ATF_ANY_TYPE | ATF_NOFLAGS, 0, offsetof(struct T3, any2),
-		.tag = -1 /* Ambiguous tag (ANY?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (ANY?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_ANY,
 		.type_selector = 0,

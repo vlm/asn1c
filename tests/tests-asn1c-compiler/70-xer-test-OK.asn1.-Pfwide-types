@@ -1388,7 +1388,7 @@ extern asn_TYPE_member_t asn_MBR_SetOfChoice_1[1];
 
 asn_TYPE_member_t asn_MBR_SetOfChoice_1[] = {
 	{ ATF_POINTER, 0, 0,
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_SimpleChoice,
 		.type_selector = 0,
@@ -1454,7 +1454,7 @@ extern asn_TYPE_member_t asn_MBR_NamedSetOfChoice_1[1];
 
 asn_TYPE_member_t asn_MBR_NamedSetOfChoice_1[] = {
 	{ ATF_POINTER, 0, 0,
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_SimpleChoice,
 		.type_selector = 0,

@@ -475,7 +475,7 @@ asn_TYPE_descriptor_t asn_DEF_a_2 = {
 
 static asn_TYPE_member_t asn_MBR_c_5[] = {
 	{ ATF_POINTER, 0, 0,
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_Choice3,
 		.type_selector = 0,

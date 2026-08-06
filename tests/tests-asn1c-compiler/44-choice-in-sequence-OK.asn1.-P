@@ -188,7 +188,7 @@ static asn_TYPE_member_t asn_MBR_b_3[] = {
 		.name = "d"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct b, choice.e),
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_e_6,
 		.type_selector = 0,
@@ -249,7 +249,7 @@ static asn_TYPE_member_t asn_MBR_T_1[] = {
 		.name = "a"
 		},
 	{ ATF_NOFLAGS, 0, offsetof(struct T, b),
-		.tag = -1 /* Ambiguous tag (CHOICE?) */,
+		.tag = ASN_TAG_AMBIGUOUS /* Ambiguous tag (CHOICE?) */,
 		.tag_mode = 0,
 		.type = &asn_DEF_b_3,
 		.type_selector = 0,
