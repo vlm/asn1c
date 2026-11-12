@@ -1,5 +1,5 @@
 % asn1c(1) ASN.1 Compiler
-% Lev Walkin <vlm@lionet.info>
+% Lev Walkin \<vlm@lionet.info\>
 % 2017-09-01
 
 # NAME
@@ -176,8 +176,8 @@ CANONICAL-UPER uper_encode()      *-UPER        uper_decode()
 
 BASIC-XER      xer_encode(...)    *-XER         xer_decode()
 
-CANONICAL-XER  xer_encode         *-XER         xer_decode()
-               (XER_F_CANONICAL)
+CANONICAL-XER  xer_encode() with  *-XER         xer_decode()
+               XER_F_CANONICAL
 -------------------------------------------------------------
 
 *) Asterisk means both BASIC and CANONICAL variants.
