@@ -1,5 +1,5 @@
 % enber(1) unber(1) counterpart
-% Lev Walkin <vlm@lionet.info>
+% Lev Walkin \<vlm@lionet.info\>
 % 2016-01-23
 
 # NAME

@@ -1,5 +1,5 @@
 % unber(1) ASN.1 BER Decoder
-% Lev Walkin <vlm@lionet.info>
+% Lev Walkin \<vlm@lionet.info\>
 % 2016-01-23
 
 # NAME
