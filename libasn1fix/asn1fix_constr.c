@@ -91,9 +91,11 @@ int
 asn1f_fix_constr_ext(arg_t *arg) {
 	asn1p_expr_t *expr = arg->expr;
 	asn1p_expr_t *v;
-	TQ_HEAD(asn1p_expr_t) root_list;
-	TQ_HEAD(asn1p_expr_t) ext_list;
-	TQ_HEAD(asn1p_expr_t) *cur_list;
+	/*
+	 * Declare all TQ_HEAD anonymous structs at once to avoid violating
+	 * strict aliasing rules, that allows the compiler to discard TQ_INIT() stores.
+	 */
+	TQ_HEAD(asn1p_expr_t) root_list, ext_list, *cur_list;
 	int r_value = 0;
 	int ext_count = 0;
 
@@ -110,7 +112,7 @@ asn1f_fix_constr_ext(arg_t *arg) {
 
 	TQ_INIT(&root_list);
 	TQ_INIT(&ext_list);
-	cur_list = (void *)&root_list;
+	cur_list = &root_list;
 
 	/*
 	 * Split the set of fields into two lists, the root list
@@ -120,9 +122,9 @@ asn1f_fix_constr_ext(arg_t *arg) {
 		if(v->expr_type == A1TC_EXTENSIBLE) {
 			ext_count++;
 			switch(ext_count) {
-			case 1: cur_list = (void *)&ext_list; break;
+			case 1: cur_list = &ext_list; break;
 			case 2:
-				cur_list = (void *)&root_list;
+				cur_list = &root_list;
 				if(v->value) {
 					FATAL("Optional extension marker "
 						"must not contain "
